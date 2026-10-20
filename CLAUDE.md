@@ -27,6 +27,11 @@
   scores BENIGN + all scheduled classes on the same rows for every arm (unlearned class = recall 0; s4 asserts same rows).
 - Anything not run on real data is UNVERIFIED. make_synthetic.py output is a plumbing check only.
 
+## Version control
+- Git repo, pushed to https://github.com/DevChi1l/cicddos2019-continual-nids (PUBLIC, branch main).
+- After every change: commit with a clear message and `git push`. Never commit data, run outputs or checkpoints
+  (*.zip, *.parquet, *.npz, *.pt, nids_out/ are gitignored); check for secrets before pushing (repo is public).
+
 ## Layout
 common.py | s0_audit.py | s1_preprocess.py (clean+split) | s1b_experiences.py (CI/CII + scaler) | s2_model.py | s3_continual.py (E0, T/A0, arms, gate, poison, repair) | s4_report.py (tables/plots) | s5_explain.py (read-only explanations/diagnostics) | make_synthetic.py | smoke_test.py | notebooks/00_audit, 01_splits_experiences, 02_train_evaluate, 03_understand_our_model (read-only)
 - Architecture name: FT-Transformer-style tabular Transformer (per-feature numeric tokens + [CLS]); the class name `TabTransformer` is historical, NOT the original TabTransformer.
