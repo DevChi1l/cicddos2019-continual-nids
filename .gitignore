@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Data, run outputs and checkpoints (too large / regenerated on Kaggle)
+*.zip
+*.parquet
+*.npz
+*.pt
+nids_out/
