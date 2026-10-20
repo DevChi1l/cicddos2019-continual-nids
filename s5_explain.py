@@ -148,6 +148,10 @@ def gate_check(rounds: list[dict], args: dict) -> pd.DataFrame:
                    for k in r["new_classes"]]
         checks += [(f"benign FAR <= {args['gate_far_max']}", v["benign_far"], args["gate_far_max"], "<="),
                    (f"new-class FAR <= {args['gate_newfar_max']}", v["new_class_far"], args["gate_newfar_max"], "<=")]
+        if args.get("gate_conf_drop") is not None:  # only runs that switched the confidence check on
+            checks += [(f"old {k}: mean p >= ref - {args['gate_conf_drop']}", v["mean_conf"].get(k, 0.0),
+                        ref["mean_conf"][k] - args["gate_conf_drop"], ">=")
+                       for k in r["old_classes"] if k != "BENIGN"]
         ok_all = True
         for name, val, bound, op in checks:
             ok = val >= bound if op == ">=" else val <= bound

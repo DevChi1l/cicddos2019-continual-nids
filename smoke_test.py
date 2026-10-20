@@ -4,8 +4,11 @@ Checks plumbing only (files exist, invariants hold, teacher unchanged). Numbers 
 here are NOT results. Takes about a minute on CPU.
 
   python smoke_test.py --work /tmp/nids_smoke
+  python smoke_test.py --work W --write-golden g.json   # on the OLD code: record checkpoint hashes
+  python smoke_test.py --work W --golden g.json         # on the NEW code: default flags must match
 """
 import argparse
+import hashlib
 import json
 import shutil
 import subprocess
@@ -23,9 +26,29 @@ def run(*args):
     subprocess.run(cmd, check=True)
 
 
+def ckpt_hashes(runs: Path, names=None) -> dict:
+    """sha256 of tensors + classes + meta of every checkpoint (file bytes are not stable)."""
+    import torch
+    out = {}
+    for p in sorted(runs.rglob("*.pt")):
+        rel = str(p.relative_to(runs))
+        if names is not None and rel not in names:
+            continue
+        ck = torch.load(p, map_location="cpu")
+        h = hashlib.sha256()
+        for k, v in sorted(ck["state"].items()):
+            h.update(k.encode())
+            h.update(v.numpy().tobytes())
+        h.update(json.dumps([ck["classes"], ck["meta"]], sort_keys=True).encode())
+        out[rel] = h.hexdigest()
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--work", default="./smoke_work")
+    ap.add_argument("--golden", default=None, help="checkpoint hashes recorded with the previous code")
+    ap.add_argument("--write-golden", default=None)
     a = ap.parse_args()
     w = Path(a.work).resolve()
     shutil.rmtree(w, ignore_errors=True)
@@ -118,6 +141,55 @@ def main():
                         "cii", "--run", "smoke", *map(str, fast), "--resume", "--poison-frac", "0.25"],
                        capture_output=True, text=True)
     assert p.returncode != 0 and "refuse --resume" in p.stderr, p.stderr[-500:]
+
+    # default flags must reproduce the previous code's checkpoints exactly (main stays reproducible)
+    runs = out / "runs"
+    base = ckpt_hashes(runs)
+    if a.write_golden:
+        Path(a.write_golden).write_text(json.dumps(base, indent=0))
+    if a.golden:
+        gold = json.loads(Path(a.golden).read_text())
+        gold = {k: v for k, v in gold.items() if k.endswith(".pt")}
+        diff = [k for k in gold if base.get(k) != gold[k]]
+        assert not diff and len(gold) == len(base), f"default-flag checkpoints changed: {diff}"
+        print(f"default flags: {len(gold)} checkpoint hashes identical to the previous code")
+    # a completed run is never overwritten
+    p = subprocess.run([sys.executable, str(HERE / "s3_continual.py"), "--out", str(out), "--scenario",
+                        "cii", "--run", "smoke", *map(str, fast)], capture_output=True, text=True)
+    assert p.returncode != 0 and "never overwritten" in p.stderr, p.stderr[-500:]
+
+    # new flags: seed, conf gate, three-way repair + relabel; then the same + forced R1 diagnostics
+    new = [*fast, "--seed", 43, "--gate-conf-drop", 0.05, "--repair-rule", "threeway", "--relabel-to-teacher"]
+    run("s3_continual.py", "--out", out, "--scenario", "cii", "--run", "flags", *new)
+    run("s3_continual.py", "--out", out, "--scenario", "cii", "--run", "flags_diag", *new,
+        "--forced-r1", "soft,threeway,threeway+relabel")
+    f1, f2 = runs / "cii" / "flags", runs / "cii" / "flags_diag"
+    h1 = ckpt_hashes(f1)
+    assert h1 == ckpt_hashes(f2, set(h1)), "forced R1 diagnostics changed a decision path"
+    assert ckpt_hashes(f1, {"T.pt"}) != ckpt_hashes(runs / "cii" / "smoke", {"T.pt"}), "--seed had no effect"
+    assert json.loads((f1 / "config.json").read_text())["seed"] == 43
+    for arm in ("clean", "poisoned"):
+        d = json.loads((f2 / arm / "r1_diag.json").read_text())
+        assert d and all(x["diagnostic"] and x["attempt"] == "R1_diag" for x in d)
+        assert {x["method"] for x in d} == {"soft", "threeway", "threeway+relabel"}
+    assert not (f2 / "poisoned_repair" / "r1_diag.json").exists()
+    recs = json.loads((f1 / "poisoned_repair" / "rounds.json").read_text())
+    assert all("conf_check" in r and "mean_conf" in r["val"] for r in recs)
+    r1 = [r for r in recs if r["attempt"] == "R1"]
+    assert all(r["teacher_weights"]["method"] == "threeway+relabel" for r in r1)
+    print(f"new flags ran: R1 attempts {len(r1)}, conf-gate rejections "
+          f"{sum(any('mean p' in g for g in r['gate_reasons']) for r in recs)}")
+    run("s4_report.py", "--out", out, "--scenario", "cii", "--run", "flags_diag")
+
+    # a second schedule under --tag never touches the first schedule's Stage 1b files
+    before = {p: p.read_bytes() for p in [out / "protected_exclusions.json", out / "cii" / "scaler.json"]}
+    (w / "schedule_alt.json").write_text(json.dumps({"experiences": [["Syn"], ["LDAP", "UDP"]]}))
+    run("s1b_experiences.py", "--out", out, "--schedule", w / "schedule_alt.json", "--scenario", "cii",
+        "--tag", "alt", "--attack-cap", 1500, "--min-rows", 100, "--min-benign-protected", 50)
+    assert all(p.read_bytes() == b for p, b in before.items()), "--tag overwrote the original Stage 1b files"
+    run("s3_continual.py", "--out", out, "--scenario", "cii", "--tag", "alt", "--run", "alt", *fast,
+        "--gate-old-drop", 1, "--gate-new-min", 0, "--gate-far-max", 1, "--gate-newfar-max", 1)
+    assert "alt/cii/scaler.json" in json.loads((runs / "cii" / "alt" / "config.json").read_text())["inputs"]
     print("\nSMOKE TEST PASSED (plumbing only - synthetic numbers are not results)")
 
 

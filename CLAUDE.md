@@ -6,7 +6,8 @@
 - No metrics from the old repository or old CIC collection experiments in any new result.
 - Dataset: CICDDoS2019 flow files. Schema, class counts and splits come from `nids_out/manifest.json`; do not assume them.
 - Leakage rules: split before fitting anything; fit scaler/vocab on E0 TRAIN rows only and freeze (s1b_experiences.py); V and test never used for training,
-  replay, or threshold tuning (thresholds use the calibration split); no SMOTE across splits or tasks.
+  replay, or threshold tuning; no SMOTE across splits or tasks. The calib split is created and protected but
+  NOT used by any code yet (gate thresholds are fixed constants, not tuned).
 - Preserve the class-to-index map (`class_map.json`) across experiences; head expansion copies old rows.
 - Attack scope (initial): attacker edits labels of a bounded fraction of ONE old class in the replay buffer B only.
   D, V, test, teacher weights and gradients are out of reach. FGSM/PGD and backdoors are separate threat models.
@@ -33,5 +34,24 @@
   (*.zip, *.parquet, *.npz, *.pt, nids_out/ are gitignored); check for secrets before pushing (repo is public).
 
 ## Layout
-common.py | s0_audit.py | s1_preprocess.py (clean+split) | s1b_experiences.py (CI/CII + scaler) | s2_model.py | s3_continual.py (E0, T/A0, arms, gate, poison, repair) | s4_report.py (tables/plots) | s5_explain.py (read-only explanations/diagnostics) | make_synthetic.py | smoke_test.py | notebooks/00_audit, 01_splits_experiences, 02_train_evaluate, 03_understand_our_model (read-only)
+common.py | s0_audit.py | s1_preprocess.py (clean+split) | s1b_experiences.py (CI/CII + scaler; --tag writes a second schedule under nids_out/<tag>/) | s2_model.py | s3_continual.py (E0, T/A0, arms, gate, poison, repair) | s4_report.py (tables/plots) | s5_explain.py (read-only explanations/diagnostics) | s6_sweep.py (sweep tables: --decisions val-only, then --test) | s7_deliverables.py (report tables/claims from saved files) | demo.py (3 read-only demo interactions) | make_all_labels_schedule.py | make_synthetic.py | smoke_test.py | experiments/prereg_sweep.md | docs/slides_outline.md | notebooks/00-04
+- s3 flags added 2026-10-21, all default-off (default flags reproduce `main`; smoke_test checks checkpoint hashes against the old code):
+  --seed (training only), --repair-rule {soft,threeway}, --relabel-to-teacher (a different method), --tw-keep/--tw-quarantine/--tw-mid-weight,
+  --forced-r1 (DIAGNOSTIC R1s on clean/poisoned arms -> r1_diag.json, never a decision), --gate-conf-drop (mean p always logged), --tag.
+  s3 refuses to write into a completed run (run_manifest.json exists) unless --resume: `main` can never be overwritten.
+
+## Kaggle inputs and outputs per notebook
+Kaggle layout (from notebook 03's output on Kaggle): code dataset `dvdhere/nids-code`, which ALSO contains the cleaned splits
+(results_01) at `nids/notebooks/results_01/nids_out`; main's results in `dvdhere/nids-results` at `nids_out/`. Notebooks find
+folders by searching for a marker file (`s5_explain.find_dir`), never by a hard-coded path.
+
+| Notebook | Needs (Add Input) | Writes |
+|---|---|---|
+| 00_audit | CICDDoS2019 CSVs; code | `nids_out/manifest.json` (audit) |
+| 01_splits_experiences | CICDDoS2019 CSVs (Stage 1 only); code | `clean_{train,calib,val,test}.parquet`, `split_manifest.json`, `class_map.json`, `features.json`, `{ci,cii}/` (scaler, experience ids, manifest), `protected_exclusions.json` = results_01 |
+| 02_train_evaluate | code + results_01 (comes with the code dataset); GPU | `runs/cii/<RUN>/` (T.pt, A0.pt, arms, rounds.json, final_test.json, report/), zip `nids_results.zip` |
+| 03_understand_our_model | code (with s5_explain.py) + nids-results (main); results_01 optional (comes with the code dataset); CPU | nothing (read-only; asserts every checkpoint unchanged) |
+| 04_poison_sweep | new code (git clone with Internet ON, or a code-dataset version with s6_sweep.py) + code dataset for results_01 (found via clean_train.parquet) + nids-results (main, for H0); GPU | `runs/cii/repro_s42`, `runs/cii/sweep_f{f}_s{seed}`, `sweep/` (decisions, diagnostics, hypotheses, test tables); optional part B `all12/` + `runs/{cii,ci}/all12_*_s42`; zip `nids_sweep.zip` (no parquet, nothing from main) |
+Not verified: 00 and 01 run on Kaggle long before this table was written; their input attachment names are not re-checked.
+Notebook 04 and part B have run only in local pieces (setup cell, input-hash check, dry run, zip filter), not end to end on Kaggle.
 - Architecture name: FT-Transformer-style tabular Transformer (per-feature numeric tokens + [CLS]); the class name `TabTransformer` is historical, NOT the original TabTransformer.

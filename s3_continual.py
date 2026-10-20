@@ -31,6 +31,22 @@ Val/test never include Stage 1b's protected exclusions (rows whose model input e
 training input); protected_exclusions.json must match the scenario's experience manifest.
 The run records sha256 of every Stage 1/1b input; --resume refuses if any of them changed.
 
+Optional, all off by default (defaults reproduce the `main` run exactly):
+  --seed S           training randomness only (init, buffer draws, poison draw, batch order);
+                     Stage 1/1b splits and experiences stay fixed at common.SEED.
+  --repair-rule      soft (default): replay weight = p_T(stored label | x).
+                     threeway: p_T >= --tw-keep -> 1 (keep); p_T <= --tw-quarantine -> 0
+                     (quarantine); in between -> --tw-mid-weight (reduced).
+  --relabel-to-teacher  a DIFFERENT method: rows with p_T(stored) <= --tw-quarantine and
+                     max_k p_T(k) >= --tw-keep get T's predicted label (weight 1).
+  --forced-r1 M,...  DIAGNOSTIC: on arms without repair (clean, poisoned), also train an R1 with
+                     each method M from the same start as C1, gate it, and log it to
+                     r1_diag.json. Never used for any decision, never enters the buffer.
+  --gate-conf-drop d mean p(k | val rows of class k) of every old attack class is always logged;
+                     only when d is set must it stay >= ref - d.
+  --tag NAME         read Stage 1b files from <out>/NAME/ (e.g. an all-labels schedule) instead
+                     of <out>/.
+
 Head indices follow arrival order (BENIGN, E0 classes, E1 classes, ...) and are stored in
 every checkpoint; class_map.json is still the data-side map.
 
@@ -166,8 +182,11 @@ def evaluate(model, classes, rows: Rows, device, new=(), scope=None):
     scope = list(classes) if scope is None else list(scope)
     m = np.isin(rows.lab, scope)
     true = rows.lab[m]
-    pred = np.array(classes)[predict_proba(model, rows.x[m], rows.c[m], device).argmax(1)]
+    P = predict_proba(model, rows.x[m], rows.c[m], device)
+    pred = np.array(classes)[P.argmax(1)]
     recall = {k: float((pred[true == k] == k).mean()) for k in scope if (true == k).any()}
+    # mean probability of the true class, for classes the model has (confidence, not decisions)
+    mean_conf = {k: float(P[true == k, j].mean()) for j, k in enumerate(classes) if (true == k).any()}
     support = {k: int((true == k).sum()) for k in scope}
     ben = true == "BENIGN"
     notnew = ~np.isin(true, list(new))
@@ -176,7 +195,7 @@ def evaluate(model, classes, rows: Rows, device, new=(), scope=None):
         "n_rows": int(m.sum()), "rows_sha256": rid_hash(rows.rid[m]),
         "accuracy": float((pred == true).mean()),
         "macro_recall": float(np.mean(list(recall.values()))),
-        "recall": recall, "support": support,
+        "recall": recall, "support": support, "mean_conf": mean_conf,
         "benign_far": float((pred[ben] != "BENIGN").mean()) if ben.any() else float("nan"),
         "n_benign": int(ben.sum()),
         "new_class_far": float(np.isin(pred[notnew], list(new)).mean()) if new and notnew.any() else 0.0,
@@ -197,7 +216,23 @@ def gate(met, ref, old_attack, new, a):
         reasons.append(f"benign FAR {met['benign_far']:.3f} > {a.gate_far_max}")
     if met["new_class_far"] > a.gate_newfar_max:
         reasons.append(f"new-class FAR {met['new_class_far']:.3f} > {a.gate_newfar_max}")
+    if a.gate_conf_drop is not None:
+        for k, c in conf_check(met, ref, old_attack, a).items():
+            if not c["ok"]:
+                reasons.append(f"old {k} mean p {c['cand']:.3f} < floor {c['floor']:.3f}")
     return not reasons, reasons
+
+
+def conf_check(met, ref, old_attack, a):
+    """Mean p(k | val rows of k), candidate vs reference, per old attack class. Logged always;
+    'ok' is None unless --gate-conf-drop is set."""
+    out = {}
+    for k in old_attack:
+        cand, r = met["mean_conf"].get(k, 0.0), ref["mean_conf"][k]
+        floor = None if a.gate_conf_drop is None else r - a.gate_conf_drop
+        out[k] = {"cand": cand, "ref": r, "drop": r - cand, "floor": floor,
+                  "ok": None if floor is None else cand >= floor}
+    return out
 
 
 # ---- replay buffer and attack ---------------------------------------------
@@ -243,6 +278,45 @@ def teacher_weights(T, T_classes, rows: Rows, buf, device):
     return w, stats
 
 
+METHODS = ("soft", "threeway", "soft+relabel", "threeway+relabel")
+
+
+def repair_rows(T, T_classes, rows: Rows, buf, device, method, a):
+    """(weights, labels, stats) for the replay rows under one repair method.
+    'soft' is exactly teacher_weights. Rows whose stored label T never saw keep weight 1 and
+    their label in every method."""
+    labels = buf["label"].to_numpy().astype(str).copy()
+    if method == "soft":
+        w, stats = teacher_weights(T, T_classes, rows, buf, device)
+        return w, labels, {**stats, "method": method}
+    rule, relabel = method.split("+")[0], method.endswith("+relabel")
+    i = rows.idx(buf["rid"].to_numpy())
+    p = predict_proba(T, rows.x[i], rows.c[i], device)
+    known = buf["label"].isin(T_classes).to_numpy()
+    col = buf["label"].map({k: j for j, k in enumerate(T_classes)}).fillna(0).to_numpy().astype(int)
+    ps = np.where(known, p[np.arange(len(buf)), col], 1.0)
+    if rule == "soft":
+        w = ps.copy()
+    else:
+        w = np.where(ps >= a.tw_keep, 1.0, np.where(ps <= a.tw_quarantine, 0.0, a.tw_mid_weight))
+    w[~known] = 1.0
+    moved = np.zeros(len(buf), bool)
+    if relabel:
+        moved = known & (ps <= a.tw_quarantine) & (p.max(1) >= a.tw_keep)
+        labels[moved] = np.array(T_classes)[p.argmax(1)][moved]
+        w[moved] = 1.0
+    fl = buf["flipped"].to_numpy().astype(bool)
+    true = buf["true_label"].to_numpy().astype(str)
+    # flipped / true_label are used ONLY for these diagnostics, never for training
+    stats = {"method": method, "mean_w_flipped": float(w[fl].mean()) if fl.any() else None,
+             "mean_w_clean_known": float(w[known & ~fl].mean()) if (known & ~fl).any() else None,
+             "n_weighted": int(known.sum()), "n_unweighted": int((~known).sum()),
+             "n_quarantined": int((w == 0).sum()), "n_quarantined_flipped": int(((w == 0) & fl).sum()),
+             "n_relabelled": int(moved.sum()), "n_relabelled_to_true": int((moved & (labels == true)).sum()),
+             "n_relabelled_flipped": int((moved & fl).sum())}
+    return w, labels, stats
+
+
 # ---- experiment ------------------------------------------------------------
 def initial_round(ctx, a, rdir):
     T_path, A0_path = rdir / "T.pt", rdir / "A0.pt"
@@ -250,13 +324,13 @@ def initial_round(ctx, a, rdir):
     if a.resume and T_path.exists() and A0_path.exists():
         print("resume: loading T and A0")
     else:
-        torch.manual_seed(SEED)
+        torch.manual_seed(a.seed)
         m = build(len(classes), ctx, a)
         tr = ctx["train"]
         i = tr.idx(ctx["exp"][0])
         t0 = time.time()
         losses = train(m, classes, tr.x[i], tr.c[i], tr.lab[i], np.ones(len(i)), a.epochs0,
-                       a, ctx["device"], SEED)
+                       a, ctx["device"], a.seed)
         met = evaluate(m, classes, ctx["val"], ctx["device"])
         save_ckpt(T_path, m, classes, {"role": "frozen teacher", "trained_on": "E0"})
         save_ckpt(A0_path, m, classes, {"role": "accepted A0", "trained_on": "E0"})
@@ -274,50 +348,68 @@ def run_arm(arm, ctx, a, rdir, T, T_classes):
     do_poison, do_repair = ARMS[arm]
     adir = rdir / arm
     adir.mkdir(parents=True, exist_ok=True)
-    rng = np.random.default_rng(SEED + 1)  # same buffer draws in every arm
+    rng = np.random.default_rng(a.seed + 1)  # same buffer draws in every arm
     A, A_cls = load_ckpt(rdir / "A0.pt", ctx, a)
     tr, val, dev = ctx["train"], ctx["val"], ctx["device"]
     buf = buffer_add(pd.DataFrame(columns=["rid", "label", "true_label", "flipped"]),
                      tr, ctx["exp"][0], a.mem_per_class, rng)
-    records = []
+    repair_method = a.repair_rule + ("+relabel" if a.relabel_to_teacher else "")
+    diag_methods = [] if do_repair else [s for s in a.forced_r1.split(",") if s]
+    records, diags = [], []
     for t in range(1, len(ctx["schedule"])):
         if do_poison and t == 1:
             buf = poison(buf, a.poison_target, a.poison_to, a.poison_frac,
-                         np.random.default_rng(SEED + 2))
+                         np.random.default_rng(a.seed + 2))
         buf.to_csv(adir / f"buffer_before_E{t}.csv", index=False)
         new = ctx["schedule"][t]
         ref = evaluate(A, A_cls, val, dev)
         cand = A_cls + new
+        old_attack = [k for k in A_cls if k != "BENIGN"]
         di = tr.idx(ctx["exp"][t])
         bi = tr.idx(buf["rid"].to_numpy())
         x = np.concatenate([tr.x[di], tr.x[bi]])
         c = np.concatenate([tr.c[di], tr.c[bi]])
         lab = np.concatenate([tr.lab[di], buf["label"].to_numpy().astype(str)])
+        start = A  # last accepted model: the start of C1, R1 and every R1 diagnostic
+
+        def attempt(method):
+            """Train one candidate from `start`; method None = C1 (plain stored labels)."""
+            torch.manual_seed(a.seed + 10 * t)
+            m = copy.deepcopy(start)
+            m.expand_head(len(cand))
+            w, lab_t, wstats = np.ones(len(lab)), lab, None
+            if method is not None:
+                wb, lb, wstats = repair_rows(T, T_classes, tr, buf, dev, method, a)
+                w[len(di):] = wb
+                lab_t = np.concatenate([tr.lab[di], lb])
+            t0 = time.time()
+            losses = train(m, cand, x, c, lab_t, w, a.epochs_update, a, dev, a.seed + t)
+            met = evaluate(m, cand, val, dev, new)
+            ok, reasons = gate(met, ref, old_attack, new, a)
+            return m, ok, {"arm": arm, "experience": t, "gate_reasons": reasons, "new_classes": new,
+                           "old_classes": A_cls, "losses": losses, "seconds": time.time() - t0,
+                           "teacher_weights": wstats, "n_current": int(len(di)), "n_replay": int(len(bi)),
+                           "n_replay_flipped": int(buf["flipped"].sum()),
+                           "conf_check": conf_check(met, ref, old_attack, a), "val": met, "ref_val": ref}
+
         accepted = False
         for att in ["C1"] + (["R1"] if do_repair else []):
-            torch.manual_seed(SEED + 10 * t)
-            m = copy.deepcopy(A)  # C1 and R1 both start from the last accepted model
-            m.expand_head(len(cand))
-            w = np.ones(len(lab))
-            wstats = None
-            if att == "R1":
-                wb, wstats = teacher_weights(T, T_classes, tr, buf, dev)
-                w[len(di):] = wb
-            t0 = time.time()
-            losses = train(m, cand, x, c, lab, w, a.epochs_update, a, dev, SEED + t)
-            met = evaluate(m, cand, val, dev, new)
-            ok, reasons = gate(met, ref, [k for k in A_cls if k != "BENIGN"], new, a)
+            m, ok, rec = attempt(None if att == "C1" else repair_method)
             save_ckpt(adir / f"E{t}_{att}.pt", m, cand, {"arm": arm, "attempt": att, "accepted": ok})
-            records.append({"arm": arm, "experience": t, "attempt": att, "accepted": ok,
-                            "gate_reasons": reasons, "new_classes": new, "old_classes": A_cls,
-                            "losses": losses, "seconds": time.time() - t0, "teacher_weights": wstats,
-                            "n_current": int(len(di)), "n_replay": int(len(bi)),
-                            "n_replay_flipped": int(buf["flipped"].sum()),
-                            "val": met, "ref_val": ref})
-            print(f"[{arm}] E{t} {att}: {'ACCEPT' if ok else 'REJECT'} {reasons}")
+            records.append({**rec, "attempt": att, "accepted": ok})
+            print(f"[{arm}] E{t} {att}: {'ACCEPT' if ok else 'REJECT'} {rec['gate_reasons']}")
             if ok:
                 A, A_cls, accepted = m, cand, True
                 break
+        for method in diag_methods:  # diagnostic only: never deployed, never changes the buffer
+            m, ok, rec = attempt(method)
+            save_ckpt(adir / f"E{t}_R1diag_{method.replace('+', '_')}.pt", m, cand,
+                      {"arm": arm, "attempt": "R1_diag", "method": method, "diagnostic": True})
+            diags.append({**rec, "attempt": "R1_diag", "method": method, "diagnostic": True,
+                          "would_pass_gate": ok})
+            print(f"[{arm}] E{t} R1_diag[{method}] (diagnostic, not a decision): "
+                  f"{'would pass' if ok else 'would fail'} {rec['gate_reasons']}")
+            save_json(diags, adir / "r1_diag.json")
         if accepted:  # buffer grows only after acceptance
             buf = buffer_add(buf, tr, ctx["exp"][t], a.mem_per_class, rng)
         else:
@@ -352,13 +444,28 @@ def main():
     ap.add_argument("--gate-new-min", type=float, default=0.80)
     ap.add_argument("--gate-far-max", type=float, default=0.05)
     ap.add_argument("--gate-newfar-max", type=float, default=0.05)
+    ap.add_argument("--gate-conf-drop", type=float, default=None,
+                    help="if set, old-class mean p(k) on val must stay >= ref - this (always logged)")
+    ap.add_argument("--seed", type=int, default=SEED, help="training randomness only; splits stay fixed")
+    ap.add_argument("--repair-rule", choices=["soft", "threeway"], default="soft")
+    ap.add_argument("--relabel-to-teacher", action="store_true",
+                    help="R1 relabels confidently contradicted rows to T's prediction (a different method)")
+    ap.add_argument("--tw-keep", type=float, default=0.9)
+    ap.add_argument("--tw-quarantine", type=float, default=0.1)
+    ap.add_argument("--tw-mid-weight", type=float, default=0.5)
+    ap.add_argument("--forced-r1", default="",
+                    help=f"DIAGNOSTIC R1 methods on arms without repair, comma list of {METHODS}")
+    ap.add_argument("--tag", default="", help="read Stage 1b files from <out>/<tag>/ instead of <out>/")
     ap.add_argument("--resume", action="store_true", help="reuse T/A0 if saved; skip finished arms")
     ap.add_argument("--dry-run", action="store_true", help="load and verify all inputs, then stop (no training)")
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     a = ap.parse_args()
 
     out = default_work_dir() if a.out is None else Path(a.out)
-    sdir = out / a.scenario
+    bad = [m for m in a.forced_r1.split(",") if m and m not in METHODS]
+    assert not bad, f"unknown --forced-r1 method(s) {bad}; choose from {METHODS}"
+    base = Path(a.tag)  # Path("") when no tag: the original file names
+    sdir = out / base / a.scenario
     em = load_json(sdir / "experience_manifest.json")
     schedule = em["schedule"]
     a.poison_target = a.poison_target or schedule[0][0]
@@ -369,9 +476,13 @@ def main():
     # every arm and every resumed process must use these exact Stage 1/1b files
     inputs = {n: file_hash(out / n) for n in
               ["split_manifest.json", "class_map.json", "clean_train.parquet", "clean_val.parquet",
-               "clean_test.parquet", "protected_exclusions.json", f"{a.scenario}/experience_rids.npz",
-               f"{a.scenario}/scaler.json", f"{a.scenario}/experience_manifest.json"]}
+               "clean_test.parquet", str(base / "protected_exclusions.json"),
+               str(base / a.scenario / "experience_rids.npz"), str(base / a.scenario / "scaler.json"),
+               str(base / a.scenario / "experience_manifest.json")]}
     rdir = out / "runs" / a.scenario / a.run
+    if (rdir / "run_manifest.json").exists() and not a.resume and not a.dry_run:
+        raise SystemExit(f"refuse: run '{a.run}' is complete in {rdir}; it is never overwritten. "
+                         "Use a new --run name.")
     run_args = {k: v for k, v in vars(a).items() if k not in ("resume", "arms", "device", "dry_run")}
     if a.resume and (rdir / "config.json").exists():
         old = load_json(rdir / "config.json")
@@ -380,7 +491,7 @@ def main():
             raise SystemExit(f"refuse --resume of '{a.run}': Stage 1/1b files changed {changed} or "
                              f"settings changed. Use a new --run name.")
 
-    torch.manual_seed(SEED)
+    torch.manual_seed(a.seed)
     scaler = load_json(sdir / "scaler.json")
     class_map = load_json(out / "class_map.json")
     z = np.load(sdir / "experience_rids.npz")
@@ -389,7 +500,7 @@ def main():
     scope = ["BENIGN"] + [k for e in schedule for k in e]  # unscheduled classes never scored
     tr_df = pd.read_parquet(out / "clean_train.parquet")
     # protected rows whose model input equals a training input (Stage 1b); same ids for CI and CII
-    pe = load_json(out / "protected_exclusions.json")
+    pe = load_json(out / base / "protected_exclusions.json")
     excluded = np.array(pe["excluded_rids"], dtype="int64")
     assert hashlib.sha256(excluded.tobytes()).hexdigest() == pe["rids_sha256"] == \
         em["protected_exclusions"]["rids_sha256"], "protected_exclusions.json does not match this scenario's Stage 1b"
@@ -425,7 +536,7 @@ def main():
         print("dry run: everything loads and matches Stage 1b; nothing trained or written")
         return
     rdir.mkdir(parents=True, exist_ok=True)
-    save_json({"args": run_args, "seed": SEED, "schedule": schedule, "inputs": inputs,
+    save_json({"args": run_args, "seed": a.seed, "schedule": schedule, "inputs": inputs,
                "protected_excluded_rows": int(len(excluded)), "val_rows": rows["val"],
                "test_rows": rows["test"], "device": str(ctx["device"]), "torch": torch.__version__},
               rdir / "config.json")

@@ -1,6 +1,6 @@
 # Poison-resilient continual NIDS - starter pipeline (Stages 0-2)
 
-Status: **Stages 0-4 ran end to end on synthetic CICDDoS2019-style files only (`smoke_test.py`, CPU PyTorch). On real data (Kaggle): the Stage 0 full audit and Stage 1 have run (95,272 distinct benign kept, zero cross-split feature overlap); Stage 1b passed for CI and CII (166 protected rows excluded as transformed duplicates, residual overlap 0; outputs in `results_01.zip`); one CII run (seed 42, poison_frac 0.5) completed (`nids_results.zip`): every C1 passed the gate, so R1 never ran on real data. See `notebooks/03_understand_our_model.ipynb`.** Nothing here
+Status: **Stages 0-4 ran end to end on synthetic CICDDoS2019-style files only (`smoke_test.py`, CPU PyTorch). On real data (Kaggle): the Stage 0 full audit and Stage 1 have run (95,272 distinct benign kept, zero cross-split feature overlap); Stage 1b passed for CI and CII (166 protected rows excluded as transformed duplicates, residual overlap 0; outputs in `results_01.zip`); one CII run (seed 42, poison_frac 0.5) completed (`nids_results.zip`): every C1 passed the gate, so R1 never ran on real data. See `notebooks/03_understand_our_model.ipynb`. Next: the pre-registered poison sweep (`experiments/prereg_sweep.md`, `notebooks/04_poison_sweep.ipynb`), not yet run.** Nothing here
 is a result about the proposed method; it is data plumbing + an untrained model.
 
 ## Easiest: run `notebooks/00_audit.ipynb` -> `01_splits_experiences.ipynb` -> `02_train_evaluate.ipynb` on Kaggle (they call the scripts below).

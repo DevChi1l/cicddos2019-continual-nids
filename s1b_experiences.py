@@ -30,6 +30,9 @@ the remaining overlap must be exactly 0. Training rows and the scaler are not ch
 Usage:
   python s1b_experiences.py --schedule schedule.json --scenario cii --attack-cap 20000
   python s1b_experiences.py --suggest      # print per-split class counts, no output files
+  python s1b_experiences.py --schedule all_labels.json --scenario cii --tag all12 ...
+      --tag writes every Stage 1b output under <out>/<tag>/ (the parquet splits are only read),
+      so a second schedule never overwrites the files an earlier run was built from.
 """
 from __future__ import annotations
 
@@ -184,6 +187,7 @@ def main():
     ap.add_argument("--scenario", choices=["ci", "cii"], default="cii")
     ap.add_argument("--attack-cap", type=int, default=20_000, help="max train rows per attack class")
     ap.add_argument("--suggest", action="store_true")
+    ap.add_argument("--tag", default="", help="write outputs to <out>/<tag>/ (default: <out>/)")
     ap.add_argument("--max-excluded-share", type=float, default=0.05,
                     help="refuse if excluding transformed duplicates would remove more than this share "
                          "of any class in any protected split")
@@ -213,9 +217,10 @@ def main():
         plans[sc_name] = (ids_s, fit_scaler(e0, feats["numeric"], feats["categorical"]))
     ids, scaler = plans[a.scenario]
     known = ["BENIGN"] + [c for e in schedule for c in e]
-    excl = protected_exclusions(out, train, plans, known, a)
+    dest = out / a.tag
+    excl = protected_exclusions(out, train, plans, known, a, dest)
 
-    sdir = out / a.scenario
+    sdir = dest / a.scenario
     sdir.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(sdir / "experience_rids.npz", **{f"e{t}": v for t, v in ids.items()})
     save_json(scaler, sdir / "scaler.json")
@@ -252,7 +257,8 @@ def main():
     print(f"Saved to {sdir}")
 
 
-def protected_exclusions(out: Path, train: pd.DataFrame, plans: dict, known: list[str], a) -> dict:
+def protected_exclusions(out: Path, train: pd.DataFrame, plans: dict, known: list[str], a,
+                         dest: Path | None = None) -> dict:
     """Protected rows whose model input equals a training input are excluded from scoring.
 
     A protected (calib/val/test) row is excluded if, under the frozen scaler of ANY scenario,
@@ -301,7 +307,7 @@ def protected_exclusions(out: Path, train: pd.DataFrame, plans: dict, known: lis
            "rids_sha256": hashlib.sha256(ex.tobytes()).hexdigest(),
            "by_split_class": by, "residual": residual, "diagnosis": diag,
            "excluded_rids": ex.tolist()}
-    save_json(res, out / "protected_exclusions.json")  # saved before any refusal, for inspection
+    save_json(res, (dest or out) / "protected_exclusions.json")  # saved before any refusal, for inspection
 
     print("transformed duplicates of training inputs (protected rows), per scenario scaler:")
     for sc_name, sp_d in diag.items():

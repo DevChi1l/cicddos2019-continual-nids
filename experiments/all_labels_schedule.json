@@ -1,0 +1,62 @@
+{
+ "experiences": [
+  [
+   "Syn"
+  ],
+  [
+   "DNS",
+   "LDAP"
+  ],
+  [
+   "MSSQL",
+   "NTP"
+  ],
+  [
+   "NetBIOS",
+   "SNMP"
+  ],
+  [
+   "SSDP",
+   "TFTP"
+  ],
+  [
+   "UDP",
+   "UDPLag"
+  ]
+ ],
+ "attack_cap": 9312,
+ "labels_used": 12,
+ "labels_total": 14,
+ "excluded": {
+  "Portmap": {
+   "train": 363,
+   "val": 60
+  },
+  "WebDDoS": {
+   "train": 132,
+   "val": 22
+  }
+ },
+ "rule": {
+  "min_train": 1000,
+  "min_val": 200,
+  "e0": "Syn",
+  "per_experience": 2
+ },
+ "cii_benign_per_experience": [
+  9528,
+  9527,
+  9527,
+  9527,
+  9527,
+  9527
+ ],
+ "ci_benign": [
+  57163,
+  0,
+  0,
+  0,
+  0,
+  0
+ ]
+}
