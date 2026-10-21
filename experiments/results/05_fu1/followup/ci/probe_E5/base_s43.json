@@ -1,0 +1,325 @@
+{
+  "scenario": "ci",
+  "recipe": "base",
+  "seed": 43,
+  "block": 5,
+  "new_classes": [
+    "UDP",
+    "UDPLag"
+  ],
+  "old_classes": [
+    "BENIGN",
+    "Syn",
+    "MSSQL",
+    "NTP",
+    "NetBIOS",
+    "SNMP",
+    "SSDP",
+    "TFTP"
+  ],
+  "gate_pass": false,
+  "gate_reasons": [
+    "old SSDP recall 0.002 < floor 0.941",
+    "new-class FAR 0.112 > 0.05"
+  ],
+  "gate_margin": -0.9391903348876642,
+  "binding": "old SSDP",
+  "seconds": 9.552710056304932,
+  "losses": [
+    0.6176124792442745,
+    0.4158759185985805,
+    0.381266921207777,
+    0.3620043539075446,
+    0.34917699475385344
+  ],
+  "n_current": 18624,
+  "n_replay": 16000,
+  "val": {
+    "n_rows": 54945,
+    "rows_sha256": "68b6080f23ac4954c3d507fba86d7e26ab40afe8c9cd393c27e85eec9af7fa6d",
+    "accuracy": 0.8748384748384749,
+    "macro_recall": 0.857653411713683,
+    "recall": {
+      "BENIGN": 0.9770695277164195,
+      "Syn": 0.9534572241754562,
+      "MSSQL": 0.9343117952389476,
+      "NTP": 0.980980980980981,
+      "NetBIOS": 0.9400527009222661,
+      "SNMP": 0.9713536413153117,
+      "SSDP": 0.00211954217888936,
+      "TFTP": 0.9948272985149341,
+      "UDP": 0.9921618665694495,
+      "UDPLag": 0.830199539524175
+    },
+    "support": {
+      "BENIGN": 9507,
+      "Syn": 5973,
+      "MSSQL": 5587,
+      "NTP": 5994,
+      "NetBIOS": 1518,
+      "SNMP": 4957,
+      "SSDP": 4718,
+      "TFTP": 5993,
+      "UDP": 5486,
+      "UDPLag": 5212
+    },
+    "mean_conf": {
+      "BENIGN": 0.9570056796073914,
+      "Syn": 0.945587158203125,
+      "MSSQL": 0.9028745293617249,
+      "NTP": 0.9726923108100891,
+      "NetBIOS": 0.9264824986457825,
+      "SNMP": 0.9300141334533691,
+      "SSDP": 0.23853452503681183,
+      "TFTP": 0.9865155220031738,
+      "UDP": 0.6530680060386658,
+      "UDPLag": 0.8430556058883667
+    },
+    "benign_far": 0.02293047228358052,
+    "n_benign": 9507,
+    "new_class_far": 0.11187199132144553,
+    "confusion": {
+      "BENIGN": {
+        "BENIGN": 9289,
+        "MSSQL": 1,
+        "NTP": 0,
+        "NetBIOS": 193,
+        "SNMP": 3,
+        "SSDP": 0,
+        "Syn": 0,
+        "TFTP": 0,
+        "UDP": 5,
+        "UDPLag": 16
+      },
+      "MSSQL": {
+        "BENIGN": 5,
+        "MSSQL": 5220,
+        "NTP": 9,
+        "NetBIOS": 8,
+        "SNMP": 273,
+        "SSDP": 0,
+        "Syn": 0,
+        "TFTP": 72,
+        "UDP": 0,
+        "UDPLag": 0
+      },
+      "NTP": {
+        "BENIGN": 8,
+        "MSSQL": 47,
+        "NTP": 5880,
+        "NetBIOS": 8,
+        "SNMP": 0,
+        "SSDP": 2,
+        "Syn": 0,
+        "TFTP": 17,
+        "UDP": 32,
+        "UDPLag": 0
+      },
+      "NetBIOS": {
+        "BENIGN": 19,
+        "MSSQL": 49,
+        "NTP": 0,
+        "NetBIOS": 1427,
+        "SNMP": 4,
+        "SSDP": 0,
+        "Syn": 12,
+        "TFTP": 4,
+        "UDP": 0,
+        "UDPLag": 3
+      },
+      "SNMP": {
+        "BENIGN": 22,
+        "MSSQL": 57,
+        "NTP": 0,
+        "NetBIOS": 41,
+        "SNMP": 4815,
+        "SSDP": 0,
+        "Syn": 0,
+        "TFTP": 8,
+        "UDP": 0,
+        "UDPLag": 14
+      },
+      "SSDP": {
+        "BENIGN": 1,
+        "MSSQL": 17,
+        "NTP": 33,
+        "NetBIOS": 0,
+        "SNMP": 5,
+        "SSDP": 10,
+        "Syn": 0,
+        "TFTP": 0,
+        "UDP": 4650,
+        "UDPLag": 2
+      },
+      "Syn": {
+        "BENIGN": 18,
+        "MSSQL": 0,
+        "NTP": 0,
+        "NetBIOS": 45,
+        "SNMP": 0,
+        "SSDP": 1,
+        "Syn": 5695,
+        "TFTP": 0,
+        "UDP": 0,
+        "UDPLag": 214
+      },
+      "TFTP": {
+        "BENIGN": 4,
+        "MSSQL": 8,
+        "NTP": 0,
+        "NetBIOS": 4,
+        "SNMP": 1,
+        "SSDP": 0,
+        "Syn": 0,
+        "TFTP": 5962,
+        "UDP": 0,
+        "UDPLag": 14
+      },
+      "UDP": {
+        "BENIGN": 0,
+        "MSSQL": 8,
+        "NTP": 29,
+        "NetBIOS": 4,
+        "SNMP": 0,
+        "SSDP": 2,
+        "Syn": 0,
+        "TFTP": 0,
+        "UDP": 5443,
+        "UDPLag": 0
+      },
+      "UDPLag": {
+        "BENIGN": 15,
+        "MSSQL": 9,
+        "NTP": 0,
+        "NetBIOS": 45,
+        "SNMP": 1,
+        "SSDP": 1,
+        "Syn": 26,
+        "TFTP": 0,
+        "UDP": 788,
+        "UDPLag": 4327
+      }
+    }
+  },
+  "ref_val": {
+    "n_rows": 44247,
+    "rows_sha256": "4f48b9af97183eea1c7ab972e330e8bfb8915c972f318b3584334f05ca828966",
+    "accuracy": 0.9748457522543901,
+    "macro_recall": 0.9723956566487776,
+    "recall": {
+      "BENIGN": 0.9713895024718628,
+      "Syn": 0.9901222166415536,
+      "MSSQL": 0.9389654555217469,
+      "NTP": 0.9793126459793127,
+      "NetBIOS": 0.9459815546772069,
+      "SNMP": 0.9679241476699617,
+      "SSDP": 0.9913098770665536,
+      "TFTP": 0.9941598531620224
+    },
+    "support": {
+      "BENIGN": 9507,
+      "Syn": 5973,
+      "MSSQL": 5587,
+      "NTP": 5994,
+      "NetBIOS": 1518,
+      "SNMP": 4957,
+      "SSDP": 4718,
+      "TFTP": 5993
+    },
+    "mean_conf": {
+      "BENIGN": 0.9478188753128052,
+      "Syn": 0.9885640144348145,
+      "MSSQL": 0.8962225317955017,
+      "NTP": 0.9671463370323181,
+      "NetBIOS": 0.9320225715637207,
+      "SNMP": 0.9193357825279236,
+      "SSDP": 0.9810611605644226,
+      "TFTP": 0.9826560616493225
+    },
+    "benign_far": 0.02861049752813716,
+    "n_benign": 9507,
+    "new_class_far": 0.0,
+    "confusion": {
+      "BENIGN": {
+        "BENIGN": 9235,
+        "MSSQL": 0,
+        "NTP": 1,
+        "NetBIOS": 262,
+        "SNMP": 2,
+        "SSDP": 1,
+        "Syn": 6,
+        "TFTP": 0
+      },
+      "MSSQL": {
+        "BENIGN": 5,
+        "MSSQL": 5246,
+        "NTP": 17,
+        "NetBIOS": 5,
+        "SNMP": 240,
+        "SSDP": 1,
+        "Syn": 3,
+        "TFTP": 70
+      },
+      "NTP": {
+        "BENIGN": 6,
+        "MSSQL": 35,
+        "NTP": 5870,
+        "NetBIOS": 10,
+        "SNMP": 0,
+        "SSDP": 69,
+        "Syn": 0,
+        "TFTP": 4
+      },
+      "NetBIOS": {
+        "BENIGN": 19,
+        "MSSQL": 40,
+        "NTP": 0,
+        "NetBIOS": 1436,
+        "SNMP": 4,
+        "SSDP": 0,
+        "Syn": 16,
+        "TFTP": 3
+      },
+      "SNMP": {
+        "BENIGN": 31,
+        "MSSQL": 80,
+        "NTP": 0,
+        "NetBIOS": 40,
+        "SNMP": 4798,
+        "SSDP": 0,
+        "Syn": 6,
+        "TFTP": 2
+      },
+      "SSDP": {
+        "BENIGN": 1,
+        "MSSQL": 16,
+        "NTP": 15,
+        "NetBIOS": 4,
+        "SNMP": 5,
+        "SSDP": 4677,
+        "Syn": 0,
+        "TFTP": 0
+      },
+      "Syn": {
+        "BENIGN": 9,
+        "MSSQL": 0,
+        "NTP": 0,
+        "NetBIOS": 49,
+        "SNMP": 0,
+        "SSDP": 1,
+        "Syn": 5914,
+        "TFTP": 0
+      },
+      "TFTP": {
+        "BENIGN": 3,
+        "MSSQL": 11,
+        "NTP": 1,
+        "NetBIOS": 5,
+        "SNMP": 0,
+        "SSDP": 1,
+        "Syn": 14,
+        "TFTP": 5958
+      }
+    }
+  }
+}

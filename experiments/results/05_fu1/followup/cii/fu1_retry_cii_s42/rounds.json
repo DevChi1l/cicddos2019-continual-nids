@@ -1,0 +1,1715 @@
+[
+  {
+    "recipe": "base",
+    "seed": 42,
+    "block": 1,
+    "new_classes": [
+      "DNS",
+      "LDAP"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn"
+    ],
+    "gate_pass": false,
+    "gate_reasons": [
+      "new DNS recall 0.677 < 0.8"
+    ],
+    "gate_margin": -0.12333409663384476,
+    "binding": "new DNS",
+    "seconds": 9.269569158554077,
+    "losses": [
+      0.7641547373311041,
+      0.37048528081970095,
+      0.3071333440068476,
+      0.2904298987912448,
+      0.2809312767449265
+    ],
+    "n_current": 28151,
+    "n_replay": 4000,
+    "val": {
+      "n_rows": 22143,
+      "rows_sha256": "a12c4d27bace358384de7e36632dd3da26167083adf9e2c9e19dcc2d878b730e",
+      "accuracy": 0.9252133857200922,
+      "macro_recall": 0.8964574981820694,
+      "recall": {
+        "BENIGN": 0.9974755443357526,
+        "Syn": 0.995312238406161,
+        "DNS": 0.6766659033661553,
+        "LDAP": 0.9163763066202091
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296
+      },
+      "mean_conf": {
+        "BENIGN": 0.982505202293396,
+        "Syn": 0.99120032787323,
+        "DNS": 0.741527795791626,
+        "LDAP": 0.6814746856689453
+      },
+      "benign_far": 0.0025244556642473968,
+      "n_benign": 9507,
+      "new_class_far": 0.0016795865633074936,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9483,
+          "DNS": 10,
+          "LDAP": 14,
+          "Syn": 0
+        },
+        "DNS": {
+          "BENIGN": 54,
+          "DNS": 2955,
+          "LDAP": 1354,
+          "Syn": 4
+        },
+        "LDAP": {
+          "BENIGN": 19,
+          "DNS": 168,
+          "LDAP": 2104,
+          "Syn": 5
+        },
+        "Syn": {
+          "BENIGN": 26,
+          "DNS": 1,
+          "LDAP": 1,
+          "Syn": 5945
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 15480,
+      "rows_sha256": "99411cbc29009dddf8678c4142fbe2b15f6e3c6b1383015dda4b149a99d65d49",
+      "accuracy": 0.9981912144702842,
+      "macro_recall": 0.9976561192030805,
+      "recall": {
+        "BENIGN": 1.0,
+        "Syn": 0.995312238406161
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973
+      },
+      "mean_conf": {
+        "BENIGN": 0.9968410134315491,
+        "Syn": 0.9945804476737976
+      },
+      "benign_far": 0.0,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9507,
+          "Syn": 0
+        },
+        "Syn": {
+          "BENIGN": 28,
+          "Syn": 5945
+        }
+      }
+    },
+    "attempt": "C1",
+    "accepted": false
+  },
+  {
+    "recipe": "ep20",
+    "seed": 42,
+    "block": 1,
+    "new_classes": [
+      "DNS",
+      "LDAP"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn"
+    ],
+    "gate_pass": true,
+    "gate_reasons": [],
+    "gate_margin": 0.03031829631325844,
+    "binding": "new DNS",
+    "seconds": 31.547555446624756,
+    "losses": [
+      0.7641547373311041,
+      0.37048528081970095,
+      0.3071333440068476,
+      0.2904298987912448,
+      0.2809312767449265,
+      0.2689491933594224,
+      0.2594639488350848,
+      0.2511098138687455,
+      0.24833246181049834,
+      0.2398580680036874,
+      0.23422988439539885,
+      0.2343538488044119,
+      0.2332503314861921,
+      0.22742492318698426,
+      0.2250204995621686,
+      0.2228338401671357,
+      0.22362386068129167,
+      0.22003663109474608,
+      0.21751783671315983,
+      0.21617431105460533
+    ],
+    "n_current": 28151,
+    "n_replay": 4000,
+    "val": {
+      "n_rows": 22143,
+      "rows_sha256": "a12c4d27bace358384de7e36632dd3da26167083adf9e2c9e19dcc2d878b730e",
+      "accuracy": 0.9474325972090503,
+      "macro_recall": 0.9173311876003122,
+      "recall": {
+        "BENIGN": 0.9951614599768591,
+        "Syn": 0.9949773982923155,
+        "DNS": 0.8303182963132585,
+        "LDAP": 0.8488675958188153
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296
+      },
+      "mean_conf": {
+        "BENIGN": 0.9891460537910461,
+        "Syn": 0.9922153949737549,
+        "DNS": 0.7833056449890137,
+        "LDAP": 0.781853437423706
+      },
+      "benign_far": 0.004838540023140844,
+      "n_benign": 9507,
+      "new_class_far": 0.004780361757105943,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9461,
+          "DNS": 18,
+          "LDAP": 28,
+          "Syn": 0
+        },
+        "DNS": {
+          "BENIGN": 10,
+          "DNS": 3626,
+          "LDAP": 730,
+          "Syn": 1
+        },
+        "LDAP": {
+          "BENIGN": 9,
+          "DNS": 337,
+          "LDAP": 1949,
+          "Syn": 1
+        },
+        "Syn": {
+          "BENIGN": 2,
+          "DNS": 12,
+          "LDAP": 16,
+          "Syn": 5943
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 15480,
+      "rows_sha256": "99411cbc29009dddf8678c4142fbe2b15f6e3c6b1383015dda4b149a99d65d49",
+      "accuracy": 0.9981912144702842,
+      "macro_recall": 0.9976561192030805,
+      "recall": {
+        "BENIGN": 1.0,
+        "Syn": 0.995312238406161
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973
+      },
+      "mean_conf": {
+        "BENIGN": 0.9968410134315491,
+        "Syn": 0.9945804476737976
+      },
+      "benign_far": 0.0,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9507,
+          "Syn": 0
+        },
+        "Syn": {
+          "BENIGN": 28,
+          "Syn": 5945
+        }
+      }
+    },
+    "attempt": "C2",
+    "accepted": true
+  },
+  {
+    "recipe": "base",
+    "seed": 42,
+    "block": 2,
+    "new_classes": [
+      "MSSQL",
+      "NTP"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn",
+      "DNS",
+      "LDAP"
+    ],
+    "gate_pass": false,
+    "gate_reasons": [
+      "old DNS recall 0.577 < floor 0.780"
+    ],
+    "gate_margin": -0.20326310968628336,
+    "binding": "old DNS",
+    "seconds": 9.914188146591187,
+    "losses": [
+      0.47479933529818047,
+      0.2469368773791297,
+      0.22902967383897727,
+      0.21457540360629077,
+      0.2091918957399505
+    ],
+    "n_current": 28151,
+    "n_replay": 10000,
+    "val": {
+      "n_rows": 33724,
+      "rows_sha256": "173962a3ea54d327653b5e728ab66a9c27709f4f8c01d0e54fdbc50384919916",
+      "accuracy": 0.9186039615703949,
+      "macro_recall": 0.8910257091447891,
+      "recall": {
+        "BENIGN": 0.9986325865151994,
+        "Syn": 0.995312238406161,
+        "DNS": 0.5770551866269751,
+        "LDAP": 0.8754355400696864,
+        "MSSQL": 0.9260783962770718,
+        "NTP": 0.9736403069736403
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296,
+        "MSSQL": 5587,
+        "NTP": 5994
+      },
+      "mean_conf": {
+        "BENIGN": 0.994148313999176,
+        "Syn": 0.9936485290527344,
+        "DNS": 0.5687363743782043,
+        "LDAP": 0.7778657674789429,
+        "MSSQL": 0.8498098850250244,
+        "NTP": 0.954236626625061
+      },
+      "benign_far": 0.0013674134848006732,
+      "n_benign": 9507,
+      "new_class_far": 0.04032877207243824,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9494,
+          "DNS": 3,
+          "LDAP": 4,
+          "MSSQL": 3,
+          "NTP": 3,
+          "Syn": 0
+        },
+        "DNS": {
+          "BENIGN": 36,
+          "DNS": 2520,
+          "LDAP": 962,
+          "MSSQL": 753,
+          "NTP": 95,
+          "Syn": 1
+        },
+        "LDAP": {
+          "BENIGN": 17,
+          "DNS": 230,
+          "LDAP": 2010,
+          "MSSQL": 37,
+          "NTP": 1,
+          "Syn": 1
+        },
+        "MSSQL": {
+          "BENIGN": 4,
+          "DNS": 214,
+          "LDAP": 99,
+          "MSSQL": 5174,
+          "NTP": 93,
+          "Syn": 3
+        },
+        "NTP": {
+          "BENIGN": 11,
+          "DNS": 136,
+          "LDAP": 1,
+          "MSSQL": 9,
+          "NTP": 5836,
+          "Syn": 1
+        },
+        "Syn": {
+          "BENIGN": 18,
+          "DNS": 0,
+          "LDAP": 9,
+          "MSSQL": 0,
+          "NTP": 1,
+          "Syn": 5945
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 22143,
+      "rows_sha256": "a12c4d27bace358384de7e36632dd3da26167083adf9e2c9e19dcc2d878b730e",
+      "accuracy": 0.9474325972090503,
+      "macro_recall": 0.9173311876003122,
+      "recall": {
+        "BENIGN": 0.9951614599768591,
+        "Syn": 0.9949773982923155,
+        "DNS": 0.8303182963132585,
+        "LDAP": 0.8488675958188153
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296
+      },
+      "mean_conf": {
+        "BENIGN": 0.9891460537910461,
+        "Syn": 0.9922153949737549,
+        "DNS": 0.7833056449890137,
+        "LDAP": 0.781853437423706
+      },
+      "benign_far": 0.004838540023140844,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9461,
+          "DNS": 18,
+          "LDAP": 28,
+          "Syn": 0
+        },
+        "DNS": {
+          "BENIGN": 10,
+          "DNS": 3626,
+          "LDAP": 730,
+          "Syn": 1
+        },
+        "LDAP": {
+          "BENIGN": 9,
+          "DNS": 337,
+          "LDAP": 1949,
+          "Syn": 1
+        },
+        "Syn": {
+          "BENIGN": 2,
+          "DNS": 12,
+          "LDAP": 16,
+          "Syn": 5943
+        }
+      }
+    },
+    "attempt": "C1",
+    "accepted": false
+  },
+  {
+    "recipe": "base",
+    "seed": 42,
+    "block": 3,
+    "new_classes": [
+      "NetBIOS",
+      "SNMP"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn",
+      "DNS",
+      "LDAP"
+    ],
+    "gate_pass": false,
+    "gate_reasons": [
+      "old DNS recall 0.673 < floor 0.780",
+      "old LDAP recall 0.576 < floor 0.799",
+      "new-class FAR 0.076 > 0.05"
+    ],
+    "gate_margin": -0.22308362369337975,
+    "binding": "old LDAP",
+    "seconds": 9.704193592071533,
+    "losses": [
+      0.5612951536103097,
+      0.3665446490490722,
+      0.3467318672317811,
+      0.3272390255495023,
+      0.32086342610896285
+    ],
+    "n_current": 28151,
+    "n_replay": 10000,
+    "val": {
+      "n_rows": 28618,
+      "rows_sha256": "716523e5abfacc132387a4dd00e2f2c3906c448a0bb615129e5fc48b12882461",
+      "accuracy": 0.8910126493815081,
+      "macro_recall": 0.8496184092866467,
+      "recall": {
+        "BENIGN": 0.9904281056063953,
+        "Syn": 0.9939728779507785,
+        "DNS": 0.6730020609113808,
+        "LDAP": 0.5757839721254355,
+        "NetBIOS": 0.9762845849802372,
+        "SNMP": 0.8882388541456526
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296,
+        "NetBIOS": 1518,
+        "SNMP": 4957
+      },
+      "mean_conf": {
+        "BENIGN": 0.9830210208892822,
+        "Syn": 0.9930020570755005,
+        "DNS": 0.5900911688804626,
+        "LDAP": 0.5082917213439941,
+        "NetBIOS": 0.9438921809196472,
+        "SNMP": 0.7394447326660156
+      },
+      "benign_far": 0.009571894393604712,
+      "n_benign": 9507,
+      "new_class_far": 0.07623176624666937,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9416,
+          "DNS": 0,
+          "LDAP": 2,
+          "NetBIOS": 88,
+          "SNMP": 1,
+          "Syn": 0
+        },
+        "DNS": {
+          "BENIGN": 14,
+          "DNS": 2939,
+          "LDAP": 515,
+          "NetBIOS": 542,
+          "SNMP": 357,
+          "Syn": 0
+        },
+        "LDAP": {
+          "BENIGN": 5,
+          "DNS": 301,
+          "LDAP": 1322,
+          "NetBIOS": 26,
+          "SNMP": 642,
+          "Syn": 0
+        },
+        "NetBIOS": {
+          "BENIGN": 7,
+          "DNS": 24,
+          "LDAP": 1,
+          "NetBIOS": 1482,
+          "SNMP": 4,
+          "Syn": 0
+        },
+        "SNMP": {
+          "BENIGN": 5,
+          "DNS": 78,
+          "LDAP": 419,
+          "NetBIOS": 52,
+          "SNMP": 4403,
+          "Syn": 0
+        },
+        "Syn": {
+          "BENIGN": 3,
+          "DNS": 1,
+          "LDAP": 0,
+          "NetBIOS": 31,
+          "SNMP": 1,
+          "Syn": 5937
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 22143,
+      "rows_sha256": "a12c4d27bace358384de7e36632dd3da26167083adf9e2c9e19dcc2d878b730e",
+      "accuracy": 0.9474325972090503,
+      "macro_recall": 0.9173311876003122,
+      "recall": {
+        "BENIGN": 0.9951614599768591,
+        "Syn": 0.9949773982923155,
+        "DNS": 0.8303182963132585,
+        "LDAP": 0.8488675958188153
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296
+      },
+      "mean_conf": {
+        "BENIGN": 0.9891460537910461,
+        "Syn": 0.9922153949737549,
+        "DNS": 0.7833056449890137,
+        "LDAP": 0.781853437423706
+      },
+      "benign_far": 0.004838540023140844,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9461,
+          "DNS": 18,
+          "LDAP": 28,
+          "Syn": 0
+        },
+        "DNS": {
+          "BENIGN": 10,
+          "DNS": 3626,
+          "LDAP": 730,
+          "Syn": 1
+        },
+        "LDAP": {
+          "BENIGN": 9,
+          "DNS": 337,
+          "LDAP": 1949,
+          "Syn": 1
+        },
+        "Syn": {
+          "BENIGN": 2,
+          "DNS": 12,
+          "LDAP": 16,
+          "Syn": 5943
+        }
+      }
+    },
+    "attempt": "C1",
+    "accepted": false
+  },
+  {
+    "recipe": "base",
+    "seed": 42,
+    "block": 4,
+    "new_classes": [
+      "SSDP",
+      "TFTP"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn",
+      "DNS",
+      "LDAP"
+    ],
+    "gate_pass": true,
+    "gate_reasons": [],
+    "gate_margin": 0.04041811846689902,
+    "binding": "old LDAP",
+    "seconds": 9.739508390426636,
+    "losses": [
+      0.38338733102642647,
+      0.13631273335910388,
+      0.11734509238454419,
+      0.10833958345801142,
+      0.10621324995025508
+    ],
+    "n_current": 28151,
+    "n_replay": 10000,
+    "val": {
+      "n_rows": 32854,
+      "rows_sha256": "7ebee5263d4e78860a63bb511cebe9a48126eedf11523a58c3b747e3dd81bb95",
+      "accuracy": 0.9627442624946734,
+      "macro_recall": 0.9413655524821144,
+      "recall": {
+        "BENIGN": 0.9990533291259073,
+        "Syn": 0.9956470785200067,
+        "DNS": 0.8236775818639799,
+        "LDAP": 0.8392857142857143,
+        "SSDP": 0.9947011445527766,
+        "TFTP": 0.9958284665443017
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296,
+        "SSDP": 4718,
+        "TFTP": 5993
+      },
+      "mean_conf": {
+        "BENIGN": 0.9949918389320374,
+        "Syn": 0.9947822690010071,
+        "DNS": 0.7758769392967224,
+        "LDAP": 0.7514215111732483,
+        "SSDP": 0.989423394203186,
+        "TFTP": 0.9922254085540771
+      },
+      "benign_far": 0.0009466708740927738,
+      "n_benign": 9507,
+      "new_class_far": 0.0008128979813033464,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9498,
+          "DNS": 1,
+          "LDAP": 3,
+          "SSDP": 5,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "DNS": {
+          "BENIGN": 43,
+          "DNS": 3597,
+          "LDAP": 714,
+          "SSDP": 9,
+          "Syn": 1,
+          "TFTP": 3
+        },
+        "LDAP": {
+          "BENIGN": 18,
+          "DNS": 347,
+          "LDAP": 1927,
+          "SSDP": 0,
+          "Syn": 4,
+          "TFTP": 0
+        },
+        "SSDP": {
+          "BENIGN": 1,
+          "DNS": 18,
+          "LDAP": 6,
+          "SSDP": 4693,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "Syn": {
+          "BENIGN": 24,
+          "DNS": 0,
+          "LDAP": 1,
+          "SSDP": 1,
+          "Syn": 5947,
+          "TFTP": 0
+        },
+        "TFTP": {
+          "BENIGN": 8,
+          "DNS": 2,
+          "LDAP": 0,
+          "SSDP": 1,
+          "Syn": 14,
+          "TFTP": 5968
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 22143,
+      "rows_sha256": "a12c4d27bace358384de7e36632dd3da26167083adf9e2c9e19dcc2d878b730e",
+      "accuracy": 0.9474325972090503,
+      "macro_recall": 0.9173311876003122,
+      "recall": {
+        "BENIGN": 0.9951614599768591,
+        "Syn": 0.9949773982923155,
+        "DNS": 0.8303182963132585,
+        "LDAP": 0.8488675958188153
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296
+      },
+      "mean_conf": {
+        "BENIGN": 0.9891460537910461,
+        "Syn": 0.9922153949737549,
+        "DNS": 0.7833056449890137,
+        "LDAP": 0.781853437423706
+      },
+      "benign_far": 0.004838540023140844,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9461,
+          "DNS": 18,
+          "LDAP": 28,
+          "Syn": 0
+        },
+        "DNS": {
+          "BENIGN": 10,
+          "DNS": 3626,
+          "LDAP": 730,
+          "Syn": 1
+        },
+        "LDAP": {
+          "BENIGN": 9,
+          "DNS": 337,
+          "LDAP": 1949,
+          "Syn": 1
+        },
+        "Syn": {
+          "BENIGN": 2,
+          "DNS": 12,
+          "LDAP": 16,
+          "Syn": 5943
+        }
+      }
+    },
+    "attempt": "C1",
+    "accepted": true
+  },
+  {
+    "recipe": "base",
+    "seed": 42,
+    "block": 2,
+    "new_classes": [
+      "MSSQL",
+      "NTP"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn",
+      "DNS",
+      "LDAP",
+      "SSDP",
+      "TFTP"
+    ],
+    "gate_pass": false,
+    "gate_reasons": [
+      "old DNS recall 0.600 < floor 0.774",
+      "old LDAP recall 0.784 < floor 0.789",
+      "old SSDP recall 0.938 < floor 0.945"
+    ],
+    "gate_margin": -0.17395237004808795,
+    "binding": "old DNS",
+    "seconds": 11.427935600280762,
+    "losses": [
+      0.40406073604880777,
+      0.2293924024945674,
+      0.2086175800946633,
+      0.20250057034650606,
+      0.19806172613128176
+    ],
+    "n_current": 28151,
+    "n_replay": 16000,
+    "val": {
+      "n_rows": 44435,
+      "rows_sha256": "8b0cc79167a5a823d2388588c5bb747a519f46b4b91bad80db6a55f495b13044",
+      "accuracy": 0.9332958253628896,
+      "macro_recall": 0.9060365643823015,
+      "recall": {
+        "BENIGN": 0.9984222152098454,
+        "Syn": 0.9951448183492383,
+        "DNS": 0.5997252118158919,
+        "LDAP": 0.7844076655052264,
+        "SSDP": 0.9383213225943197,
+        "TFTP": 0.9943267145002503,
+        "MSSQL": 0.950957580096653,
+        "NTP": 0.986986986986987
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296,
+        "SSDP": 4718,
+        "TFTP": 5993,
+        "MSSQL": 5587,
+        "NTP": 5994
+      },
+      "mean_conf": {
+        "BENIGN": 0.9922990798950195,
+        "Syn": 0.9947296977043152,
+        "DNS": 0.5638781785964966,
+        "LDAP": 0.6825281381607056,
+        "SSDP": 0.9381729364395142,
+        "TFTP": 0.9866892099380493,
+        "MSSQL": 0.9010502696037292,
+        "NTP": 0.9771180748939514
+      },
+      "benign_far": 0.001577784790154623,
+      "n_benign": 9507,
+      "new_class_far": 0.046447921105497045,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9492,
+          "DNS": 7,
+          "LDAP": 4,
+          "MSSQL": 3,
+          "NTP": 0,
+          "SSDP": 0,
+          "Syn": 0,
+          "TFTP": 1
+        },
+        "DNS": {
+          "BENIGN": 33,
+          "DNS": 2619,
+          "LDAP": 559,
+          "MSSQL": 935,
+          "NTP": 219,
+          "SSDP": 0,
+          "Syn": 1,
+          "TFTP": 1
+        },
+        "LDAP": {
+          "BENIGN": 13,
+          "DNS": 412,
+          "LDAP": 1801,
+          "MSSQL": 64,
+          "NTP": 5,
+          "SSDP": 0,
+          "Syn": 1,
+          "TFTP": 0
+        },
+        "MSSQL": {
+          "BENIGN": 5,
+          "DNS": 115,
+          "LDAP": 49,
+          "MSSQL": 5313,
+          "NTP": 40,
+          "SSDP": 0,
+          "Syn": 0,
+          "TFTP": 65
+        },
+        "NTP": {
+          "BENIGN": 10,
+          "DNS": 38,
+          "LDAP": 1,
+          "MSSQL": 24,
+          "NTP": 5916,
+          "SSDP": 0,
+          "Syn": 0,
+          "TFTP": 5
+        },
+        "SSDP": {
+          "BENIGN": 0,
+          "DNS": 4,
+          "LDAP": 6,
+          "MSSQL": 15,
+          "NTP": 266,
+          "SSDP": 4427,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "Syn": {
+          "BENIGN": 13,
+          "DNS": 2,
+          "LDAP": 6,
+          "MSSQL": 7,
+          "NTP": 0,
+          "SSDP": 1,
+          "Syn": 5944,
+          "TFTP": 0
+        },
+        "TFTP": {
+          "BENIGN": 7,
+          "DNS": 1,
+          "LDAP": 0,
+          "MSSQL": 12,
+          "NTP": 0,
+          "SSDP": 0,
+          "Syn": 14,
+          "TFTP": 5959
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 32854,
+      "rows_sha256": "7ebee5263d4e78860a63bb511cebe9a48126eedf11523a58c3b747e3dd81bb95",
+      "accuracy": 0.9627442624946734,
+      "macro_recall": 0.9413655524821144,
+      "recall": {
+        "BENIGN": 0.9990533291259073,
+        "Syn": 0.9956470785200067,
+        "DNS": 0.8236775818639799,
+        "LDAP": 0.8392857142857143,
+        "SSDP": 0.9947011445527766,
+        "TFTP": 0.9958284665443017
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296,
+        "SSDP": 4718,
+        "TFTP": 5993
+      },
+      "mean_conf": {
+        "BENIGN": 0.9949918389320374,
+        "Syn": 0.9947822690010071,
+        "DNS": 0.7758769392967224,
+        "LDAP": 0.7514215111732483,
+        "SSDP": 0.989423394203186,
+        "TFTP": 0.9922254085540771
+      },
+      "benign_far": 0.0009466708740927738,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9498,
+          "DNS": 1,
+          "LDAP": 3,
+          "SSDP": 5,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "DNS": {
+          "BENIGN": 43,
+          "DNS": 3597,
+          "LDAP": 714,
+          "SSDP": 9,
+          "Syn": 1,
+          "TFTP": 3
+        },
+        "LDAP": {
+          "BENIGN": 18,
+          "DNS": 347,
+          "LDAP": 1927,
+          "SSDP": 0,
+          "Syn": 4,
+          "TFTP": 0
+        },
+        "SSDP": {
+          "BENIGN": 1,
+          "DNS": 18,
+          "LDAP": 6,
+          "SSDP": 4693,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "Syn": {
+          "BENIGN": 24,
+          "DNS": 0,
+          "LDAP": 1,
+          "SSDP": 1,
+          "Syn": 5947,
+          "TFTP": 0
+        },
+        "TFTP": {
+          "BENIGN": 8,
+          "DNS": 2,
+          "LDAP": 0,
+          "SSDP": 1,
+          "Syn": 14,
+          "TFTP": 5968
+        }
+      }
+    },
+    "attempt": "D1",
+    "accepted": false
+  },
+  {
+    "recipe": "base",
+    "seed": 42,
+    "block": 3,
+    "new_classes": [
+      "NetBIOS",
+      "SNMP"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn",
+      "DNS",
+      "LDAP",
+      "SSDP",
+      "TFTP"
+    ],
+    "gate_pass": false,
+    "gate_reasons": [
+      "old DNS recall 0.650 < floor 0.774",
+      "old LDAP recall 0.641 < floor 0.789"
+    ],
+    "gate_margin": -0.14860627177700347,
+    "binding": "old LDAP",
+    "seconds": 11.409159183502197,
+    "losses": [
+      0.4707263453062473,
+      0.31071309674132036,
+      0.2903309032185637,
+      0.2806208255563635,
+      0.26905618907600637
+    ],
+    "n_current": 28151,
+    "n_replay": 16000,
+    "val": {
+      "n_rows": 39329,
+      "rows_sha256": "94f1b8f1e48d948d8ca2872e0a3b47e726222cc6b91ffb647478e4c40aad5b87",
+      "accuracy": 0.9154313610821532,
+      "macro_recall": 0.8851607227111897,
+      "recall": {
+        "BENIGN": 0.9906384769117492,
+        "Syn": 0.99347061778001,
+        "DNS": 0.6496450652621937,
+        "LDAP": 0.6406794425087108,
+        "SSDP": 0.9938533276812208,
+        "TFTP": 0.9953278825296179,
+        "NetBIOS": 0.9657444005270093,
+        "SNMP": 0.8519265684890055
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296,
+        "SSDP": 4718,
+        "TFTP": 5993,
+        "NetBIOS": 1518,
+        "SNMP": 4957
+      },
+      "mean_conf": {
+        "BENIGN": 0.982481837272644,
+        "Syn": 0.99191814661026,
+        "DNS": 0.5820805430412292,
+        "LDAP": 0.5779337882995605,
+        "SSDP": 0.9903205037117004,
+        "TFTP": 0.9931180477142334,
+        "NetBIOS": 0.9264588356018066,
+        "SNMP": 0.6973505020141602
+      },
+      "benign_far": 0.009361523088250763,
+      "n_benign": 9507,
+      "new_class_far": 0.04793936811347172,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9418,
+          "DNS": 0,
+          "LDAP": 2,
+          "NetBIOS": 86,
+          "SNMP": 0,
+          "SSDP": 1,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "DNS": {
+          "BENIGN": 15,
+          "DNS": 2837,
+          "LDAP": 670,
+          "NetBIOS": 415,
+          "SNMP": 427,
+          "SSDP": 1,
+          "Syn": 0,
+          "TFTP": 2
+        },
+        "LDAP": {
+          "BENIGN": 6,
+          "DNS": 231,
+          "LDAP": 1471,
+          "NetBIOS": 23,
+          "SNMP": 565,
+          "SSDP": 0,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "NetBIOS": {
+          "BENIGN": 10,
+          "DNS": 32,
+          "LDAP": 1,
+          "NetBIOS": 1466,
+          "SNMP": 3,
+          "SSDP": 0,
+          "Syn": 0,
+          "TFTP": 6
+        },
+        "SNMP": {
+          "BENIGN": 4,
+          "DNS": 55,
+          "LDAP": 625,
+          "NetBIOS": 50,
+          "SNMP": 4223,
+          "SSDP": 0,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "SSDP": {
+          "BENIGN": 0,
+          "DNS": 8,
+          "LDAP": 4,
+          "NetBIOS": 14,
+          "SNMP": 3,
+          "SSDP": 4689,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "Syn": {
+          "BENIGN": 2,
+          "DNS": 0,
+          "LDAP": 1,
+          "NetBIOS": 35,
+          "SNMP": 0,
+          "SSDP": 1,
+          "Syn": 5934,
+          "TFTP": 0
+        },
+        "TFTP": {
+          "BENIGN": 3,
+          "DNS": 3,
+          "LDAP": 0,
+          "NetBIOS": 7,
+          "SNMP": 0,
+          "SSDP": 1,
+          "Syn": 14,
+          "TFTP": 5965
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 32854,
+      "rows_sha256": "7ebee5263d4e78860a63bb511cebe9a48126eedf11523a58c3b747e3dd81bb95",
+      "accuracy": 0.9627442624946734,
+      "macro_recall": 0.9413655524821144,
+      "recall": {
+        "BENIGN": 0.9990533291259073,
+        "Syn": 0.9956470785200067,
+        "DNS": 0.8236775818639799,
+        "LDAP": 0.8392857142857143,
+        "SSDP": 0.9947011445527766,
+        "TFTP": 0.9958284665443017
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296,
+        "SSDP": 4718,
+        "TFTP": 5993
+      },
+      "mean_conf": {
+        "BENIGN": 0.9949918389320374,
+        "Syn": 0.9947822690010071,
+        "DNS": 0.7758769392967224,
+        "LDAP": 0.7514215111732483,
+        "SSDP": 0.989423394203186,
+        "TFTP": 0.9922254085540771
+      },
+      "benign_far": 0.0009466708740927738,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9498,
+          "DNS": 1,
+          "LDAP": 3,
+          "SSDP": 5,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "DNS": {
+          "BENIGN": 43,
+          "DNS": 3597,
+          "LDAP": 714,
+          "SSDP": 9,
+          "Syn": 1,
+          "TFTP": 3
+        },
+        "LDAP": {
+          "BENIGN": 18,
+          "DNS": 347,
+          "LDAP": 1927,
+          "SSDP": 0,
+          "Syn": 4,
+          "TFTP": 0
+        },
+        "SSDP": {
+          "BENIGN": 1,
+          "DNS": 18,
+          "LDAP": 6,
+          "SSDP": 4693,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "Syn": {
+          "BENIGN": 24,
+          "DNS": 0,
+          "LDAP": 1,
+          "SSDP": 1,
+          "Syn": 5947,
+          "TFTP": 0
+        },
+        "TFTP": {
+          "BENIGN": 8,
+          "DNS": 2,
+          "LDAP": 0,
+          "SSDP": 1,
+          "Syn": 14,
+          "TFTP": 5968
+        }
+      }
+    },
+    "attempt": "D1",
+    "accepted": false
+  },
+  {
+    "recipe": "base",
+    "seed": 42,
+    "block": 5,
+    "new_classes": [
+      "UDP",
+      "UDPLag"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn",
+      "DNS",
+      "LDAP",
+      "SSDP",
+      "TFTP"
+    ],
+    "gate_pass": false,
+    "gate_reasons": [
+      "old DNS recall 0.747 < floor 0.774",
+      "old SSDP recall 0.063 < floor 0.945",
+      "new-class FAR 0.143 > 0.05"
+    ],
+    "gate_margin": -0.8821746502755404,
+    "binding": "old SSDP",
+    "seconds": 11.53372597694397,
+    "losses": [
+      0.5806071777339268,
+      0.3845466431882956,
+      0.3652547493899995,
+      0.35563377687278785,
+      0.3468456098674035
+    ],
+    "n_current": 28151,
+    "n_replay": 16000,
+    "val": {
+      "n_rows": 43552,
+      "rows_sha256": "6661efa63917d5c48fded7495399de7b6ea83a5bfb5ec9a2a1b21998c522659a",
+      "accuracy": 0.8391577883908891,
+      "macro_recall": 0.8108885660483229,
+      "recall": {
+        "BENIGN": 0.9951614599768591,
+        "Syn": 0.9653440482169764,
+        "DNS": 0.7467368903137165,
+        "LDAP": 0.9102787456445993,
+        "SSDP": 0.06252649427723611,
+        "TFTP": 0.994994159853162,
+        "UDP": 0.972657674079475,
+        "UDPLag": 0.8394090560245587
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296,
+        "SSDP": 4718,
+        "TFTP": 5993,
+        "UDP": 5486,
+        "UDPLag": 5212
+      },
+      "mean_conf": {
+        "BENIGN": 0.9894715547561646,
+        "Syn": 0.9689140915870667,
+        "DNS": 0.7172509431838989,
+        "LDAP": 0.8270564675331116,
+        "SSDP": 0.3394796550273895,
+        "TFTP": 0.9916089177131653,
+        "UDP": 0.6080904603004456,
+        "UDPLag": 0.8397884964942932
+      },
+      "benign_far": 0.004838540023140844,
+      "n_benign": 9507,
+      "new_class_far": 0.14266147196688378,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9461,
+          "DNS": 5,
+          "LDAP": 14,
+          "SSDP": 4,
+          "Syn": 0,
+          "TFTP": 1,
+          "UDP": 1,
+          "UDPLag": 21
+        },
+        "DNS": {
+          "BENIGN": 22,
+          "DNS": 3261,
+          "LDAP": 1044,
+          "SSDP": 0,
+          "Syn": 1,
+          "TFTP": 1,
+          "UDP": 15,
+          "UDPLag": 23
+        },
+        "LDAP": {
+          "BENIGN": 8,
+          "DNS": 187,
+          "LDAP": 2090,
+          "SSDP": 0,
+          "Syn": 3,
+          "TFTP": 0,
+          "UDP": 0,
+          "UDPLag": 8
+        },
+        "SSDP": {
+          "BENIGN": 0,
+          "DNS": 18,
+          "LDAP": 7,
+          "SSDP": 295,
+          "Syn": 0,
+          "TFTP": 0,
+          "UDP": 4398,
+          "UDPLag": 0
+        },
+        "Syn": {
+          "BENIGN": 9,
+          "DNS": 1,
+          "LDAP": 1,
+          "SSDP": 0,
+          "Syn": 5766,
+          "TFTP": 0,
+          "UDP": 1,
+          "UDPLag": 195
+        },
+        "TFTP": {
+          "BENIGN": 3,
+          "DNS": 2,
+          "LDAP": 0,
+          "SSDP": 0,
+          "Syn": 0,
+          "TFTP": 5963,
+          "UDP": 6,
+          "UDPLag": 19
+        },
+        "UDP": {
+          "BENIGN": 1,
+          "DNS": 8,
+          "LDAP": 0,
+          "SSDP": 136,
+          "Syn": 0,
+          "TFTP": 0,
+          "UDP": 5336,
+          "UDPLag": 5
+        },
+        "UDPLag": {
+          "BENIGN": 4,
+          "DNS": 11,
+          "LDAP": 2,
+          "SSDP": 8,
+          "Syn": 36,
+          "TFTP": 0,
+          "UDP": 776,
+          "UDPLag": 4375
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 32854,
+      "rows_sha256": "7ebee5263d4e78860a63bb511cebe9a48126eedf11523a58c3b747e3dd81bb95",
+      "accuracy": 0.9627442624946734,
+      "macro_recall": 0.9413655524821144,
+      "recall": {
+        "BENIGN": 0.9990533291259073,
+        "Syn": 0.9956470785200067,
+        "DNS": 0.8236775818639799,
+        "LDAP": 0.8392857142857143,
+        "SSDP": 0.9947011445527766,
+        "TFTP": 0.9958284665443017
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296,
+        "SSDP": 4718,
+        "TFTP": 5993
+      },
+      "mean_conf": {
+        "BENIGN": 0.9949918389320374,
+        "Syn": 0.9947822690010071,
+        "DNS": 0.7758769392967224,
+        "LDAP": 0.7514215111732483,
+        "SSDP": 0.989423394203186,
+        "TFTP": 0.9922254085540771
+      },
+      "benign_far": 0.0009466708740927738,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9498,
+          "DNS": 1,
+          "LDAP": 3,
+          "SSDP": 5,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "DNS": {
+          "BENIGN": 43,
+          "DNS": 3597,
+          "LDAP": 714,
+          "SSDP": 9,
+          "Syn": 1,
+          "TFTP": 3
+        },
+        "LDAP": {
+          "BENIGN": 18,
+          "DNS": 347,
+          "LDAP": 1927,
+          "SSDP": 0,
+          "Syn": 4,
+          "TFTP": 0
+        },
+        "SSDP": {
+          "BENIGN": 1,
+          "DNS": 18,
+          "LDAP": 6,
+          "SSDP": 4693,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "Syn": {
+          "BENIGN": 24,
+          "DNS": 0,
+          "LDAP": 1,
+          "SSDP": 1,
+          "Syn": 5947,
+          "TFTP": 0
+        },
+        "TFTP": {
+          "BENIGN": 8,
+          "DNS": 2,
+          "LDAP": 0,
+          "SSDP": 1,
+          "Syn": 14,
+          "TFTP": 5968
+        }
+      }
+    },
+    "attempt": "C1",
+    "accepted": false
+  },
+  {
+    "recipe": "base",
+    "seed": 42,
+    "block": 5,
+    "new_classes": [
+      "UDP",
+      "UDPLag"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn",
+      "DNS",
+      "LDAP",
+      "SSDP",
+      "TFTP"
+    ],
+    "gate_pass": false,
+    "gate_reasons": [
+      "old DNS recall 0.747 < floor 0.774",
+      "old SSDP recall 0.063 < floor 0.945",
+      "new-class FAR 0.143 > 0.05"
+    ],
+    "gate_margin": -0.8821746502755404,
+    "binding": "old SSDP",
+    "seconds": 11.57573676109314,
+    "losses": [
+      0.5806071777339268,
+      0.3845466431882956,
+      0.3652547493899995,
+      0.35563377687278785,
+      0.3468456098674035
+    ],
+    "n_current": 28151,
+    "n_replay": 16000,
+    "val": {
+      "n_rows": 43552,
+      "rows_sha256": "6661efa63917d5c48fded7495399de7b6ea83a5bfb5ec9a2a1b21998c522659a",
+      "accuracy": 0.8391577883908891,
+      "macro_recall": 0.8108885660483229,
+      "recall": {
+        "BENIGN": 0.9951614599768591,
+        "Syn": 0.9653440482169764,
+        "DNS": 0.7467368903137165,
+        "LDAP": 0.9102787456445993,
+        "SSDP": 0.06252649427723611,
+        "TFTP": 0.994994159853162,
+        "UDP": 0.972657674079475,
+        "UDPLag": 0.8394090560245587
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296,
+        "SSDP": 4718,
+        "TFTP": 5993,
+        "UDP": 5486,
+        "UDPLag": 5212
+      },
+      "mean_conf": {
+        "BENIGN": 0.9894715547561646,
+        "Syn": 0.9689140915870667,
+        "DNS": 0.7172509431838989,
+        "LDAP": 0.8270564675331116,
+        "SSDP": 0.3394796550273895,
+        "TFTP": 0.9916089177131653,
+        "UDP": 0.6080904603004456,
+        "UDPLag": 0.8397884964942932
+      },
+      "benign_far": 0.004838540023140844,
+      "n_benign": 9507,
+      "new_class_far": 0.14266147196688378,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9461,
+          "DNS": 5,
+          "LDAP": 14,
+          "SSDP": 4,
+          "Syn": 0,
+          "TFTP": 1,
+          "UDP": 1,
+          "UDPLag": 21
+        },
+        "DNS": {
+          "BENIGN": 22,
+          "DNS": 3261,
+          "LDAP": 1044,
+          "SSDP": 0,
+          "Syn": 1,
+          "TFTP": 1,
+          "UDP": 15,
+          "UDPLag": 23
+        },
+        "LDAP": {
+          "BENIGN": 8,
+          "DNS": 187,
+          "LDAP": 2090,
+          "SSDP": 0,
+          "Syn": 3,
+          "TFTP": 0,
+          "UDP": 0,
+          "UDPLag": 8
+        },
+        "SSDP": {
+          "BENIGN": 0,
+          "DNS": 18,
+          "LDAP": 7,
+          "SSDP": 295,
+          "Syn": 0,
+          "TFTP": 0,
+          "UDP": 4398,
+          "UDPLag": 0
+        },
+        "Syn": {
+          "BENIGN": 9,
+          "DNS": 1,
+          "LDAP": 1,
+          "SSDP": 0,
+          "Syn": 5766,
+          "TFTP": 0,
+          "UDP": 1,
+          "UDPLag": 195
+        },
+        "TFTP": {
+          "BENIGN": 3,
+          "DNS": 2,
+          "LDAP": 0,
+          "SSDP": 0,
+          "Syn": 0,
+          "TFTP": 5963,
+          "UDP": 6,
+          "UDPLag": 19
+        },
+        "UDP": {
+          "BENIGN": 1,
+          "DNS": 8,
+          "LDAP": 0,
+          "SSDP": 136,
+          "Syn": 0,
+          "TFTP": 0,
+          "UDP": 5336,
+          "UDPLag": 5
+        },
+        "UDPLag": {
+          "BENIGN": 4,
+          "DNS": 11,
+          "LDAP": 2,
+          "SSDP": 8,
+          "Syn": 36,
+          "TFTP": 0,
+          "UDP": 776,
+          "UDPLag": 4375
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 32854,
+      "rows_sha256": "7ebee5263d4e78860a63bb511cebe9a48126eedf11523a58c3b747e3dd81bb95",
+      "accuracy": 0.9627442624946734,
+      "macro_recall": 0.9413655524821144,
+      "recall": {
+        "BENIGN": 0.9990533291259073,
+        "Syn": 0.9956470785200067,
+        "DNS": 0.8236775818639799,
+        "LDAP": 0.8392857142857143,
+        "SSDP": 0.9947011445527766,
+        "TFTP": 0.9958284665443017
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "DNS": 4367,
+        "LDAP": 2296,
+        "SSDP": 4718,
+        "TFTP": 5993
+      },
+      "mean_conf": {
+        "BENIGN": 0.9949918389320374,
+        "Syn": 0.9947822690010071,
+        "DNS": 0.7758769392967224,
+        "LDAP": 0.7514215111732483,
+        "SSDP": 0.989423394203186,
+        "TFTP": 0.9922254085540771
+      },
+      "benign_far": 0.0009466708740927738,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9498,
+          "DNS": 1,
+          "LDAP": 3,
+          "SSDP": 5,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "DNS": {
+          "BENIGN": 43,
+          "DNS": 3597,
+          "LDAP": 714,
+          "SSDP": 9,
+          "Syn": 1,
+          "TFTP": 3
+        },
+        "LDAP": {
+          "BENIGN": 18,
+          "DNS": 347,
+          "LDAP": 1927,
+          "SSDP": 0,
+          "Syn": 4,
+          "TFTP": 0
+        },
+        "SSDP": {
+          "BENIGN": 1,
+          "DNS": 18,
+          "LDAP": 6,
+          "SSDP": 4693,
+          "Syn": 0,
+          "TFTP": 0
+        },
+        "Syn": {
+          "BENIGN": 24,
+          "DNS": 0,
+          "LDAP": 1,
+          "SSDP": 1,
+          "Syn": 5947,
+          "TFTP": 0
+        },
+        "TFTP": {
+          "BENIGN": 8,
+          "DNS": 2,
+          "LDAP": 0,
+          "SSDP": 1,
+          "Syn": 14,
+          "TFTP": 5968
+        }
+      }
+    },
+    "attempt": "D1",
+    "accepted": false
+  }
+]

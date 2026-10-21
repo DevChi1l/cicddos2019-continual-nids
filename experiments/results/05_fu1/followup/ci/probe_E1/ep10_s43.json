@@ -1,0 +1,119 @@
+{
+  "scenario": "ci",
+  "recipe": "ep10",
+  "seed": 43,
+  "block": 1,
+  "new_classes": [
+    "DNS",
+    "LDAP"
+  ],
+  "old_classes": [
+    "BENIGN",
+    "Syn"
+  ],
+  "gate_pass": false,
+  "gate_reasons": [
+    "new DNS recall 0.715 < 0.8"
+  ],
+  "gate_margin": -0.08463476070528975,
+  "binding": "new DNS",
+  "seconds": 11.376993417739868,
+  "losses": [
+    1.1079430837273767,
+    0.6854495005695284,
+    0.49301822481431923,
+    0.3779127321705285,
+    0.35715387818499705,
+    0.3409264693840221,
+    0.33159634837672597,
+    0.3289742353866259,
+    0.3163998328897538,
+    0.30150369146925726
+  ],
+  "n_current": 18624,
+  "n_replay": 4000,
+  "val": {
+    "n_rows": 22143,
+    "rows_sha256": "a12c4d27bace358384de7e36632dd3da26167083adf9e2c9e19dcc2d878b730e",
+    "accuracy": 0.9301810956058348,
+    "macro_recall": 0.9054067298297466,
+    "recall": {
+      "BENIGN": 0.9902177343010413,
+      "Syn": 0.995312238406161,
+      "DNS": 0.7153652392947103,
+      "LDAP": 0.9207317073170732
+    },
+    "support": {
+      "BENIGN": 9507,
+      "Syn": 5973,
+      "DNS": 4367,
+      "LDAP": 2296
+    },
+    "mean_conf": {
+      "BENIGN": 0.9664339423179626,
+      "Syn": 0.9908173084259033,
+      "DNS": 0.6920784115791321,
+      "LDAP": 0.8221467733383179
+    },
+    "benign_far": 0.009782265698958662,
+    "n_benign": 9507,
+    "new_class_far": 0.006201550387596899,
+    "confusion": {
+      "BENIGN": {
+        "BENIGN": 9414,
+        "DNS": 64,
+        "LDAP": 29,
+        "Syn": 0
+      },
+      "DNS": {
+        "BENIGN": 43,
+        "DNS": 3124,
+        "LDAP": 1199,
+        "Syn": 1
+      },
+      "LDAP": {
+        "BENIGN": 16,
+        "DNS": 163,
+        "LDAP": 2114,
+        "Syn": 3
+      },
+      "Syn": {
+        "BENIGN": 25,
+        "DNS": 3,
+        "LDAP": 0,
+        "Syn": 5945
+      }
+    }
+  },
+  "ref_val": {
+    "n_rows": 15480,
+    "rows_sha256": "99411cbc29009dddf8678c4142fbe2b15f6e3c6b1383015dda4b149a99d65d49",
+    "accuracy": 0.9983850129198967,
+    "macro_recall": 0.9979072492884647,
+    "recall": {
+      "BENIGN": 1.0,
+      "Syn": 0.9958144985769295
+    },
+    "support": {
+      "BENIGN": 9507,
+      "Syn": 5973
+    },
+    "mean_conf": {
+      "BENIGN": 0.9980596303939819,
+      "Syn": 0.9958140254020691
+    },
+    "benign_far": 0.0,
+    "n_benign": 9507,
+    "new_class_far": 0.0,
+    "confusion": {
+      "BENIGN": {
+        "BENIGN": 9507,
+        "Syn": 0
+      },
+      "Syn": {
+        "BENIGN": 25,
+        "Syn": 5948
+      }
+    }
+  }
+}

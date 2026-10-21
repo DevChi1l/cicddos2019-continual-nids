@@ -1,0 +1,87 @@
+{
+  "rule": "per failure type, over all (scenario, seed) cells of its probe block: a non-base recipe is eligible if it passes the gate in >= ceil(2/3 of its cells); pick the eligible recipe with most passes, then the highest median gate margin, then the earlier one in the fixed recipe list; none eligible -> no recipe",
+  "new_class": {
+    "block": 1,
+    "scenarios": [
+      "ci",
+      "cii"
+    ],
+    "recipe": "ep20",
+    "table": [
+      {
+        "recipe": "base",
+        "cells": 6,
+        "passed": 0,
+        "median_margin": -0.1361575452255553,
+        "min_margin": -0.2197389512250973,
+        "eligible": false
+      },
+      {
+        "recipe": "ep10",
+        "cells": 6,
+        "passed": 1,
+        "median_margin": -0.03345546141515915,
+        "min_margin": -0.0846347607052897,
+        "eligible": false
+      },
+      {
+        "recipe": "ep20",
+        "cells": 6,
+        "passed": 5,
+        "median_margin": 0.0226900119601476,
+        "min_margin": -0.0017403251660178,
+        "eligible": true
+      },
+      {
+        "recipe": "lr3e-4",
+        "cells": 6,
+        "passed": 0,
+        "median_margin": -0.17886420883902,
+        "min_margin": -0.2753835585069842,
+        "eligible": false
+      },
+      {
+        "recipe": "balanced",
+        "cells": 6,
+        "passed": 0,
+        "median_margin": -0.13913441722005948,
+        "min_margin": -0.2094343943210442,
+        "eligible": false
+      }
+    ]
+  },
+  "old_class": {
+    "block": 5,
+    "scenarios": [
+      "ci",
+      "cii"
+    ],
+    "recipe": null,
+    "table": [
+      {
+        "recipe": "base",
+        "cells": 6,
+        "passed": 0,
+        "median_margin": -0.9384484951250529,
+        "min_margin": -0.939614243323442,
+        "eligible": false
+      },
+      {
+        "recipe": "balanced",
+        "cells": 6,
+        "passed": 0,
+        "median_margin": -0.484739701984488,
+        "min_margin": -0.8283382789317507,
+        "eligible": false
+      },
+      {
+        "recipe": "distill",
+        "cells": 6,
+        "passed": 0,
+        "median_margin": -0.9361169987282746,
+        "min_margin": -0.9410979228486648,
+        "eligible": false
+      }
+    ]
+  }
+}

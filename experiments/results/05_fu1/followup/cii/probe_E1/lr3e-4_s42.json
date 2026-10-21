@@ -1,0 +1,114 @@
+{
+  "scenario": "cii",
+  "recipe": "lr3e-4",
+  "seed": 42,
+  "block": 1,
+  "new_classes": [
+    "DNS",
+    "LDAP"
+  ],
+  "old_classes": [
+    "BENIGN",
+    "Syn"
+  ],
+  "gate_pass": false,
+  "gate_reasons": [
+    "new DNS recall 0.632 < 0.8"
+  ],
+  "gate_margin": -0.16752919624456153,
+  "binding": "new DNS",
+  "seconds": 8.080232620239258,
+  "losses": [
+    0.9766958583784654,
+    0.4712869489370195,
+    0.41432655418902836,
+    0.3372774845144618,
+    0.30888614454486985
+  ],
+  "n_current": 28151,
+  "n_replay": 4000,
+  "val": {
+    "n_rows": 22143,
+    "rows_sha256": "a12c4d27bace358384de7e36632dd3da26167083adf9e2c9e19dcc2d878b730e",
+    "accuracy": 0.9198392268436978,
+    "macro_recall": 0.8945398664238695,
+    "recall": {
+      "BENIGN": 0.996108130850952,
+      "Syn": 0.995312238406161,
+      "DNS": 0.6324708037554385,
+      "LDAP": 0.9542682926829268
+    },
+    "support": {
+      "BENIGN": 9507,
+      "Syn": 5973,
+      "DNS": 4367,
+      "LDAP": 2296
+    },
+    "mean_conf": {
+      "BENIGN": 0.9735201001167297,
+      "Syn": 0.9846705794334412,
+      "DNS": 0.6920713186264038,
+      "LDAP": 0.7147194743156433
+    },
+    "benign_far": 0.00389186914904807,
+    "n_benign": 9507,
+    "new_class_far": 0.0025193798449612403,
+    "confusion": {
+      "BENIGN": {
+        "BENIGN": 9470,
+        "DNS": 25,
+        "LDAP": 12,
+        "Syn": 0
+      },
+      "DNS": {
+        "BENIGN": 49,
+        "DNS": 2762,
+        "LDAP": 1552,
+        "Syn": 4
+      },
+      "LDAP": {
+        "BENIGN": 24,
+        "DNS": 76,
+        "LDAP": 2191,
+        "Syn": 5
+      },
+      "Syn": {
+        "BENIGN": 26,
+        "DNS": 2,
+        "LDAP": 0,
+        "Syn": 5945
+      }
+    }
+  },
+  "ref_val": {
+    "n_rows": 15480,
+    "rows_sha256": "99411cbc29009dddf8678c4142fbe2b15f6e3c6b1383015dda4b149a99d65d49",
+    "accuracy": 0.9981912144702842,
+    "macro_recall": 0.9976561192030805,
+    "recall": {
+      "BENIGN": 1.0,
+      "Syn": 0.995312238406161
+    },
+    "support": {
+      "BENIGN": 9507,
+      "Syn": 5973
+    },
+    "mean_conf": {
+      "BENIGN": 0.9968410134315491,
+      "Syn": 0.9945804476737976
+    },
+    "benign_far": 0.0,
+    "n_benign": 9507,
+    "new_class_far": 0.0,
+    "confusion": {
+      "BENIGN": {
+        "BENIGN": 9507,
+        "Syn": 0
+      },
+      "Syn": {
+        "BENIGN": 28,
+        "Syn": 5945
+      }
+    }
+  }
+}
