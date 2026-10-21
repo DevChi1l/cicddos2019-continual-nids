@@ -8,7 +8,12 @@ deciding on VALIDATION only:
                 (E1: update-training / class-balance changes; E5: balanced class weights or distillation)
   decide        the pre-registered selection rule -> decisions.json (one recipe per failure type, or none)
   policy        clean arm, whole schedule, with the retry policy below (validation decisions only, no test)
-  score-test    the deployed model on test, ONCE, after the validation files are committed (needs that sha)
+  bundle        after validation: final models + decisions + rounds + sha256 manifest in one zip (no test),
+                so test can be scored in a later Kaggle session
+  restore       a later session: verify every hash in a bundle, then copy it into <work>/followup/
+  score-test    the deployed model on test, ONCE. Refuses unless decisions.json, summary.json and rounds.json
+                are byte-identical to their copies under experiments/results/05_fu1/ in the given git commit,
+                and final.pt has the hash recorded in summary.json
 
 Inputs are read only: --src is a nids_out with clean_*.parquet, all12/<scenario>/ and
 runs/<scenario>/all12_<scenario>_s42/ (its config.json must hash the same Stage 1/1b files). Outputs go only to
@@ -37,8 +42,13 @@ from __future__ import annotations
 
 import argparse
 import copy
+import json
 import re
+import shutil
+import subprocess
+import tempfile
 import time
+import zipfile
 from argparse import Namespace
 from datetime import datetime, timezone
 from pathlib import Path
@@ -60,6 +70,7 @@ RECIPES = {
 }
 FAMILY = {"new_class": ["base", "ep10", "ep20", "lr3e-4", "balanced"],
           "old_class": ["base", "balanced", "distill"]}
+COMMITTED = "experiments/results/05_fu1"  # where fu1_val.zip's contents are committed (paths start with followup/)
 RULE = ("per failure type, over all (scenario, seed) cells of its probe block: a non-base recipe is eligible if it "
         "passes the gate in >= ceil(2/3 of its cells); pick the eligible recipe with most passes, then the highest "
         "median gate margin, then the earlier one in the fixed recipe list; none eligible -> no recipe")
@@ -175,6 +186,8 @@ def decide(a):
 
 def policy(a):
     run, cfg, hp, ctx, dest = setup(a)
+    assert Path(a.decisions).resolve() == (dest.parent / "decisions.json").resolve(), \
+        "use <work>/followup/decisions.json (the file that is committed and bundled)"
     dec = load_json(Path(a.decisions))
     recipe_for = {fam: dec[fam]["recipe"] for fam in FAMILY}
     rdir = dest / a.run
@@ -221,9 +234,65 @@ def policy(a):
     S3.save_ckpt(rdir / "final.pt", A, A_cls, {"role": "deployed after the retry policy"})
     save_json({"source_run": str(run), "seed": seed, "recipes": recipe_for, "decisions_sha256": S3.file_hash(a.decisions),
                "inputs": cfg["inputs"], "T_sha256_file": t_hash, "T_unchanged": True, "final_classes": A_cls,
+               "final_sha256": S3.file_hash(rdir / "final.pt"),
                "block_status": {f"E{t}": status.get(t) for t in range(1, len(ctx["schedule"]))},
                "device": str(ctx["device"]), "torch": torch.__version__}, rdir / "summary.json")
     print(f"deployed classes: {A_cls}\nwritten {rdir} (validation decisions only; no test scored)")
+
+
+BUNDLED = ("summary.json", "rounds.json", "final.pt")  # per policy run; plus followup/decisions.json
+
+
+def bundle(a):
+    """Restorable copy of the validation outcome: no test file can enter it."""
+    root = Path(a.work or default_work_dir()) / "followup"
+    runs = sorted(p.parent for p in root.glob("*/*/summary.json"))
+    assert runs, f"no finished policy run under {root}"
+    files = [root / "decisions.json"] + [r / f for r in runs for f in BUNDLED]
+    for r in runs:
+        s = load_json(r / "summary.json")
+        assert s["final_sha256"] == S3.file_hash(r / "final.pt"), f"{r}/final.pt differs from its summary"
+        assert s["decisions_sha256"] == S3.file_hash(root / "decisions.json"), "decisions.json changed after policy"
+    manifest = {"files": {str(Path("followup") / p.relative_to(root)): S3.file_hash(p) for p in files},
+                "created_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                "note": "FU1 validation outcome only (no test). Restore with `s9_followup.py restore`."}
+    dest = Path(a.bundle)
+    with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as zf:
+        for p in files:
+            zf.write(p, Path("followup") / p.relative_to(root))
+        zf.writestr("RESTORE_MANIFEST.json", json.dumps(manifest, indent=1))
+    print(f"{len(files)} files + RESTORE_MANIFEST.json -> {dest} ({dest.stat().st_size / 1e6:.2f} MB)")
+
+
+def restore(a):
+    """Copy a bundle (zip, or the folder Kaggle extracts it to) into <work>/followup after checking every hash."""
+    src = Path(a.bundle)
+    with tempfile.TemporaryDirectory() as tmp:
+        if src.is_file():
+            zipfile.ZipFile(src).extractall(tmp)
+            src = Path(tmp)
+        man = load_json(src / "RESTORE_MANIFEST.json")
+        bad = {f: "missing" if not (src / f).exists() else "hash differs" for f, h in man["files"].items()
+               if not (src / f).exists() or S3.file_hash(src / f) != h}
+        assert not bad, f"refuse: bundle damaged {bad}"
+        for s in (src / "followup").glob("*/*/summary.json"):
+            assert load_json(s)["final_sha256"] == man["files"][str(s.parent.relative_to(src) / "final.pt")]
+            assert load_json(s)["decisions_sha256"] == man["files"]["followup/decisions.json"]
+        root = Path(a.work or default_work_dir())
+        for f in man["files"]:
+            t = root / f
+            if t.exists():
+                assert S3.file_hash(t) == man["files"][f], f"refuse: {t} exists with different content"
+                continue
+            t.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src / f, t)
+    print(f"restored {len(man['files'])} files into {root / 'followup'}; every sha256 matches the manifest")
+
+
+def committed_copy(repo: Path, sha: str, rel: str) -> bytes:
+    p = subprocess.run(["git", "-C", str(repo), "show", f"{sha}:{COMMITTED}/{rel}"], capture_output=True)
+    assert p.returncode == 0, f"{COMMITTED}/{rel} not found in commit {sha} (fetch it first): {p.stderr.decode()[-300:]}"
+    return p.stdout
 
 
 def score_test(a):
@@ -231,9 +300,17 @@ def score_test(a):
         "--decisions-commit <git sha> of the commit that holds this run's validation files is required"
     run, cfg, hp, ctx, dest = setup(a)
     rdir = dest / a.run
-    assert (rdir / "summary.json").exists(), "run `policy` first"
+    assert (rdir / "summary.json").exists(), "run `policy` (or `restore`) first"
     if (rdir / "final_test.json").exists():
         raise SystemExit(f"refuse: {rdir} was already scored on test; it is scored once")
+    # the model scored here must be the one whose validation decisions are in the named commit
+    repo, root = Path(a.repo or Path(__file__).resolve().parent), dest.parent
+    for p in (root / "decisions.json", rdir / "summary.json", rdir / "rounds.json"):
+        assert p.read_bytes() == committed_copy(repo, a.decisions_commit, str(p.relative_to(root.parent))), \
+            f"refuse: {p} differs from the copy committed in {a.decisions_commit}"
+    s = load_json(rdir / "summary.json")
+    assert S3.file_hash(rdir / "final.pt") == s["final_sha256"], "refuse: final.pt is not the validated model"
+    assert s["decisions_sha256"] == S3.file_hash(root / "decisions.json") and s["inputs"] == cfg["inputs"]
     m, cls = S3.load_ckpt(rdir / "final.pt", ctx, hp)
     test = S3.evaluate(m, cls, ctx["test"], ctx["device"], scope=ctx["scope"])
     save_json({"final_classes": cls, "decisions_commit": a.decisions_commit,
@@ -275,7 +352,7 @@ def separability(a):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["separability", "probe", "decide", "policy", "score-test"])
+    ap.add_argument("cmd", choices=["separability", "probe", "decide", "policy", "bundle", "restore", "score-test"])
     ap.add_argument("--src", help="nids_out with clean_*.parquet, <tag>/<scenario>/ and the source run (read only)")
     ap.add_argument("--work", default=None, help="writes go to <work>/followup/ (default: the nids_out work dir)")
     ap.add_argument("--scenario", choices=["ci", "cii"], default="cii")
@@ -290,10 +367,12 @@ def main():
     ap.add_argument("--decisions", default=None, help="decisions.json written by `decide`")
     ap.add_argument("--run", default=None)
     ap.add_argument("--decisions-commit", default=None)
+    ap.add_argument("--repo", default=None, help="git checkout holding the decisions commit (default: this code's)")
+    ap.add_argument("--bundle", default=None, help="bundle: zip to write; restore: zip or extracted folder")
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     a = ap.parse_args()
-    {"separability": separability, "probe": probe, "decide": decide, "policy": policy,
-     "score-test": score_test}[a.cmd](a)
+    {"separability": separability, "probe": probe, "decide": decide, "policy": policy, "bundle": bundle,
+     "restore": restore, "score-test": score_test}[a.cmd](a)
 
 
 if __name__ == "__main__":

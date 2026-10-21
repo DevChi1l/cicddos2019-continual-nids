@@ -13,6 +13,7 @@ import json
 import shutil
 import subprocess
 import sys
+import zipfile
 from pathlib import Path
 
 import pandas as pd
@@ -203,7 +204,7 @@ def main():
     rep = json.loads((fdir / "probe_E1" / "base_s42.json").read_text())["reproduces_logged_C1"]
     assert rep == 0.0, f"s9 base recipe does not reproduce s3's C1 (max diff {rep})"
     run("s9_followup.py", "decide", "--work", w / "fu", "--new-class-block", 1, "--old-class-block", 2)
-    forced = w / "fu" / "forced_decisions.json"  # forced recipes, so C2 and D1 are exercised
+    forced = fdir.parent / "decisions.json"  # overwritten with forced recipes, so C2 and D1 are exercised
     forced.write_text(json.dumps({"new_class": {"recipe": "ep10"}, "old_class": {"recipe": "distill"}}))
     run("s9_followup.py", "policy", *fu, "--decisions", forced, "--run", "fu_smoke")
     recs = json.loads((fdir / "fu_smoke" / "rounds.json").read_text())
@@ -213,12 +214,38 @@ def main():
         att = [r for r in recs if r["block"] == b]
         assert len(att) <= 3 and sum(r["accepted"] for r in att) <= 1 and not any(r["accepted"] for r in att[:-1])
         assert all(r["attempt"] in ("C2", "D1") for r in att[1:]), att
-    p = subprocess.run([sys.executable, str(HERE / "s9_followup.py"), "score-test", *map(str, fu), "--run", "fu_smoke"],
-                       capture_output=True, text=True)
+    def s9(*args):
+        return subprocess.run([sys.executable, str(HERE / "s9_followup.py"), *map(str, args)],
+                              capture_output=True, text=True)
+    p = s9("score-test", *fu, "--run", "fu_smoke")
     assert p.returncode != 0 and "decisions-commit" in p.stderr, p.stderr[-500:]
-    run("s9_followup.py", "score-test", *fu, "--run", "fu_smoke", "--decisions-commit", "0000000")
-    p = subprocess.run([sys.executable, str(HERE / "s9_followup.py"), "score-test", *map(str, fu), "--run", "fu_smoke",
-                        "--decisions-commit", "0000000"], capture_output=True, text=True)
+    # validation -> test handoff: bundle (no test inside), commit the validation files, restore elsewhere, score
+    bz = w / "fu1_restore.zip"
+    run("s9_followup.py", "bundle", "--work", w / "fu", "--bundle", bz)
+    names = zipfile.ZipFile(bz).namelist()
+    assert "RESTORE_MANIFEST.json" in names and not any("final_test" in n for n in names), names
+    repo = w / "repo"
+    dst = repo / "experiments" / "results" / "05_fu1" / "followup"
+    for f in ["decisions.json", "cii/fu_smoke/summary.json", "cii/fu_smoke/rounds.json"]:
+        (dst / f).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(fdir.parent / f, dst / f)
+    git = ["git", "-C", str(repo), "-c", "user.name=smoke", "-c", "user.email=smoke@example.invalid"]
+    subprocess.run(["git", "init", "-q", str(repo)], check=True)
+    subprocess.run([*git, "add", "-A"], check=True)
+    subprocess.run([*git, "commit", "-q", "-m", "fu1 val"], check=True)
+    sha = subprocess.run([*git, "rev-parse", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+    bad = w / "bad_bundle"  # a damaged bundle must be refused
+    zipfile.ZipFile(bz).extractall(bad)
+    with open(bad / "followup" / "cii" / "fu_smoke" / "final.pt", "ab") as f:
+        f.write(b"x")
+    p = s9("restore", "--work", w / "fu_bad", "--bundle", bad)
+    assert p.returncode != 0 and "bundle damaged" in p.stderr, p.stderr[-500:]
+    fu2 = [*fu[:2], "--work", w / "fu2", *fu[4:]]  # a fresh session: nothing but the bundle
+    run("s9_followup.py", "restore", "--work", w / "fu2", "--bundle", bz)
+    p = s9("score-test", *fu2, "--run", "fu_smoke", "--decisions-commit", "0" * 7, "--repo", repo)
+    assert p.returncode != 0 and "not found in commit" in p.stderr, p.stderr[-500:]
+    run("s9_followup.py", "score-test", *fu2, "--run", "fu_smoke", "--decisions-commit", sha, "--repo", repo)
+    p = s9("score-test", *fu2, "--run", "fu_smoke", "--decisions-commit", sha, "--repo", repo)
     assert p.returncode != 0 and "scored once" in p.stderr, p.stderr[-500:]
     assert before == {p: p.read_bytes() for p in src_run.rglob("*") if p.is_file()}, "s9 changed the source run"
     print(f"FU1 (s9) ran: {len(recs)} policy attempts "

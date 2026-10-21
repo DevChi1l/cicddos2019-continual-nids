@@ -92,4 +92,12 @@ classes overlap, not because the training recipe is weak.
 
 ## Deviations
 
-(none yet)
+- **2026-10-21, before any FU1 run (procedure only):** added a resumable validation-to-test handoff.
+  - After `policy`, `bundle` writes `fu1_restore.zip` (the validated `final.pt` per run, `summary.json`,
+    `rounds.json`, `decisions.json` and a sha256 manifest; no test). `restore` checks every hash before copying it
+    back.
+  - `summary.json` now records `final.pt`'s sha256.
+  - `score-test` refuses unless `decisions.json`, `summary.json` and `rounds.json` are byte-identical to their
+    copies under `experiments/results/05_fu1/` in the named commit, and `final.pt` matches the recorded hash.
+  - `policy` accepts only `<work>/followup/decisions.json`.
+  - Recipes, selection rule, retry policy and gate are unchanged.
