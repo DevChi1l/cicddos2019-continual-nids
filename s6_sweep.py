@@ -240,7 +240,8 @@ def main():
             s = summ[summ["arm"] == arm]
             c = f"recall_{target}"
             ax.errorbar(s["poison_frac"] + (j - 1) * 0.004, s[f"{c}_mean"],
-                        yerr=[s[f"{c}_mean"] - s[f"{c}_min"], s[f"{c}_max"] - s[f"{c}_mean"]],
+                        # clip: the mean of identical values can exceed them by 1 ulp
+                        yerr=np.clip([s[f"{c}_mean"] - s[f"{c}_min"], s[f"{c}_max"] - s[f"{c}_mean"]], 0, None),
                         color=ARM_COLOR[arm], marker="o", markersize=7, linewidth=2, capsize=3,
                         markeredgecolor="white", label=arm)
         ax.set_xlabel("poison fraction f (bars: min-max over seeds)", color=MUTED, fontsize=8)
