@@ -190,6 +190,39 @@ def main():
     run("s3_continual.py", "--out", out, "--scenario", "cii", "--tag", "alt", "--run", "alt", *fast,
         "--gate-old-drop", 1, "--gate-new-min", 0, "--gate-far-max", 1, "--gate-newfar-max", 1)
     assert "alt/cii/scaler.json" in json.loads((runs / "cii" / "alt" / "config.json").read_text())["inputs"]
+
+    # follow-up FU1 (s9): reads a finished run, never writes into it; base recipe = the logged s3 C1
+    src_run = runs / "cii" / "smoke"
+    before = {p: p.read_bytes() for p in src_run.rglob("*") if p.is_file()}
+    fu = ["--src", out, "--work", w / "fu", "--scenario", "cii", "--tag", "", "--source-run", "smoke",
+          "--device", "cpu", "--seeds", "42,43"]
+    run("s9_followup.py", "separability", *fu, "--pairs", "LDAP:UDP")
+    run("s9_followup.py", "probe", *fu, "--block", 1, "--recipes", "base,ep10,lr3e-4,balanced")
+    run("s9_followup.py", "probe", *fu, "--block", 2, "--recipes", "base,balanced,distill")
+    fdir = w / "fu" / "followup" / "cii"
+    rep = json.loads((fdir / "probe_E1" / "base_s42.json").read_text())["reproduces_logged_C1"]
+    assert rep == 0.0, f"s9 base recipe does not reproduce s3's C1 (max diff {rep})"
+    run("s9_followup.py", "decide", "--work", w / "fu", "--new-class-block", 1, "--old-class-block", 2)
+    forced = w / "fu" / "forced_decisions.json"  # forced recipes, so C2 and D1 are exercised
+    forced.write_text(json.dumps({"new_class": {"recipe": "ep10"}, "old_class": {"recipe": "distill"}}))
+    run("s9_followup.py", "policy", *fu, "--decisions", forced, "--run", "fu_smoke")
+    recs = json.loads((fdir / "fu_smoke" / "rounds.json").read_text())
+    logged = json.loads((src_run / "clean" / "rounds.json").read_text())[0]
+    assert recs[0]["attempt"] == "C1" and recs[0]["val"]["recall"] == logged["val"]["recall"], "policy C1 != s3 C1"
+    for b in {r["block"] for r in recs}:
+        att = [r for r in recs if r["block"] == b]
+        assert len(att) <= 3 and sum(r["accepted"] for r in att) <= 1 and not any(r["accepted"] for r in att[:-1])
+        assert all(r["attempt"] in ("C2", "D1") for r in att[1:]), att
+    p = subprocess.run([sys.executable, str(HERE / "s9_followup.py"), "score-test", *map(str, fu), "--run", "fu_smoke"],
+                       capture_output=True, text=True)
+    assert p.returncode != 0 and "decisions-commit" in p.stderr, p.stderr[-500:]
+    run("s9_followup.py", "score-test", *fu, "--run", "fu_smoke", "--decisions-commit", "0000000")
+    p = subprocess.run([sys.executable, str(HERE / "s9_followup.py"), "score-test", *map(str, fu), "--run", "fu_smoke",
+                        "--decisions-commit", "0000000"], capture_output=True, text=True)
+    assert p.returncode != 0 and "scored once" in p.stderr, p.stderr[-500:]
+    assert before == {p: p.read_bytes() for p in src_run.rglob("*") if p.is_file()}, "s9 changed the source run"
+    print(f"FU1 (s9) ran: {len(recs)} policy attempts "
+          f"({', '.join(sorted({r['attempt'] for r in recs}))}); source run unchanged")
     print("\nSMOKE TEST PASSED (plumbing only - synthetic numbers are not results)")
 
 

@@ -12,6 +12,8 @@
 - Attack scope (initial): attacker edits labels of a bounded fraction of ONE old class in the replay buffer B only.
   D, V, test, teacher weights and gradients are out of reach. FGSM/PGD and backdoors are separate threat models.
 - Gate: per-old-class recall floors, new-class recall, new-class false-alarm rate. At most two attempts per block (C1, R1).
+  Exception, follow-up FU1 only (`s9_followup.py`, `experiments/prereg_followup_fu1.md`): clean blocks get C1, one C2 with a
+  validation-selected recipe, and one deferred retry D1; s3 itself is unchanged (a rejected block is skipped for good).
 - Everything must run on a Kaggle T4. Smallest meaningful experiment first. Fixed seeds; save configs, manifests, per-round metrics.
 
 - Stage 1 dedupes GLOBALLY on model features (float64 hash) BEFORE capping (bottom-k per class); label-conflict vectors dropped; each feature vector exists once, so no split overlap (asserted; s1b also checks overlap after scaling).
@@ -34,7 +36,7 @@
   (*.zip, *.parquet, *.npz, *.pt, nids_out/ are gitignored); check for secrets before pushing (repo is public).
 
 ## Layout
-common.py | s0_audit.py | s1_preprocess.py (clean+split) | s1b_experiences.py (CI/CII + scaler; --tag writes a second schedule under nids_out/<tag>/) | s2_model.py | s3_continual.py (E0, T/A0, arms, gate, poison, repair) | s4_report.py (tables/plots) | s5_explain.py (read-only explanations/diagnostics) | s6_sweep.py (sweep tables: --decisions val-only, then --test) | s7_deliverables.py (report tables/claims from saved files) | demo.py (3 read-only demo interactions) | make_all_labels_schedule.py | make_result_tables.py (small CSV/JSON result tables for git from saved runs) | make_synthetic.py | smoke_test.py | experiments/prereg_sweep.md | docs/slides_outline.md | notebooks/00-04
+common.py | s0_audit.py | s1_preprocess.py (clean+split) | s1b_experiences.py (CI/CII + scaler; --tag writes a second schedule under nids_out/<tag>/) | s2_model.py | s3_continual.py (E0, T/A0, arms, gate, poison, repair) | s4_report.py (tables/plots) | s5_explain.py (read-only explanations/diagnostics) | s6_sweep.py (sweep tables: --decisions val-only, then --test) | s7_deliverables.py (report tables/claims from saved files) | demo.py (3 read-only demo interactions) | make_all_labels_schedule.py | make_result_tables.py (small CSV/JSON result tables for git from saved runs) | s9_followup.py (FU1: probes, selection rule, retry policy; reads finished runs only) | make_synthetic.py | smoke_test.py | experiments/prereg_sweep.md, prereg_followup_fu1.md | docs/slides_outline.md | notebooks/00-05
 - s3 flags added 2026-10-21, all default-off (default flags reproduce `main`; smoke_test checks checkpoint hashes against the old code):
   --seed (training only), --repair-rule {soft,threeway}, --relabel-to-teacher (a different method), --tw-keep/--tw-quarantine/--tw-mid-weight,
   --forced-r1 (DIAGNOSTIC R1s on clean/poisoned arms -> r1_diag.json, never a decision), --gate-conf-drop (mean p always logged), --tag.
@@ -52,6 +54,7 @@ folders by searching for a marker file (`s5_explain.find_dir`), never by a hard-
 | 02_train_evaluate | code + results_01 (comes with the code dataset); GPU | `runs/cii/<RUN>/` (T.pt, A0.pt, arms, rounds.json, final_test.json, report/), zip `nids_results.zip` |
 | 03_understand_our_model | code (with s5_explain.py) + nids-results (main); results_01 optional (comes with the code dataset); CPU | nothing (read-only; asserts every checkpoint unchanged) |
 | 04_poison_sweep | new code (git clone with Internet ON, or a code-dataset version with s6_sweep.py) + code dataset for results_01 (found via clean_train.parquet) + nids-results (main, for H0); GPU | `runs/cii/repro_s42`, `runs/cii/sweep_f{f}_s{seed}`, `sweep/` (decisions, diagnostics, hypotheses, test tables); optional part B `all12/` + `runs/{cii,ci}/all12_*_s42`; zip `nids_sweep.zip` (no parquet, nothing from main) |
+| 05_followup_fu1 | new code (Internet ON, git clone) + notebook 04's output (clean_*.parquet, all12/, runs/{cii,ci}/all12_*_s42; found via the all12 run marker); GPU | `followup/{cii,ci}/` (separability.csv, probe_E1/E5 + csv, fu1_retry_*_s42/), `followup/decisions.json`; zips `fu1_val.zip`, later `fu1_test.zip` |
 Not verified: 00 and 01 run on Kaggle long before this table was written; their input attachment names are not re-checked.
 Notebook 04 and part B have run only in local pieces (setup cell, input-hash check, dry run, zip filter), not end to end on Kaggle.
 - Architecture name: FT-Transformer-style tabular Transformer (per-feature numeric tokens + [CLS]); the class name `TabTransformer` is historical, NOT the original TabTransformer.

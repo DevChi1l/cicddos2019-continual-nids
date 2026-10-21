@@ -137,15 +137,20 @@ def predict_proba(model, x, c, device, bs=4096):
     return torch.cat(out).numpy() if out else np.zeros((0, model.head.out_features), "float32")
 
 
-def train(model, classes, x, c, lab, w, epochs, a, device, seed):
+def train(model, classes, x, c, lab, w, epochs, a, device, seed, cw_power=0.5, distill=None):
     """Weighted cross-entropy. Class weights (inverse sqrt frequency) offset scarce benign;
-    w is the per-row weight (1 everywhere except teacher-weighted replay rows in R1)."""
+    w is the per-row weight (1 everywhere except teacher-weighted replay rows in R1).
+    Used only by s9_followup (defaults = the behaviour above):
+      cw_power  class weight (N / (K n_k)) ** cw_power; 1.0 gives every class the same total weight.
+      distill   (prev_model, n_old, lam, temp): adds lam * temp^2 * KL(prev || model) on the first n_old
+                logits, i.e. distillation from the last accepted model (LwF-style)."""
     pos = {k: i for i, k in enumerate(classes)}
     y = pd.Series(lab).map(pos).to_numpy()
     assert not np.isnan(y.astype(float)).any(), "training label outside the model's classes"
     y = y.astype("int64")
     cnt = np.bincount(y, minlength=len(classes))
-    cw = np.where(cnt > 0, np.sqrt(len(y) / (len(classes) * np.maximum(cnt, 1))), 0.0)
+    ratio = len(y) / (len(classes) * np.maximum(cnt, 1))
+    cw = np.where(cnt > 0, np.sqrt(ratio) if cw_power == 0.5 else ratio ** cw_power, 0.0)
     sw = torch.tensor(cw[y] * w, dtype=torch.float32, device=device)
     X, C = torch.from_numpy(x).to(device), torch.from_numpy(c).to(device)
     Y = torch.from_numpy(y).to(device)
@@ -153,6 +158,9 @@ def train(model, classes, x, c, lab, w, epochs, a, device, seed):
     use_amp = device.type == "cuda"
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
     g = torch.Generator().manual_seed(seed)
+    if distill is not None:
+        prev, n_old, lam, temp = distill
+        prev.eval()
     losses = []
     for _ in range(epochs):
         model.train()
@@ -164,6 +172,12 @@ def train(model, classes, x, c, lab, w, epochs, a, device, seed):
                 logits = model(X[b], C[b])
             ce = F.cross_entropy(logits.float(), Y[b], reduction="none")
             loss = (ce * sw[b]).sum() / sw[b].sum().clamp_min(1e-8)
+            if distill is not None:
+                with torch.no_grad(), torch.autocast(device.type, dtype=torch.float16, enabled=use_amp):
+                    pl = prev(X[b], C[b])
+                kd = F.kl_div(F.log_softmax(logits.float()[:, :n_old] / temp, -1),
+                              F.log_softmax(pl.float() / temp, -1), log_target=True, reduction="batchmean")
+                loss = loss + lam * temp ** 2 * kd
             opt.zero_grad(set_to_none=True)
             scaler.scale(loss).backward()
             scaler.step(opt)
@@ -364,6 +378,7 @@ def run_arm(arm, ctx, a, rdir, T, T_classes):
         new = ctx["schedule"][t]
         ref = evaluate(A, A_cls, val, dev)
         cand = A_cls + new
+        old_cls = list(A_cls)  # A_cls changes on acceptance; diagnostics after it must log these
         old_attack = [k for k in A_cls if k != "BENIGN"]
         di = tr.idx(ctx["exp"][t])
         bi = tr.idx(buf["rid"].to_numpy())
@@ -387,7 +402,7 @@ def run_arm(arm, ctx, a, rdir, T, T_classes):
             met = evaluate(m, cand, val, dev, new)
             ok, reasons = gate(met, ref, old_attack, new, a)
             return m, ok, {"arm": arm, "experience": t, "gate_reasons": reasons, "new_classes": new,
-                           "old_classes": A_cls, "losses": losses, "seconds": time.time() - t0,
+                           "old_classes": old_cls, "losses": losses, "seconds": time.time() - t0,
                            "teacher_weights": wstats, "n_current": int(len(di)), "n_replay": int(len(bi)),
                            "n_replay_flipped": int(buf["flipped"].sum()),
                            "conf_check": conf_check(met, ref, old_attack, a), "val": met, "ref_val": ref}
@@ -420,6 +435,59 @@ def run_arm(arm, ctx, a, rdir, T, T_classes):
     save_json({"arm": arm, "final_classes": A_cls, "scope": ctx["scope"], "test": test},
               adir / "final_test.json")
     return records, test
+
+
+def input_names(tag: str, scenario: str) -> list[str]:
+    """Stage 1/1b files a run depends on (their sha256 go into config.json)."""
+    base = Path(tag)  # Path("") when no tag: the original file names
+    return ["split_manifest.json", "class_map.json", "clean_train.parquet", "clean_val.parquet",
+            "clean_test.parquet", str(base / "protected_exclusions.json"),
+            str(base / scenario / "experience_rids.npz"), str(base / scenario / "scaler.json"),
+            str(base / scenario / "experience_manifest.json")]
+
+
+def load_context(out: Path, tag: str, scenario: str, device: str):
+    """Load one scenario's Stage 1/1b rows and check them against Stage 1b's manifests.
+    Returns (ctx, val/test row counts per class, train rows per experience, excluded row ids)."""
+    sdir = out / Path(tag) / scenario
+    em = load_json(sdir / "experience_manifest.json")
+    schedule = em["schedule"]
+    scaler = load_json(sdir / "scaler.json")
+    class_map = load_json(out / "class_map.json")
+    z = np.load(sdir / "experience_rids.npz")
+    exp = [z[f"e{t}"] for t in range(len(schedule))]
+    used = np.unique(np.concatenate(exp))
+    scope = ["BENIGN"] + [k for e in schedule for k in e]  # unscheduled classes never scored
+    tr_df = pd.read_parquet(out / "clean_train.parquet")
+    # protected rows whose model input equals a training input (Stage 1b); same ids for CI and CII
+    pe = load_json(out / Path(tag) / "protected_exclusions.json")
+    excluded = np.array(pe["excluded_rids"], dtype="int64")
+    assert hashlib.sha256(excluded.tobytes()).hexdigest() == pe["rids_sha256"] == \
+        em["protected_exclusions"]["rids_sha256"], "protected_exclusions.json does not match this scenario's Stage 1b"
+
+    def protected(sp):
+        d = pd.read_parquet(out / f"clean_{sp}.parquet")
+        return Rows(d[d[LABEL_COL].isin(scope) & ~d["_rid"].isin(excluded)], scaler, class_map)
+
+    ctx = {
+        "device": torch.device(device), "schedule": schedule, "exp": exp, "scope": scope,
+        "train": Rows(tr_df[tr_df["_rid"].isin(used)], scaler, class_map),
+        "val": protected("val"), "test": protected("test"),
+        "n_num": len(scaler["features_numeric"]),
+        "card": [len(v) + 1 for v in scaler["cat_vocab"].values()],
+    }
+    del tr_df
+    assert not (set(used) & set(ctx["val"].rid) | set(used) & set(ctx["test"].rid)), \
+        "training row id also in val/test"
+    # the rows loaded here must be exactly the rows Stage 1b reported
+    rows = {sp: {k: int((ctx[sp].lab == k).sum()) for k in scope} for sp in ("val", "test")}
+    for sp in rows:
+        assert rows[sp] == em["protected_exclusions"]["kept_by_split_class"][sp], \
+            f"{sp} rows differ from Stage 1b: {rows[sp]}"
+    per_exp = {f"E{t}": pd.Series(ctx["train"].lab[ctx["train"].idx(e)]).value_counts().to_dict()
+               for t, e in enumerate(exp)}
+    assert per_exp == em["counts_per_experience"], f"experience rows differ from Stage 1b: {per_exp}"
+    return ctx, rows, per_exp, excluded
 
 
 def main():
@@ -464,21 +532,14 @@ def main():
     out = default_work_dir() if a.out is None else Path(a.out)
     bad = [m for m in a.forced_r1.split(",") if m and m not in METHODS]
     assert not bad, f"unknown --forced-r1 method(s) {bad}; choose from {METHODS}"
-    base = Path(a.tag)  # Path("") when no tag: the original file names
-    sdir = out / base / a.scenario
-    em = load_json(sdir / "experience_manifest.json")
-    schedule = em["schedule"]
+    schedule = load_json(out / a.tag / a.scenario / "experience_manifest.json")["schedule"]
     a.poison_target = a.poison_target or schedule[0][0]
     assert a.poison_target in schedule[0], "poison target must be an E0 attack class (T knows it)"
     assert a.poison_to in ["BENIGN"] + schedule[0], "poison_to must be a class known at E0"
     assert a.poison_to != a.poison_target
 
     # every arm and every resumed process must use these exact Stage 1/1b files
-    inputs = {n: file_hash(out / n) for n in
-              ["split_manifest.json", "class_map.json", "clean_train.parquet", "clean_val.parquet",
-               "clean_test.parquet", str(base / "protected_exclusions.json"),
-               str(base / a.scenario / "experience_rids.npz"), str(base / a.scenario / "scaler.json"),
-               str(base / a.scenario / "experience_manifest.json")]}
+    inputs = {n: file_hash(out / n) for n in input_names(a.tag, a.scenario)}
     rdir = out / "runs" / a.scenario / a.run
     if (rdir / "run_manifest.json").exists() and not a.resume and not a.dry_run:
         raise SystemExit(f"refuse: run '{a.run}' is complete in {rdir}; it is never overwritten. "
@@ -492,41 +553,7 @@ def main():
                              f"settings changed. Use a new --run name.")
 
     torch.manual_seed(a.seed)
-    scaler = load_json(sdir / "scaler.json")
-    class_map = load_json(out / "class_map.json")
-    z = np.load(sdir / "experience_rids.npz")
-    exp = [z[f"e{t}"] for t in range(len(schedule))]
-    used = np.unique(np.concatenate(exp))
-    scope = ["BENIGN"] + [k for e in schedule for k in e]  # unscheduled classes never scored
-    tr_df = pd.read_parquet(out / "clean_train.parquet")
-    # protected rows whose model input equals a training input (Stage 1b); same ids for CI and CII
-    pe = load_json(out / base / "protected_exclusions.json")
-    excluded = np.array(pe["excluded_rids"], dtype="int64")
-    assert hashlib.sha256(excluded.tobytes()).hexdigest() == pe["rids_sha256"] == \
-        em["protected_exclusions"]["rids_sha256"], "protected_exclusions.json does not match this scenario's Stage 1b"
-
-    def protected(sp):
-        d = pd.read_parquet(out / f"clean_{sp}.parquet")
-        return Rows(d[d[LABEL_COL].isin(scope) & ~d["_rid"].isin(excluded)], scaler, class_map)
-
-    ctx = {
-        "device": torch.device(a.device), "schedule": schedule, "exp": exp, "scope": scope,
-        "train": Rows(tr_df[tr_df["_rid"].isin(used)], scaler, class_map),
-        "val": protected("val"), "test": protected("test"),
-        "n_num": len(scaler["features_numeric"]),
-        "card": [len(v) + 1 for v in scaler["cat_vocab"].values()],
-    }
-    del tr_df
-    assert not (set(used) & set(ctx["val"].rid) | set(used) & set(ctx["test"].rid)), \
-        "training row id also in val/test"
-    # the rows loaded here must be exactly the rows Stage 1b reported
-    rows = {sp: {k: int((ctx[sp].lab == k).sum()) for k in scope} for sp in ("val", "test")}
-    for sp in rows:
-        assert rows[sp] == em["protected_exclusions"]["kept_by_split_class"][sp], \
-            f"{sp} rows differ from Stage 1b: {rows[sp]}"
-    per_exp = {f"E{t}": pd.Series(ctx["train"].lab[ctx["train"].idx(e)]).value_counts().to_dict()
-               for t, e in enumerate(exp)}
-    assert per_exp == em["counts_per_experience"], f"experience rows differ from Stage 1b: {per_exp}"
+    ctx, rows, per_exp, excluded = load_context(out, a.tag, a.scenario, a.device)
     print(f"scenario={a.scenario} schedule={schedule} device={ctx['device']} "
           f"features={ctx['n_num']} val_rows={len(ctx['val'].rid)} test_rows={len(ctx['test'].rid)}")
     print("train rows per experience:", per_exp)
