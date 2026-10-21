@@ -1,6 +1,6 @@
 # Poison-resilient continual NIDS - starter pipeline (Stages 0-2)
 
-Status: **Stages 0-4 ran end to end on synthetic CICDDoS2019-style files only (`smoke_test.py`, CPU PyTorch). On real data (Kaggle): the Stage 0 full audit and Stage 1 have run (95,272 distinct benign kept, zero cross-split feature overlap); Stage 1b passed for CI and CII (166 protected rows excluded as transformed duplicates, residual overlap 0; outputs in `results_01.zip`); one CII run (seed 42, poison_frac 0.5) completed (`nids_results.zip`): every C1 passed the gate, so R1 never ran on real data. See `notebooks/03_understand_our_model.ipynb`. Next: the pre-registered poison sweep (`experiments/prereg_sweep.md`, `notebooks/04_poison_sweep.ipynb`), not yet run.** Nothing here
+Status: **Stages 0-4 ran end to end on synthetic CICDDoS2019-style files only (`smoke_test.py`, CPU PyTorch). On real data (Kaggle): the Stage 0 full audit and Stage 1 have run (95,272 distinct benign kept, zero cross-split feature overlap); Stage 1b passed for CI and CII (166 protected rows excluded as transformed duplicates, residual overlap 0; outputs in `results_01.zip`); one CII run (seed 42, poison_frac 0.5) completed (`nids_results.zip`): every C1 passed the gate, so R1 never ran on real data. See `notebooks/03_understand_our_model.ipynb`. The pre-registered poison sweep and the exploratory 12-label runs have run (notebook 04); results and deviations: `experiments/results/SUMMARY.md`.** Nothing here
 is a result about the proposed method; it is data plumbing + an untrained model.
 
 ## Easiest: run `notebooks/00_audit.ipynb` -> `01_splits_experiences.ipynb` -> `02_train_evaluate.ipynb` on Kaggle (they call the scripts below).
@@ -37,4 +37,5 @@ Outputs go to `/kaggle/working/nids_out/`: `manifest.json`, `split_manifest.json
 - `--cap` truncates huge attack files; BENIGN is tiny so it is kept whole. Check the per-split counts table: a rare class with a few dozen validation flows cannot support a recall gate.
 
 ## Not yet done (next stages)
-Stages 3-4 exist and passed the synthetic smoke test only; no real-data training has been run.
+Real-data runs so far: `main`, the poison sweep and the 12-label runs (see `experiments/results/SUMMARY.md`).
+Not run: mild repeated corruption, shortcut/header-length ablation.

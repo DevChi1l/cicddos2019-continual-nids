@@ -85,3 +85,9 @@ p*_Syn = c_S n_S / (c_S n_S + c_B n_flipped)
   `s6 --test` was skipped, and the decisions use val only. Computation, display, human inspection and
   reporting are separated in [`results/04_sweep/README.md`](results/04_sweep/README.md). Hypotheses,
   gate, thresholds and saved values are unchanged.
+- **D2 (recorded 2026-10-21).** The test tables come from a second full execution of notebook 04
+  (code `3e7807c`, 2026-10-21 10:35-11:37 UTC, after the decisions commit `eebc990`). The plan was to restore
+  the first execution's runs; instead the sweep was retrained. All 13 runs are bit-identical to the first
+  execution: every checkpoint, CSV and JSON matches, apart from wall-clock `seconds`. So the committed
+  decisions describe the same models. As in D1, s3 scored test inside each run. The same execution also ran
+  part B (12 labels, one seed). Part B was not covered by this pre-registration and is reported as exploratory.

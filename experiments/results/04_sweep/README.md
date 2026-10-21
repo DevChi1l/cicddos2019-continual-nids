@@ -50,3 +50,11 @@ commit. We do not claim that the first test scoring happened after the commit. N
 regenerated. The decisions themselves use val only (`rounds.json` is written before the test evaluation, and
 nothing in the gate reads test rows), so this deviation does not affect H0-H6.
 Wording affected: the STOP cell in notebook 04 ("before any test number is produced") is inaccurate.
+
+## Part 2: test tables (added 2026-10-21, after `eebc990`)
+
+`final_test.csv`, `test_summary.csv` and `test_syn.png` are the `s6_sweep.py --test` output of the second
+execution of notebook 04 (deviation D2: retrained, bit-identical to the first). `deployed_models.csv` comes from
+`make_result_tables.py`. For each arm it lists what each update did, a weight-hash check that rejected updates
+kept the previous model (`fallback_ok`), and the deployed model's test metrics. Interpretation:
+[`../SUMMARY.md`](../SUMMARY.md).
