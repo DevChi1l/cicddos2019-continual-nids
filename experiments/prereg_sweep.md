@@ -78,4 +78,10 @@ p*_Syn = c_S n_S / (c_S n_S + c_B n_flipped)
 
 ## Deviations
 
-(none yet)
+- **D1 (recorded 2026-10-21).** Test scores existed before the decisions commit. `s3_continual.py` writes
+  each arm's `final_test.json` (and `A0_test` in `run_manifest.json`) at the end of every run, and
+  `s4_report.py` writes `report/final_test.csv`. Both ran inside notebook 04 cell 7 on Kaggle
+  (2026-10-20 23:12-23:55 UTC), before the validation files were committed. No test number was displayed,
+  `s6 --test` was skipped, and the decisions use val only. Computation, display, human inspection and
+  reporting are separated in [`results/04_sweep/README.md`](results/04_sweep/README.md). Hypotheses,
+  gate, thresholds and saved values are unchanged.
