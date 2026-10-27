@@ -101,3 +101,11 @@ classes overlap, not because the training recipe is weak.
     copies under `experiments/results/05_fu1/` in the named commit, and `final.pt` matches the recorded hash.
   - `policy` accepts only `<work>/followup/decisions.json`.
   - Recipes, selection rule, retry policy and gate are unchanged.
+- **2026-10-27, after test was scored (descriptive step and packaging only; no decision, recipe, gate or result
+  changed):**
+  - Step 0 (separability) was a measurement artifact: float32 `torch.cdist` rounded small distances to 0. Its
+    `separability.csv` is marked invalid in `results/05_fu1/README.md` and kept unchanged. The code now uses exact
+    float64 distances and writes `separability_exact.csv`; it was rerun locally on train vs val rows only
+    (`results/05_fu1/separability_exact_local/`). This happened after the test, so it supports no prediction.
+  - Notebook 05 cell 9 (`fu1_test.zip`) needed a helper from cell 6, which a restore session skips; in the test
+    session the zip was made by an ad-hoc cell with the same filter. The helper now lives in cell 1.

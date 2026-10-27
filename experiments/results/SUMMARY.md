@@ -1,4 +1,4 @@
-# Results summary: poison sweep and 12-label runs (CICDDoS2019, notebook 04)
+# Results summary: poison sweep, 12-label runs (notebook 04) and follow-up FU1 (notebook 05)
 
 All numbers below come from saved run files. The tables in this folder are produced by
 `python make_result_tables.py --out <nids_out>`, which reads files and trains nothing. Each section says
@@ -139,6 +139,28 @@ pairs (DNS/LDAP, SSDP/UDP) are hard to separate with these features. A rejected 
 its classes are lost permanently. This is a property of the protocol, observed in one seed; it is not a
 poisoning result. Thresholds were **not** changed after seeing these test numbers.
 
+## C. Follow-up FU1: retrying the rejected clean blocks of part B (pre-registered, one start seed)
+
+Details, provenance and tables: [`05_fu1/README.md`](05_fu1/README.md). Pre-registration:
+`../prereg_followup_fu1.md`. Decisions on validation (committed `5307b58`), test scored once afterwards (2026-10-27).
+
+- **Validation:** 20 update epochs (`ep20`) let E1 (DNS, LDAP) pass in 5 of 6 probe cells, so the retry policy
+  used it. No recipe passed E5 (SSDP vs UDP). In the full schedule only E1 (at C2) and E4 were accepted, in both
+  scenarios.
+- **Test, deployed model (123,281 rows, same rows as part B):**
+
+  | | CII s3 clean | CII FU1 | CI s3 clean | CI FU1 |
+  |---|---|---|---|---|
+  | Labels learned (of 12) | 6 | 6 | 8 | 6 |
+  | DNS / LDAP recall | 0 / 0 | 0.831 / 0.834 | 0 / 0 | 0.837 / 0.829 |
+  | Lost vs s3 (recall -> 0) | | MSSQL, NTP | | MSSQL, NTP, NetBIOS, SNMP |
+  | Macro recall (12 labels) | 0.492 | 0.471 | 0.648 | 0.470 |
+  | Benign FAR | 0.0010 | 0.0018 | 0.0290 | 0.0084 |
+
+- **Reading:** FU1 makes DNS/LDAP learnable, but once they are accepted their recall floors block the next
+  blocks, which overlap with them. Label coverage does not grow, and macro recall falls. SSDP/UDP stays unsolved.
+  This is a negative result for "better update recipes fix the 12-label protocol" (one start seed).
+
 ## What we can and cannot claim
 
 | Claim | Status |
@@ -148,5 +170,6 @@ poisoning result. Thresholds were **not** changed after seeing these test number
 | The gate stops corrupted updates, but without repair the model stops learning | 9/12 runs miss LDAP |
 | Relabel-to-teacher fixes f = 1.0 | **diagnostic only**, not deployed or tested |
 | The method works with 12 labels | **no**: clean updates fail the gate (one seed, capped data) |
+| Retrying rejected clean blocks with a validation-selected recipe (FU1) fixes it | **no**: DNS/LDAP learned (test 0.83), but 6 of 12 labels in both scenarios, macro recall lower |
 | Mild (5-10%) repeated corruption | not run |
 | Statistical significance | not claimed (3 seeds, or 1 for part B) |

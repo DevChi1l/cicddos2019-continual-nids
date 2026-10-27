@@ -37,6 +37,6 @@ Outputs go to `/kaggle/working/nids_out/`: `manifest.json`, `split_manifest.json
 - `--cap` truncates huge attack files; BENIGN is tiny so it is kept whole. Check the per-split counts table: a rare class with a few dozen validation flows cannot support a recall gate.
 
 ## Not yet done (next stages)
-Real-data runs so far: `main`, the poison sweep and the 12-label runs (see `experiments/results/SUMMARY.md`).
-Prepared, not run: follow-up FU1 (`experiments/prereg_followup_fu1.md`, `s9_followup.py`, `notebooks/05_followup_fu1.ipynb`).
+Real-data runs so far: `main`, the poison sweep, the 12-label runs and follow-up FU1 (validation + one test
+scoring; see `experiments/results/SUMMARY.md` and `experiments/results/05_fu1/README.md`).
 Not run: mild repeated corruption, shortcut/header-length ablation.

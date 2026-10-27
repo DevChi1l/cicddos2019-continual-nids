@@ -4,6 +4,7 @@ The all12 runs (notebook 04, part B) rejected CLEAN updates: E1 (new DNS recall 
 LDAP) and E5 (old SSDP recall ~0, SSDP val rows predicted UDP). s3 then skips such a block for good. FU1 asks,
 deciding on VALIDATION only:
   separability  1-nearest-neighbour recall for DNS/LDAP and SSDP/UDP: a ceiling hint, decides nothing
+                (exact float64 -> separability_exact.csv; the 2026-10-21 float32 separability.csv is invalid)
   probe         one block of the clean arm, from that arm's saved start model and buffer, one factor at a time
                 (E1: update-training / class-balance changes; E5: balanced class weights or distillation)
   decide        the pre-registered selection rule -> decisions.json (one recipe per failure type, or none)
@@ -324,8 +325,16 @@ def score_test(a):
 
 
 def separability(a):
-    """Descriptive only: 1-NN recall of each class of a pair, training rows of this scenario vs its val rows."""
+    """Descriptive only: 1-NN recall of each class of a pair, training rows of this scenario vs its val rows.
+
+    Distances are exact float64 (no matrix-product shortcut). The first version (FU1 run of 2026-10-21) used
+    float32 `torch.cdist`, whose |q|^2 + |x|^2 - 2 q.x formula rounds small distances to 0 next to the x100
+    protocol column; its `separability.csv` is INVALID (fake identical inputs, ties to the first class).
+    This version writes `separability_exact.csv`, so the two files can never be confused.
+    """
     run, cfg, hp, ctx, dest = setup(a)
+    if (dest / "separability.csv").exists():
+        print(f"note: {dest / 'separability.csv'} is the invalid float32 output; do not cite it")
     tr, va, dev = ctx["train"], ctx["val"], ctx["device"]
     ti = tr.idx(np.concatenate(ctx["exp"]))
     rows = []
@@ -333,20 +342,21 @@ def separability(a):
         ks = pair.split(":")
         s, v = ti[np.isin(tr.lab[ti], ks)], np.flatnonzero(np.isin(va.lab, ks))
         # protocol id as a far-apart extra column, so a neighbour always shares the protocol
-        X = torch.from_numpy(np.c_[tr.x[s], 100.0 * tr.c[s]]).float().to(dev)
+        X = torch.from_numpy(np.c_[tr.x[s], 100.0 * tr.c[s]]).double().to(dev)
         nn, dist = [], []
-        for i in range(0, len(v), 2048):
-            q = torch.from_numpy(np.c_[va.x[v[i:i + 2048]], 100.0 * va.c[v[i:i + 2048]]]).float().to(dev)
-            d, j = torch.cdist(q, X).min(1)
+        for i in range(0, len(v), 512):
+            q = torch.from_numpy(np.c_[va.x[v[i:i + 512]], 100.0 * va.c[v[i:i + 512]]]).double().to(dev)
+            d, j = torch.cdist(q, X, compute_mode="donot_use_mm_for_euclid_dist").min(1)
             nn.append(j.cpu().numpy())
             dist.append(d.cpu().numpy())
         pred, dist, true = tr.lab[s][np.concatenate(nn)], np.concatenate(dist), va.lab[v]
         for k in ks:
             rows.append({"scenario": a.scenario, "pair": pair, "class": k, "val_rows": int((true == k).sum()),
                          "train_rows": int((tr.lab[s] == k).sum()), "nn_recall": float((pred[true == k] == k).mean()),
-                         "share_identical_input": float((dist[true == k] == 0).mean())})
+                         "share_identical_input": float((dist[true == k] == 0).mean()),
+                         "distance": "float64_exact"})
     out = pd.DataFrame(rows)
-    out.to_csv(dest / "separability.csv", index=False)
+    out.to_csv(dest / "separability_exact.csv", index=False)
     print(out.to_string(index=False))
 
 

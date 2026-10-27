@@ -1,0 +1,5 @@
+scenario,pair,class,val_rows,train_rows,nn_recall,share_identical_input,distance
+ci,DNS:LDAP,DNS,4367,9312,0.8394779024501946,0.0,float64_exact
+ci,DNS:LDAP,LDAP,2296,9312,0.850609756097561,0.0,float64_exact
+ci,SSDP:UDP,SSDP,4718,9312,0.5796947859262399,0.0,float64_exact
+ci,SSDP:UDP,UDP,5486,9312,0.5550492161866569,0.0,float64_exact

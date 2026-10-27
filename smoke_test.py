@@ -198,6 +198,8 @@ def main():
     fu = ["--src", out, "--work", w / "fu", "--scenario", "cii", "--tag", "", "--source-run", "smoke",
           "--device", "cpu", "--seeds", "42,43"]
     run("s9_followup.py", "separability", *fu, "--pairs", "LDAP:UDP")
+    sep = pd.read_csv(w / "fu" / "followup" / "cii" / "separability_exact.csv")
+    assert (sep["distance"] == "float64_exact").all() and not (w / "fu" / "followup" / "cii" / "separability.csv").exists()
     run("s9_followup.py", "probe", *fu, "--block", 1, "--recipes", "base,ep10,lr3e-4,balanced")
     run("s9_followup.py", "probe", *fu, "--block", 2, "--recipes", "base,balanced,distill")
     fdir = w / "fu" / "followup" / "cii"
