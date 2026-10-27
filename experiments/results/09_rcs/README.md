@@ -39,12 +39,16 @@ The table shows the rejected updates. Every other update was accepted.
 - **Moving LDAP last moved the failure, it did not remove it.** Learning LDAP erased SNMP: 2/3 seeds, recall 0.45-0.65.
 - **Dropping LDAP exposed the next overlap.** SNMP erased MSSQL in 3/3 seeds, and SSDP erased NTP once.
 
-## Reading RC and RCS together (15 clean runs, validation only)
+## Reading RC and RCS together (9 clean runs, validation only)
+
+Corrected 2026-10-28: an earlier version of this heading said 15. The count from the committed `rounds.json` files is
+9 clean runs (RC 3, RCS 6), with 13 rejected updates.
 
 - **Every clean rejection was the same kind of failure.** An old attack class that is *not* Syn is forgotten when
   another amplification class that overlaps it arrives: LDAP/SNMP, MSSQL/SNMP, LDAP/MSSQL, NTP/SSDP.
 - **Syn never moved by more than 0.001.**
-- **The cause is the class-incremental sequence.** Under this gate and recipe, no class order of ≥ 5 updates drawn
-  from these classes was stable. The instability is not in the class the attack targets.
+- **The instability comes from class arrival, not from the attacked class.** Under this gate and recipe, none of
+  the three registered schedules (RC's, `rcs6`, `rcs5`) was stable. Other orders and class sets were not tried, so
+  this is not a claim about every possible order (wording corrected 2026-10-28).
 - **What this does not show.** It says nothing about replay poisoning, since no poison was applied. It is not a claim
   that the classes are inseparable: a jointly trained model learns MSSQL, NTP and SNMP at 0.83-0.99 (`07_oracle/`).

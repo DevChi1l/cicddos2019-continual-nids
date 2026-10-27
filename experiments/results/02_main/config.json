@@ -1,0 +1,61 @@
+{
+  "args": {
+    "out": null,
+    "scenario": "cii",
+    "run": "main",
+    "epochs0": 10,
+    "epochs_update": 5,
+    "batch": 512,
+    "lr": 0.001,
+    "d": 32,
+    "heads": 4,
+    "layers": 3,
+    "dropout": 0.1,
+    "mem_per_class": 2000,
+    "poison_target": "Syn",
+    "poison_to": "BENIGN",
+    "poison_frac": 0.5,
+    "gate_old_drop": 0.05,
+    "gate_new_min": 0.8,
+    "gate_far_max": 0.05,
+    "gate_newfar_max": 0.05
+  },
+  "seed": 42,
+  "schedule": [
+    [
+      "Syn"
+    ],
+    [
+      "LDAP"
+    ],
+    [
+      "UDP"
+    ]
+  ],
+  "inputs": {
+    "split_manifest.json": "bb1f5acbd8ca2cbced88236bf5dc864d9541f267ab8f744a0f059faca987c724",
+    "class_map.json": "24925278bb16fde4c1f3cf99b395246000b7ccfd963357640e8933a4a350bba6",
+    "clean_train.parquet": "379e005649890b48295d7fbc8bdda5822a45924cc875514a9df3e596543aa8b6",
+    "clean_val.parquet": "b47c2469fa0b3198ea3af864f1ab4b511d8dce07e716ac72ad12c5daa397e0e3",
+    "clean_test.parquet": "1019948deae5835078b87eddcddc9238319e9ed29485ed1621db2e42c1e140b2",
+    "protected_exclusions.json": "2894d5c2e743e8e7058fc08bcb9892f071576523c54bfe211ea33b7bdfb38f1f",
+    "cii/experience_rids.npz": "5f7e4c325aebd92b539a74bafe86d659320c472469e792e4566f92a3a19dc159",
+    "cii/scaler.json": "9ec6876fa51c5c7ee749514b79e4e45ee72976b261a972be8f00c4b29b72cb99",
+    "cii/experience_manifest.json": "ae9f5bda0ec6c7a25395c9316426cf51d23c4dfac697b37141d5f2e9b0367197"
+  },
+  "protected_excluded_rows": 166,
+  "val_rows": {
+    "BENIGN": 9507,
+    "Syn": 5973,
+    "LDAP": 2296,
+    "UDP": 5487
+  },
+  "test_rows": {
+    "BENIGN": 19028,
+    "Syn": 11946,
+    "LDAP": 4576,
+    "UDP": 10977
+  },
+  "device": "cuda",
+  "torch": "2.11.0+cu128"
+}

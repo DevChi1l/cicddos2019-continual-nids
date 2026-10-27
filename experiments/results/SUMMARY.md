@@ -1,5 +1,7 @@
 # Results summary: poison sweep, 12-label runs (notebook 04), follow-ups FU1 (notebook 05) and FU2 (notebook 06), joint oracle (notebook 07), repeated-corruption pilots RC (notebook 08) and RCS (notebook 09), both stopped; RF (notebook 10, post hoc, validation + test)
 
+Generated, source-linked tables: `../../docs/RESULT_TABLES.md` (verify with `python make_report_tables.py --check`). Full walkthrough: `../../docs/PROJECT_TECHNICAL_HANDBOOK.md`.
+
 All numbers below come from saved run files. The tables in this folder are produced by
 `python make_result_tables.py --out <nids_out>`, which reads files and trains nothing. Each section says
 whether a number is a **validation gate decision** (used by the method) or a **held-out test metric**
@@ -306,9 +308,9 @@ Files and details: `09_rcs/README.md`. Registration: `../prereg_rcs.md` (`5e4ada
   - in `rcs6`, the final LDAP update erased SNMP (2/3 seeds) or MSSQL (1/3);
   - in `rcs5`, the SNMP update erased MSSQL (3/3).
 - **Syn in the clean arm** never moved by more than 0.001.
-- **RC and RCS together:** 15 clean runs, all failing on overlapping non-Syn amplification classes. Class-incremental
-  sequences of >= 5 updates from these classes are not stable under this gate and recipe. Repeated small
-  corruption is still **untested**.
+- **RC and RCS together:** 9 clean runs (3 RC + 6 RCS; 13 rejected updates; corrected 2026-10-28, earlier text said 15), all failing on overlapping non-Syn amplification classes. None of the three
+  registered class-incremental schedules (>= 5 updates) was stable under this gate and recipe; other orders or class
+  sets were not tried. Repeated small corruption under class arrival is still **untested**.
 
 ## H. RF, notebook 10: repeated corruption under fixed-class traffic refresh (post hoc; validation, then test once)
 

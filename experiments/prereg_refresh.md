@@ -129,6 +129,10 @@ Training rows per update grow from about 21k to 39k as the buffer grows, so an a
 
 None.
 
+**Erratum (2026-10-28; the design is unaffected).** "What this is" above says "In 15 clean runs". The
+committed `rounds.json` files give 9 clean runs (RC 3, RCS 6) with 13 rejected updates. The rest of that sentence
+(every rejection was a non-Syn class; Syn never moved by more than 0.001) holds for those 9 runs.
+
 ## Outcome, validation (added 2026-10-28; the design above is unchanged)
 
 Kaggle, code `32e890a`, cells 1-6:

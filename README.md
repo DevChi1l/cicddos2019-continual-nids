@@ -1,7 +1,27 @@
-# Poison-resilient continual NIDS - starter pipeline (Stages 0-2)
+# Poison-resilient continual NIDS on CICDDoS2019
 
-Status: **Stages 0-4 ran end to end on synthetic CICDDoS2019-style files only (`smoke_test.py`, CPU PyTorch). On real data (Kaggle): the Stage 0 full audit and Stage 1 have run (95,272 distinct benign kept, zero cross-split feature overlap); Stage 1b passed for CI and CII (166 protected rows excluded as transformed duplicates, residual overlap 0; outputs in `results_01.zip`); one CII run (seed 42, poison_frac 0.5) completed (`nids_results.zip`): every C1 passed the gate, so R1 never ran on real data. See `notebooks/03_understand_our_model.ipynb`. The pre-registered poison sweep and the exploratory 12-label runs have run (notebook 04); results and deviations: `experiments/results/SUMMARY.md`.** Nothing here
-is a result about the proposed method; it is data plumbing + an untrained model.
+**Start here:**
+- `docs/PROJECT_TECHNICAL_HANDBOOK.md`: the full walkthrough from raw CSVs to claims, with history, data, model,
+  protocol, results, problems, related work and viva Q&A;
+- `docs/ARCHITECTURE.md`: one-page model and update-loop diagram;
+- `docs/RESULT_TABLES.md`: generated tables;
+- `experiments/results/SUMMARY.md`: the results and the claims table.
+
+**Status (all runs are on Kaggle T4; the evidence is committed under `experiments/results/`):**
+- **Primary positive result: four labels, CII** (BENIGN, Syn, LDAP, UDP). With every stored Syn replay label flipped
+  to BENIGN, teacher-relabel repair (FU2, a post-hoc method) learns all four classes in 3/3 seeds on held-out test.
+  The gate alone and soft repair learn LDAP/UDP in 0/3 seeds. With 75-95% flipped, the pre-registered soft repair
+  learns all four classes in 9/9 runs.
+- **Not achieved:** a 12-label (or 14-label) continual defence. Clean 12-label updates fail the gate.
+- **Limitation:** RF, a post-hoc three-label fixed-class refresh study, found that a confidence loss of 0.99 -> 0.77
+  never triggers the recall-based gate.
+- **Data:** all 70,427,637 raw rows were read once for the audit and Stage 1. Training used capped, deduplicated
+  subsets (98,833 rows in the four-label setting).
+
+**Verify without data or GPU:**
+- `python make_report_tables.py --check` checks the tables against the committed files;
+- `python demo.py fu2` demonstrates the primary result;
+- `python demo.py rf` demonstrates the limitation.
 
 ## Easiest: run `notebooks/00_audit.ipynb` -> `01_splits_experiences.ipynb` -> `02_train_evaluate.ipynb` on Kaggle (they call the scripts below).
 Local plumbing check (synthetic, needs torch): `python smoke_test.py --work /tmp/nids_smoke`.
@@ -13,7 +33,7 @@ Local plumbing check (synthetic, needs torch): `python smoke_test.py --work /tmp
 ```
 %cd /kaggle/input/<your-code-dataset>/nids      # or your cloned repo
 !python s0_audit.py --input /kaggle/input --hash                # Stage 0 (slow on 20+ GB; add --max-rows-per-file 2000000 for a first look)
-!python s1_preprocess.py --input /kaggle/input --cap 100000 --split time   # Stage 1
+!python s1_preprocess.py --input /kaggle/input --cap 60000 --split random --nonfinite drop   # Stage 1 (settings actually used)
 !python s2_model.py                                              # Stage 2 self-test
 ```
 Outputs go to `/kaggle/working/nids_out/`: `manifest.json`, `split_manifest.json`,

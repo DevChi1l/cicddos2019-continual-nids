@@ -1,0 +1,92 @@
+{
+  "scenario": "cii",
+  "schedule": [
+    [
+      "Syn"
+    ],
+    [
+      "LDAP"
+    ],
+    [
+      "UDP"
+    ]
+  ],
+  "attack_cap": 13890,
+  "seed": 42,
+  "counts_per_experience": {
+    "E0": {
+      "BENIGN": 19055,
+      "Syn": 13890
+    },
+    "E1": {
+      "BENIGN": 19054,
+      "LDAP": 13890
+    },
+    "E2": {
+      "BENIGN": 19054,
+      "UDP": 13890
+    }
+  },
+  "scaler_const_in_e0": [
+    "bwd psh flags",
+    "fwd urg flags",
+    "bwd urg flags",
+    "fin flag count",
+    "psh flag count",
+    "ece flag count",
+    "fwd avg bytes/bulk",
+    "fwd avg packets/bulk",
+    "fwd avg bulk rate",
+    "bwd avg bytes/bulk",
+    "bwd avg packets/bulk",
+    "bwd avg bulk rate"
+  ],
+  "protected_exclusions": {
+    "file": "protected_exclusions.json",
+    "rids_sha256": "b40ea35149f7fdffe388e60a243950979bbf265e42759cf41400306695ed2957",
+    "n_excluded": 166,
+    "kept_by_split_class": {
+      "calib": {
+        "BENIGN": 9513,
+        "Syn": 5973,
+        "LDAP": 2286,
+        "UDP": 5487
+      },
+      "val": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "LDAP": 2296,
+        "UDP": 5487
+      },
+      "test": {
+        "BENIGN": 19028,
+        "Syn": 11946,
+        "LDAP": 4576,
+        "UDP": 10977
+      }
+    }
+  },
+  "scaled_input_overlap_before_exclusion": {
+    "calib": 44,
+    "val": 40,
+    "test": 82
+  },
+  "scaled_input_overlap": {
+    "calib": {
+      "rows": 23259,
+      "equal_to_a_train_input": 0,
+      "share": 0.0
+    },
+    "val": {
+      "rows": 23263,
+      "equal_to_a_train_input": 0,
+      "share": 0.0
+    },
+    "test": {
+      "rows": 46527,
+      "equal_to_a_train_input": 0,
+      "share": 0.0
+    }
+  },
+  "protected": "calib/val/test are never inside any experience; excluded rows are never scored"
+}
