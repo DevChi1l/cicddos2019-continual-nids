@@ -1,0 +1,267 @@
+{
+  "proceed": true,
+  "tag": "ref6",
+  "classes": [
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ]
+  ],
+  "schedule": [
+    [
+      "Syn",
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ]
+  ],
+  "setting": "fixed-class traffic refresh (no new class after E0)",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "reason": "stable in 3/3 seeds",
+  "per_seed": {
+    "42": {
+      "run": "rf_ref6_r0.10_s42",
+      "A0_Syn_recall": 0.995312238406161,
+      "updates": [
+        {
+          "t": 1,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.048158379373849036,
+          "binding": "old Syn",
+          "Syn_recall": 0.99347061778001,
+          "gate_reasons": []
+        },
+        {
+          "t": 2,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.049158514778584204,
+          "binding": "benign FAR",
+          "Syn_recall": 0.9943077180646241,
+          "gate_reasons": []
+        },
+        {
+          "t": 3,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.04899547965846307,
+          "binding": "old Syn",
+          "Syn_recall": 0.9933031977230872,
+          "gate_reasons": []
+        },
+        {
+          "t": 4,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.049368886083938156,
+          "binding": "benign FAR",
+          "Syn_recall": 0.9954796584630838,
+          "gate_reasons": []
+        },
+        {
+          "t": 5,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.0496651598861545,
+          "binding": "old Syn",
+          "Syn_recall": 0.9951448183492383,
+          "gate_reasons": []
+        },
+        {
+          "t": 6,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.04949773982923156,
+          "binding": "old Syn",
+          "Syn_recall": 0.9946425581784698,
+          "gate_reasons": []
+        }
+      ],
+      "all_accepted": true,
+      "min_margin": 0.048158379373849036,
+      "max_abs_Syn_change": 0.002009040683073837,
+      "stable": true
+    },
+    "43": {
+      "run": "rf_ref6_r0.10_s43",
+      "A0_Syn_recall": 0.9949773982923155,
+      "updates": [
+        {
+          "t": 1,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.04863258651519933,
+          "binding": "benign FAR",
+          "Syn_recall": 0.9949773982923155,
+          "gate_reasons": []
+        },
+        {
+          "t": 2,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.049368886083938156,
+          "binding": "benign FAR",
+          "Syn_recall": 0.995312238406161,
+          "gate_reasons": []
+        },
+        {
+          "t": 3,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.0487377721678763,
+          "binding": "benign FAR",
+          "Syn_recall": 0.995312238406161,
+          "gate_reasons": []
+        },
+        {
+          "t": 4,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.05,
+          "binding": "benign FAR",
+          "Syn_recall": 0.995312238406161,
+          "gate_reasons": []
+        },
+        {
+          "t": 5,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.05,
+          "binding": "benign FAR",
+          "Syn_recall": 0.995312238406161,
+          "gate_reasons": []
+        },
+        {
+          "t": 6,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.04966616591553996,
+          "binding": "old TFTP",
+          "Syn_recall": 0.9959819186338523,
+          "gate_reasons": []
+        }
+      ],
+      "all_accepted": true,
+      "min_margin": 0.04863258651519933,
+      "max_abs_Syn_change": 0.001004520341536863,
+      "stable": true
+    },
+    "44": {
+      "run": "rf_ref6_r0.10_s44",
+      "A0_Syn_recall": 0.995312238406161,
+      "updates": [
+        {
+          "t": 1,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.04899547965846318,
+          "binding": "old Syn",
+          "Syn_recall": 0.9943077180646241,
+          "gate_reasons": []
+        },
+        {
+          "t": 2,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.04894814347323025,
+          "binding": "benign FAR",
+          "Syn_recall": 0.9949773982923155,
+          "gate_reasons": []
+        },
+        {
+          "t": 3,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.04894814347323025,
+          "binding": "benign FAR",
+          "Syn_recall": 0.994475138121547,
+          "gate_reasons": []
+        },
+        {
+          "t": 4,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.04884295782055328,
+          "binding": "benign FAR",
+          "Syn_recall": 0.995312238406161,
+          "gate_reasons": []
+        },
+        {
+          "t": 5,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.042298677381550354,
+          "binding": "old Syn",
+          "Syn_recall": 0.9876109157877113,
+          "gate_reasons": []
+        },
+        {
+          "t": 6,
+          "new_class": "refresh",
+          "accepted": true,
+          "min_margin": 0.04821184390449143,
+          "binding": "benign FAR",
+          "Syn_recall": 0.9959819186338523,
+          "gate_reasons": []
+        }
+      ],
+      "all_accepted": true,
+      "min_margin": 0.042298677381550354,
+      "max_abs_Syn_change": 0.007701322618449691,
+      "stable": true
+    }
+  },
+  "clean_files_sha256": {
+    "runs/cii/rf_ref6_r0.10_s42/config.json": "1e862528dd07bb0ad7a4041e1932adc2f73dab45080e4fe42614088b573aa3d0",
+    "runs/cii/rf_ref6_r0.10_s42/A0_metrics.json": "b29137a7d078e206750f8fe12ff92234c1862d7667df45c8234d04a25c2b8812",
+    "runs/cii/rf_ref6_r0.10_s42/clean/rounds.json": "1be63616629060d706c3a2903bad8ebe2bd81b2c79abea17d062853b05462288",
+    "runs/cii/rf_ref6_r0.10_s42/clean/val_done.json": "da0786d5df8131209f3882ab58b512fd71ed51bf72cc933f184cb9c6628c4063",
+    "runs/cii/rf_ref6_r0.10_s43/config.json": "36869c7f3e4c50e89eab00ea1b874748e26f17a7dff6b4ade3cae3a21f7e4e44",
+    "runs/cii/rf_ref6_r0.10_s43/A0_metrics.json": "3d1af64cebdff731da3f42ee36690aa5bc092d5db2069e3aab8713bf5614ffd8",
+    "runs/cii/rf_ref6_r0.10_s43/clean/rounds.json": "df5352ff5034ea4faae5d4668a3ee49508a9851c644c2fa835e4514bded3c91b",
+    "runs/cii/rf_ref6_r0.10_s43/clean/val_done.json": "362b9334743a266d728387597745a10db72e51b8e55135c3e0407afdd3ec54f7",
+    "runs/cii/rf_ref6_r0.10_s44/config.json": "8b6a6e494f6f5c9aaefa4ac73ef170565ea33cee51f03c2bd72bcc74c8de2eb6",
+    "runs/cii/rf_ref6_r0.10_s44/A0_metrics.json": "cf950d77ed714a4ba9c3fa5397401a0aae98664ebcd091c094d0318fd65d54f3",
+    "runs/cii/rf_ref6_r0.10_s44/clean/rounds.json": "444d59148258bc0321b279f5a303b6c66bda61c50f4229870f168a4d161b9df6",
+    "runs/cii/rf_ref6_r0.10_s44/clean/val_done.json": "f5d488000745e868fe21a8cb6a44242cd11bbd32a92b23111d4e3f1af3bb3e31"
+  },
+  "rule": "stable run: every C1 accepted, every C1's smallest gate margin >= 0.01, max |Syn val recall(A_t) - A0| <= 0.02; proceed only if every seed is stable; otherwise stop (no fallback, no other schedule)",
+  "min_margin": 0.01,
+  "syn_band": 0.02,
+  "utc": "2026-10-27T19:34:51+00:00"
+}

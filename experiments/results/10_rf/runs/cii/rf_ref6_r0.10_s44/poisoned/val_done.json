@@ -1,0 +1,7 @@
+{
+  "arm": "poisoned",
+  "final_ckpt": "A6.pt",
+  "final_sha256": "d8e101c039440c295fe5c8dc550855da0c114e544af2d5c6f2974b09a9485f32",
+  "n_attempts": 6,
+  "test_scored": false
+}

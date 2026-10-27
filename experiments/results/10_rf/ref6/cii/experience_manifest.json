@@ -1,0 +1,119 @@
+{
+  "scenario": "cii",
+  "schedule": [
+    [
+      "Syn",
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "TFTP"
+    ]
+  ],
+  "attack_cap": 9312,
+  "seed": 42,
+  "counts_per_experience": {
+    "E0": {
+      "Syn": 9312,
+      "BENIGN": 8167,
+      "TFTP": 5139
+    },
+    "E1": {
+      "BENIGN": 8166,
+      "TFTP": 5139
+    },
+    "E2": {
+      "BENIGN": 8166,
+      "TFTP": 5139
+    },
+    "E3": {
+      "BENIGN": 8166,
+      "TFTP": 5139
+    },
+    "E4": {
+      "BENIGN": 8166,
+      "TFTP": 5138
+    },
+    "E5": {
+      "BENIGN": 8166,
+      "TFTP": 5138
+    },
+    "E6": {
+      "BENIGN": 8166,
+      "TFTP": 5138
+    }
+  },
+  "scaler_const_in_e0": [
+    "bwd psh flags",
+    "fwd urg flags",
+    "bwd urg flags",
+    "fin flag count",
+    "psh flag count",
+    "ece flag count",
+    "fwd avg bytes/bulk",
+    "fwd avg packets/bulk",
+    "fwd avg bulk rate",
+    "bwd avg bytes/bulk",
+    "bwd avg packets/bulk",
+    "bwd avg bulk rate"
+  ],
+  "protected_exclusions": {
+    "file": "protected_exclusions.json",
+    "rids_sha256": "3d4be7f84165ff0603a40d5fe1b6d294cc5b5642e3b8631c6089cbd10870966e",
+    "n_excluded": 70,
+    "kept_by_split_class": {
+      "calib": {
+        "BENIGN": 9513,
+        "Syn": 5973,
+        "TFTP": 5992
+      },
+      "val": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "TFTP": 5991
+      },
+      "test": {
+        "BENIGN": 19028,
+        "Syn": 11946,
+        "TFTP": 11988
+      }
+    }
+  },
+  "scaled_input_overlap_before_exclusion": {
+    "calib": 17,
+    "val": 24,
+    "test": 29
+  },
+  "scaled_input_overlap": {
+    "calib": {
+      "rows": 21478,
+      "equal_to_a_train_input": 0,
+      "share": 0.0
+    },
+    "val": {
+      "rows": 21471,
+      "equal_to_a_train_input": 0,
+      "share": 0.0
+    },
+    "test": {
+      "rows": 42962,
+      "equal_to_a_train_input": 0,
+      "share": 0.0
+    }
+  },
+  "protected": "calib/val/test are never inside any experience; excluded rows are never scored"
+}

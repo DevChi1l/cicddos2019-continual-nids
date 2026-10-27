@@ -127,4 +127,18 @@ Training rows per update grow from about 21k to 39k as the buffer grows, so an a
 
 ## Deviations
 
-None yet.
+None.
+
+## Outcome, validation (added 2026-10-28; the design above is unchanged)
+
+Kaggle, code `32e890a`, cells 1-6:
+- the strict clean pilot was stable in 3/3 seeds (PROCEED);
+- all 6 runs finished in 20.8 min of T4, with no stop;
+- files: `results/10_rf/`.
+
+Predictions on validation:
+- RF1 is not supported: accepted 6/6 in 3/3 seeds, but drift was at most 0.002.
+- RF2 is supported in 3/3 seeds.
+- RF3 is supported (no C1 rejection, so the repair arm is identical to the poisoned arm).
+
+Test has not been scored yet.

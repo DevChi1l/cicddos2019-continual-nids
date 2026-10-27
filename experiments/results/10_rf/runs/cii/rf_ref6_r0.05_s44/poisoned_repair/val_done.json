@@ -1,0 +1,7 @@
+{
+  "arm": "poisoned_repair",
+  "final_ckpt": "A6.pt",
+  "final_sha256": "8005e6b4b2242194b4fdd1de3673afe8ccb2323f256be45164417139af27193f",
+  "n_attempts": 6,
+  "test_scored": false
+}
