@@ -42,5 +42,6 @@ repair deployed at f = 1.0, chosen post hoc after the sweep diagnostic). Each fo
 test scoring; see `experiments/results/SUMMARY.md`, `experiments/results/05_fu1/README.md` and
 `experiments/results/06_fu2/README.md`.
 Joint-training oracle on the 12-label rows: validation, then one test scoring (`experiments/results/07_oracle/`).
-Registered, not built: repeated small corruption per update (`experiments/prereg_repeated_corruption.md`).
+Prepared, not run: repeated small corruption per update (`experiments/prereg_repeated_corruption.md`,
+`s12_repeated.py`, `notebooks/08_repeated_corruption.ipynb`).
 Not run: shortcut/header-length ablation.

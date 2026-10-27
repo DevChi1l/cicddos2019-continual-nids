@@ -46,6 +46,14 @@ Optional, all off by default (defaults reproduce the `main` run exactly):
                      only when d is set must it stay >= ref - d.
   --tag NAME         read Stage 1b files from <out>/NAME/ (e.g. an all-labels schedule) instead
                      of <out>/.
+Added 2026-10-27 for the repeated-corruption experiment (s12, experiments/prereg_repeated_corruption.md):
+  --poison-every-update  before EVERY update t = 1.. (not only t = 1), flip round(poison_frac * n0) more
+                     stored target rows that are not yet flipped (n0 = the target's buffer rows before E1).
+                     Flips persist. One draw stream per arm (seed + 2), so both poisoned arms flip the
+                     same rows.
+  --defer-test       score no test at all (no final_test.json, no A0_test in run_manifest.json); each
+                     finished arm writes <arm>/val_done.json. Test is scored later by s12 score-test.
+  --forced-r1-arms   arms that get the --forced-r1 diagnostics (default clean,poisoned).
 
 Head indices follow arrival order (BENIGN, E0 classes, E1 classes, ...) and are stored in
 every checkpoint; class_map.json is still the data-side map.
@@ -70,6 +78,7 @@ from common import LABEL_COL, SEED, default_work_dir, load_json, save_json
 from s1b_experiences import apply_scaler
 from s2_model import TabTransformer
 
+NEW_ARGS = {"poison_every_update": False, "defer_test": False, "forced_r1_arms": "clean,poisoned"}  # 2026-10-27
 ARMS = {"clean": (False, False), "poisoned": (True, False), "poisoned_repair": (True, True),
         "poisoned_relabel": (True, True)}  # s10 (FU2) only: R1 = threeway+relabel, set via --repair-rule/--relabel-to-teacher
 
@@ -277,6 +286,17 @@ def poison(buf, target, to, frac, rng):
     return buf
 
 
+def poison_more(buf, target, to, n, rng):
+    """Flip n more stored labels of `target` among its rows that are not yet flipped (repeated attack)."""
+    idx = np.flatnonzero(((buf["label"] == target) & ~buf["flipped"].astype(bool)).to_numpy())
+    assert len(idx) >= n, f"only {len(idx)} unflipped {target} rows left, {n} requested"
+    pick = rng.choice(idx, size=n, replace=False)
+    buf = buf.copy()
+    buf.loc[pick, "label"] = to
+    buf.loc[pick, "flipped"] = True
+    return buf
+
+
 def teacher_weights(T, T_classes, rows: Rows, buf, device):
     """p_T(stored label | x) for buffer rows whose stored label T knows; 1 otherwise."""
     i = rows.idx(buf["rid"].to_numpy())
@@ -370,10 +390,17 @@ def run_arm(arm, ctx, a, rdir, T, T_classes, score_test=True):
     buf = buffer_add(pd.DataFrame(columns=["rid", "label", "true_label", "flipped"]),
                      tr, ctx["exp"][0], a.mem_per_class, rng)
     repair_method = a.repair_rule + ("+relabel" if a.relabel_to_teacher else "")
-    diag_methods = [] if do_repair else [s for s in a.forced_r1.split(",") if s]
+    diag_arms = getattr(a, "forced_r1_arms", "clean,poisoned").split(",")
+    diag_methods = [] if do_repair or arm not in diag_arms else [s for s in a.forced_r1.split(",") if s]
+    every = getattr(a, "poison_every_update", False)  # s10 passes an older config's args
     records, diags = [], []
     for t in range(1, len(ctx["schedule"])):
-        if do_poison and t == 1:
+        if do_poison and every:
+            if t == 1:
+                prng = np.random.default_rng(a.seed + 2)
+                n_more = int(round(a.poison_frac * (buf["label"] == a.poison_target).sum()))
+            buf = poison_more(buf, a.poison_target, a.poison_to, n_more, prng)
+        elif do_poison and t == 1:
             buf = poison(buf, a.poison_target, a.poison_to, a.poison_frac,
                          np.random.default_rng(a.seed + 2))
         buf.to_csv(adir / f"buffer_before_E{t}.csv", index=False)
@@ -528,6 +555,10 @@ def main():
     ap.add_argument("--forced-r1", default="",
                     help=f"DIAGNOSTIC R1 methods on arms without repair, comma list of {METHODS}")
     ap.add_argument("--tag", default="", help="read Stage 1b files from <out>/<tag>/ instead of <out>/")
+    ap.add_argument("--poison-every-update", action="store_true",
+                    help="flip round(poison_frac * n0) more target rows before EVERY update (flips persist)")
+    ap.add_argument("--defer-test", action="store_true", help="score no test (validation only); see s12")
+    ap.add_argument("--forced-r1-arms", default="clean,poisoned", help="arms that get the --forced-r1 diagnostics")
     ap.add_argument("--resume", action="store_true", help="reuse T/A0 if saved; skip finished arms")
     ap.add_argument("--dry-run", action="store_true", help="load and verify all inputs, then stop (no training)")
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
@@ -538,6 +569,8 @@ def main():
     assert not bad, f"unknown --forced-r1 method(s) {bad}; choose from {METHODS}"
     schedule = load_json(out / a.tag / a.scenario / "experience_manifest.json")["schedule"]
     a.poison_target = a.poison_target or schedule[0][0]
+    assert not (a.poison_every_update and a.poison_frac * (len(schedule) - 1) > 1), \
+        "--poison-every-update: poison_frac x number of updates must stay <= 1"
     assert a.poison_target in schedule[0], "poison target must be an E0 attack class (T knows it)"
     assert a.poison_to in ["BENIGN"] + schedule[0], "poison_to must be a class known at E0"
     assert a.poison_to != a.poison_target
@@ -549,6 +582,9 @@ def main():
         raise SystemExit(f"refuse: run '{a.run}' is complete in {rdir}; it is never overwritten. "
                          "Use a new --run name.")
     run_args = {k: v for k, v in vars(a).items() if k not in ("resume", "arms", "device", "dry_run")}
+    for k, default in NEW_ARGS.items():  # at their defaults, configs stay as before (old runs still resume)
+        if run_args[k] == default:
+            del run_args[k]
     if a.resume and (rdir / "config.json").exists():
         old = load_json(rdir / "config.json")
         changed = [n for n in inputs if old.get("inputs", {}).get(n) != inputs[n]]
@@ -575,18 +611,23 @@ def main():
     T, T_classes = initial_round(ctx, a, rdir)
     t_hash = state_hash(T)
     for arm in a.arms.split(","):
-        if a.resume and (rdir / arm / "final_test.json").exists():
+        done = rdir / arm / ("val_done.json" if a.defer_test else "final_test.json")
+        if a.resume and done.exists():
             print(f"resume: {arm} already finished")
             continue
-        run_arm(arm, ctx, a, rdir, T, T_classes)
+        records, _ = run_arm(arm, ctx, a, rdir, T, T_classes, score_test=not a.defer_test)
+        if a.defer_test:
+            final = rdir / arm / f"A{len(ctx['schedule']) - 1}.pt"
+            save_json({"arm": arm, "final_ckpt": final.name, "final_sha256": file_hash(final),
+                       "n_attempts": len(records), "test_scored": False}, done)
     t_after = state_hash(T)
     t_file = state_hash(load_ckpt(rdir / "T.pt", ctx, a)[0])
     assert t_hash == t_after == t_file, "teacher T changed!"
     A0, A0_cls = load_ckpt(rdir / "A0.pt", ctx, a)
-    save_json({"T_sha256": t_hash, "T_unchanged": True, "T_classes": T_classes,
-               "inputs": inputs,
-               "A0_test": evaluate(A0, A0_cls, ctx["test"], ctx["device"], scope=ctx["scope"])},
-              rdir / "run_manifest.json")
+    man = {"T_sha256": t_hash, "T_unchanged": True, "T_classes": T_classes, "inputs": inputs}
+    if not a.defer_test:
+        man["A0_test"] = evaluate(A0, A0_cls, ctx["test"], ctx["device"], scope=ctx["scope"])
+    save_json(man, rdir / "run_manifest.json")
     print(f"done. teacher unchanged (sha256 {t_hash[:12]}). outputs in {rdir}")
 
 

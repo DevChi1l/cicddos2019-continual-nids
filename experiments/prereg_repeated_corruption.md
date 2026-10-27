@@ -106,4 +106,58 @@ From sweep / all12 T4 timings, about 7-10 s per attempt:
 
 ## Deviations
 
-(none yet)
+None in the design: rho, target, schedule, arms, gate, repair method, seeds, horizon and stopping rules are unchanged.
+
+### Clarifications before execution (2026-10-27)
+
+These were written together with the code (`s12_repeated.py`, s3 flags, notebook 08), **before any RC run on
+real data**. No RC result existed when they were fixed. They pin down details the text above left open.
+
+1. **Attack implementation.** s3 `--poison-every-update` works as follows:
+   - **Count.** Before each update t, it flips n = round(rho x the stored Syn rows before E1) more rows. That is
+     2,000 stored rows, so n = 100 or 200.
+   - **Which rows.** The rows are drawn uniformly from the stored Syn rows that are not yet flipped.
+   - **Same rows in both poisoned arms.** Each arm has one draw stream (seed + 2), so `poisoned` and
+     `poisoned_repair` flip the same rows. `s12 summarize` asserts this, and that flips persist.
+   - **Diagnostic.** The forced soft-R1 diagnostic runs on the poisoned arm only (`--forced-r1 soft
+     --forced-r1-arms poisoned`), as registered.
+   - **No test.** `--defer-test` makes the runs score no test at all.
+2. **Pilot.** The pilot is the clean arm of the rho = 0.10 runs (`rc_rep6_r0.10_s{42,43,44}`, `--arms clean`), and
+   the full rho = 0.10 runs resume those runs, so the clean arm is not retrained.
+   - The rho = 0.05 runs train their own clean arm, as registered. Its models must be identical to the
+     rho = 0.10 clean arm's. That is reported as a determinism check, not as evidence.
+   - Fallback tag: `rep6fb`. Stage 1b is recomputed with the remaining classes and the same attack cap.
+3. **Deployed model after update t** is the accepted attempt. If both attempts are rejected, it is the previous
+   model; its validation numbers are that update's reference evaluation. A0 is t = 0.
+4. **Gate margin.** At each attempt, the margins are:
+   - old class k: recall_k - (ref_k - 0.05);
+   - new class: recall - 0.80;
+   - benign FAR: 0.05 - FAR;
+   - new-class FAR: 0.05 - new-class FAR.
+
+   The binding constraint is the smallest margin.
+5. **RC1.** Both parts must hold in >= 2 of 3 seeds:
+   - C1 is accepted at >= (updates - 1) updates (5 of 6);
+   - drift (A0 Syn val recall minus A_T's) is > 0.05.
+6. **RC2.** "Falls with cumulative flips" means, in a seed, two things:
+   - the Spearman correlation over t = 0..T between the deployed model's mean p(Syn | Syn val rows) and the
+     cumulative flipped share is < 0;
+   - the mean p at A_T is below A0's.
+
+   It is met if both hold in 3/3 seeds at rho = 0.10.
+7. **RC3.** In every run (both rho), for every update before the repair arm's first C1 rejection, the repair arm's
+   deployed model has the same weight sha256 (state hash) as the poisoned arm's.
+8. **RC4.** For >= 2 of 3 seeds, both must hold:
+   - the clean arm accepts every update;
+   - max over t of |Syn val recall(A_t) - Syn val recall(A0)| <= 0.02.
+
+   It is reported per rho; the two clean arms should be identical.
+9. **T4 time** (stopping rule 3) is the summed wall time of the s1b and s3 calls, including the pilot
+   (`rc/timing.json`).
+   - It is checked after rho = 0.10 and before rho = 0.05 starts.
+   - A crashed call is not counted; its rerun is.
+10. **Test.** `s12 score-test` runs once, and only when every validation file is byte-identical to the decisions
+    commit.
+    - It scores each arm's deployed A0..A6 on the protected test rows.
+    - It asserts that the test-row hash is the same for every model.
+    - The test trajectory is descriptive. No decision uses it.

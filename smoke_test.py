@@ -331,6 +331,61 @@ def main():
     assert p.returncode != 0 and "scored once" in p.stderr, p.stderr[-500:]
     assert before == {p: p.read_bytes() for p in runs.rglob("*") if p.is_file()}, "s11 changed a run"
     print(f"oracle (s11) ran: {len(list(od.rglob('val.json')))} cells; runs unchanged")
+
+    # repeated corruption (s12): more flips before every update, flips persist, validation only, test once
+    rc = ["--src", out, "--classes", "LDAP,NTP,SNMP", "--attack-cap", 1500, "--device", "cpu",
+          "--s1b-args", "--min-rows 100 --min-benign-protected 50"]
+    small = "--epochs0 3 --epochs-update 2 --d 16 --layers 1 --mem-per-class 200"
+    open_gate = " --gate-old-drop 1 --gate-new-min 0 --gate-far-max 1 --gate-newfar-max 1"
+    def s12(*args):
+        return subprocess.run([sys.executable, str(HERE / "s12_repeated.py"), *map(str, args)],
+                              capture_output=True, text=True)
+    rs = w / "rc_strict"  # registered gate: the pilot decides (proceed or stop); run obeys it
+    run("s12_repeated.py", "prepare", *rc, "--work", rs)
+    run("s12_repeated.py", "pilot", *rc, "--work", rs, "--s3-args", small)
+    pj = json.loads((rs / "rc" / "pilot.json").read_text())
+    if not pj["proceed"]:
+        p = s12("run", *rc, "--work", rs, "--s3-args", small)
+        assert p.returncode != 0 and "pilot said stop" in p.stderr, p.stderr[-500:]
+    ro = w / "rc_open"  # open gate: every update accepted, so the full flow runs
+    run("s12_repeated.py", "prepare", *rc, "--work", ro)
+    run("s12_repeated.py", "pilot", *rc, "--work", ro, "--s3-args", small + open_gate)
+    run("s12_repeated.py", "run", *rc, "--work", ro, "--s3-args", small + open_gate)
+    run("s12_repeated.py", "run", *rc, "--work", ro, "--s3-args", small + open_gate)  # resumable: all skipped
+    run("s12_repeated.py", "summarize", *rc, "--work", ro)
+    rruns = sorted((ro / "runs" / "cii").iterdir())
+    assert len(rruns) == 6 and not list(ro.rglob("final_test.json")), "s12 run scored test"
+    for r in rruns:
+        assert "A0_test" not in json.loads((r / "run_manifest.json").read_text())
+        assert (r / "poisoned" / "r1_diag.json").exists() and not (r / "clean" / "r1_diag.json").exists()
+        rho = float(r.name.split("_r")[-1].split("_")[0])
+        for t in (1, 2, 3):  # 20 or 10 more of the 200 stored Syn rows per update, never unflipped
+            b = pd.read_csv(r / "poisoned_repair" / f"buffer_before_E{t}.csv")
+            assert b["flipped"].sum() == t * round(rho * 200) and (b.loc[b["flipped"], "true_label"] == "Syn").all()
+    summ = json.loads((ro / "rc" / "summary.json").read_text())
+    assert all(summ["clean_arm_identical_across_rho"].values()), "clean arm differs between rho runs"
+    assert summ["predictions_val"]["rho_0.10"]["RC3_repair_is_gated"]["met"], "repair deployed other models"
+    assert len(pd.read_csv(ro / "rc" / "trajectory_val.csv")) == 2 * 3 * 3 * 4
+    vz, bz = w / "rc_val.zip", w / "rc_restore.zip"
+    run("s12_repeated.py", "zip-val", *rc, "--work", ro, "--bundle", vz)
+    run("s12_repeated.py", "bundle", *rc, "--work", ro, "--bundle", bz)
+    assert not any("test" in n for n in zipfile.ZipFile(bz).namelist())
+    zipfile.ZipFile(vz).extractall(repo / "experiments" / "results" / "08_rc")
+    subprocess.run([*git, "add", "-A"], check=True)
+    subprocess.run([*git, "commit", "-q", "-m", "rc val"], check=True)
+    sha4 = subprocess.run([*git, "rev-parse", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+    ro2 = w / "rc_restored"  # a fresh session: restore first, then prepare rebuilds Stage 1b from the pilot's tags
+    run("s12_repeated.py", "restore", *rc, "--work", ro2, "--bundle", bz)
+    run("s12_repeated.py", "prepare", *rc, "--work", ro2)
+    p = s12("score-test", *rc, "--work", ro2, "--decisions-commit", sha3, "--repo", repo)
+    assert p.returncode != 0 and "not found in commit" in p.stderr, p.stderr[-500:]
+    run("s12_repeated.py", "score-test", *rc, "--work", ro2, "--decisions-commit", sha4, "--repo", repo)
+    p = s12("score-test", *rc, "--work", ro2, "--decisions-commit", sha4, "--repo", repo)
+    assert p.returncode != 0 and "scored once" in p.stderr, p.stderr[-500:]
+    tt = pd.read_csv(ro2 / "rc" / "test" / "test_trajectory.csv")
+    assert len(tt) == 2 * 3 * 3 * 4 and tt["test_rows_sha256"].nunique() == 1
+    print(f"repeated corruption (s12) ran: pilot proceed={pj['proceed']} (registered gate), "
+          f"{len(rruns)} runs, test scored once after the commit")
     print("\nSMOKE TEST PASSED (plumbing only - synthetic numbers are not results)")
 
 
