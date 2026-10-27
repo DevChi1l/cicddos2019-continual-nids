@@ -46,6 +46,9 @@ Repeated small corruption per update, RC (`experiments/prereg_repeated_corruptio
 notebook 08): **stopped at its registered clean pilot**; no poisoned arm ran (`experiments/results/08_rc/`).
 RCS, a separate experiment that first screens for a stable clean schedule (`experiments/prereg_rcs.md`, `s13_rcs.py`,
 notebook 09): **stopped at its clean screen**, with no candidate stable; no poisoned arm ran (`experiments/results/09_rcs/`).
+Prepared, not run: RF, a post-hoc study of repeated small Syn corruption under fixed-class traffic refresh (not
+new-class arrival), with a strict clean pilot (`experiments/prereg_refresh.md`, `s14_refresh.py`,
+`notebooks/10_refresh_corruption.ipynb`).
 Completed defence result: the four-class held-out test of the sweep repair (f <= 0.95) and FU2 relabelling (f = 1.0,
 post hoc); see the box at the top of `experiments/results/SUMMARY.md`.
 Not run: shortcut/header-length ablation.

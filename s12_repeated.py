@@ -235,9 +235,14 @@ def margins(rec, a):
          if k != "BENIGN"}
     m.update({f"new {k}": v["recall"].get(k, 0.0) - a.gate_new_min for k in rec["new_classes"]})
     m["benign FAR"] = a.gate_far_max - v["benign_far"]
-    m["new-class FAR"] = a.gate_newfar_max - v["new_class_far"]
+    if rec["new_classes"]:  # a refresh update (RF) has no new class, so no new-class terms
+        m["new-class FAR"] = a.gate_newfar_max - v["new_class_far"]
     k = min(m, key=m.get)
     return m, k
+
+
+def new_label(rec) -> str:
+    return ",".join(rec["new_classes"]) or "refresh"
 
 
 def runs_done(a):
@@ -293,7 +298,7 @@ def summarize(a):
                 if arm != "clean":
                     flips.setdefault(t, {})[arm] = sorted(buf.loc[buf["flipped"], "rid"].tolist())
                     assert (buf.loc[buf["flipped"], "true_label"] == "Syn").all()
-                traj.append({**row0, "t": t, "new_class": c1["new_classes"][0],
+                traj.append({**row0, "t": t, "new_class": new_label(c1),
                              "flipped_share": nfl / n_syn, "c1_accepted": c1["accepted"],
                              "r1_ran": r1 is not None, "r1_accepted": None if r1 is None else r1["accepted"],
                              "deployed_from": acc["attempt"] if acc else "kept", "Syn_recall": v["recall"]["Syn"],

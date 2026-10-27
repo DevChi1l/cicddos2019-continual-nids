@@ -404,7 +404,7 @@ def run_arm(arm, ctx, a, rdir, T, T_classes, score_test=True):
             buf = poison(buf, a.poison_target, a.poison_to, a.poison_frac,
                          np.random.default_rng(a.seed + 2))
         buf.to_csv(adir / f"buffer_before_E{t}.csv", index=False)
-        new = ctx["schedule"][t]
+        new = [k for k in ctx["schedule"][t] if k not in A_cls]  # a refresh update (RF) repeats known classes
         ref = evaluate(A, A_cls, val, dev)
         cand = A_cls + new
         old_cls = list(A_cls)  # A_cls changes on acceptance; diagnostics after it must log these
@@ -488,7 +488,7 @@ def load_context(out: Path, tag: str, scenario: str, device: str):
     z = np.load(sdir / "experience_rids.npz")
     exp = [z[f"e{t}"] for t in range(len(schedule))]
     used = np.unique(np.concatenate(exp))
-    scope = ["BENIGN"] + [k for e in schedule for k in e]  # unscheduled classes never scored
+    scope = list(dict.fromkeys(["BENIGN"] + [k for e in schedule for k in e]))  # unscheduled classes never scored
     tr_df = pd.read_parquet(out / "clean_train.parquet")
     # protected rows whose model input equals a training input (Stage 1b); same ids for CI and CII
     pe = load_json(out / Path(tag) / "protected_exclusions.json")

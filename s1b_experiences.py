@@ -56,12 +56,15 @@ def slog(x):
 
 
 def build_manifest(train: pd.DataFrame, schedule: list[list[str]], scenario: str,
-                   attack_cap: int, seed: int = SEED) -> dict[int, np.ndarray]:
-    """Return {experience index: array of train _rid values}."""
+                   attack_cap: int, seed: int = SEED, allow_repeat: bool = False) -> dict[int, np.ndarray]:
+    """Return {experience index: array of train _rid values}.
+    allow_repeat (refresh schedules, RF): a class may appear in several experiences; its rows (at most
+    attack_cap x appearances) are permuted once and split into disjoint near-equal portions, one per appearance."""
     rng = np.random.default_rng(seed)
     k = len(schedule)
     seen = [c for exp in schedule for c in exp]
-    assert len(seen) == len(set(seen)), "a class appears in two experiences"
+    assert allow_repeat or len(seen) == len(set(seen)), "a class appears in two experiences"
+    assert all(len(e) == len(set(e)) for e in schedule), "a class appears twice in one experience"
     assert "BENIGN" not in seen, "BENIGN is implied; do not list it"
     missing = [c for c in seen if c not in set(train[LABEL_COL])]
     assert not missing, f"classes with no train rows: {missing}"
@@ -73,10 +76,20 @@ def build_manifest(train: pd.DataFrame, schedule: list[list[str]], scenario: str
     else:
         benign_parts = np.array_split(benign, k)  # disjoint, near-equal
 
+    repeated = {}
+    if allow_repeat:
+        for c in dict.fromkeys(seen):
+            n = seen.count(c)
+            if n > 1:
+                cid = rng.permutation(train.loc[train[LABEL_COL] == c, "_rid"].to_numpy())[: attack_cap * n]
+                repeated[c] = iter(np.array_split(cid, n))
     out = {}
     for t, classes in enumerate(schedule):
         ids = [benign_parts[t]]
         for c in classes:
+            if c in repeated:
+                ids.append(next(repeated[c]))
+                continue
             cid = train.loc[train[LABEL_COL] == c, "_rid"].to_numpy()
             if len(cid) > attack_cap:
                 cid = rng.choice(cid, size=attack_cap, replace=False)
@@ -193,6 +206,8 @@ def main():
                          "of any class in any protected split")
     ap.add_argument("--min-benign-protected", type=int, default=5000,
                     help="refuse if fewer benign val or test rows remain after exclusion")
+    ap.add_argument("--allow-repeat", action="store_true",
+                    help="refresh schedules: a class may appear in several experiences (disjoint row portions)")
     ap.add_argument("--min-rows", type=int, default=1000,
                     help="refuse if any scheduled class, or any experience's benign, has fewer train rows")
     a = ap.parse_args()
@@ -212,11 +227,11 @@ def main():
     # same set of row ids whichever scenario is being written.
     plans = {}
     for sc_name in SCENARIOS:
-        ids_s = build_manifest(train, schedule, sc_name, a.attack_cap)
+        ids_s = build_manifest(train, schedule, sc_name, a.attack_cap, allow_repeat=a.allow_repeat)
         e0 = train[train["_rid"].isin(ids_s[0])]
         plans[sc_name] = (ids_s, fit_scaler(e0, feats["numeric"], feats["categorical"]))
     ids, scaler = plans[a.scenario]
-    known = ["BENIGN"] + [c for e in schedule for c in e]
+    known = list(dict.fromkeys(["BENIGN"] + [c for e in schedule for c in e]))
     dest = out / a.tag
     excl = protected_exclusions(out, train, plans, known, a, dest)
 

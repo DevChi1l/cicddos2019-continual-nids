@@ -142,7 +142,7 @@ def stability(rdir: Path, n_updates: int, a) -> dict:
     for r in recs:
         m, k = S12.margins(r, hp)
         deployed = r["val"] if r["accepted"] else r["ref_val"]  # rejected -> the previous model stays
-        ups.append({"t": r["experience"], "new_class": r["new_classes"][0], "accepted": bool(r["accepted"]),
+        ups.append({"t": r["experience"], "new_class": S12.new_label(r), "accepted": bool(r["accepted"]),
                     "min_margin": m[k], "binding": k, "Syn_recall": deployed["recall"]["Syn"],
                     "gate_reasons": r["gate_reasons"]})
     acc = all(u["accepted"] for u in ups)

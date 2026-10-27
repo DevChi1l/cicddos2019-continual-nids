@@ -451,6 +451,70 @@ def main():
     assert len(tt) == 2 * 3 * 3 * 4 and tt["test_rows_sha256"].nunique() == 1 and set(tt["seed"]) == {45, 46, 47}
     print(f"RCS (s13) ran: strict screen selected={sj['selected']}; open flow screen -> confirm -> 6 runs, "
           f"test scored once after the commit")
+
+    # RF (s14): fixed-class refresh (a class repeats with disjoint rows; no new class after E0); strict clean pilot
+    rf = ["--src", out, "--refresh-class", "NTP", "--updates", 3, "--attack-cap", 1500, "--device", "cpu",
+          "--s1b-args", "--min-rows 100 --min-benign-protected 50"]
+    def s14(*args):
+        return subprocess.run([sys.executable, str(HERE / "s14_refresh.py"), *map(str, args)],
+                              capture_output=True, text=True)
+    fs = w / "rf_strict"  # registered gate and predicate: the pilot decides; a failed pilot is saved and zipped
+    run("s14_refresh.py", "prepare", *rf, "--work", fs)
+    em = json.loads((fs / "ref6" / "cii" / "experience_manifest.json").read_text())
+    assert em["schedule"] == [["Syn", "NTP"], ["NTP"], ["NTP"], ["NTP"]]
+    z = np.load(fs / "ref6" / "cii" / "experience_rids.npz")
+    ids = np.concatenate([z[k] for k in z.files])
+    assert len(ids) == len(np.unique(ids)) and all(em["counts_per_experience"][f"E{t}"]["NTP"] > 0 for t in range(4))
+    run("s14_refresh.py", "pilot", *rf, "--work", fs, "--s3-args", small)
+    fp = json.loads((fs / "rf" / "pilot.json").read_text())
+    for r in json.loads((fs / "runs" / "cii" / "rf_ref6_r0.10_s42" / "clean" / "rounds.json").read_text()):
+        assert r["new_classes"] == [], "a refresh update had a new class"
+    if not fp["proceed"]:
+        p = s14("run", *rf, "--work", fs, "--s3-args", small)
+        assert p.returncode != 0 and "no pilot.json with proceed" in p.stderr, p.stderr[-500:]
+        assert not list((fs / "runs" / "cii").glob("*/poisoned")), "a poisoned arm ran after a failed pilot"
+        run("s14_refresh.py", "zip-val", *rf, "--work", fs, "--bundle", w / "rf_clean.zip")
+        fz = zipfile.ZipFile(w / "rf_clean.zip").namelist()
+        assert "rf/pilot.json" in fz and sum(n.endswith("clean/rounds.json") for n in fz) == 3, fz
+    fo = w / "rf_open"  # open gate and loose predicate: the full flow
+    run("s14_refresh.py", "prepare", *rf, "--work", fo)
+    run("s14_refresh.py", "pilot", *rf, *loose, "--work", fo, "--s3-args", small + open_gate)
+    assert json.loads((fo / "rf" / "pilot.json").read_text())["proceed"]
+    assert not list((fo / "runs" / "cii").glob("*/poisoned")), "the pilot trained a poisoned arm"
+    run("s14_refresh.py", "run", *rf, "--work", fo, "--s3-args", small + open_gate)
+    run("s14_refresh.py", "run", *rf, "--work", fo, "--s3-args", small + open_gate)  # resumable: all skipped
+    run("s14_refresh.py", "summarize", *rf, "--work", fo)  # asserts the pilot's clean files are unchanged
+    names = sorted(r.name for r in (fo / "runs" / "cii").iterdir())
+    assert names == sorted(f"rf_ref6_r{r}_s{s}" for r in ("0.10", "0.05") for s in (42, 43, 44)), names
+    assert not (fo / "rc").exists() and not (fo / "rcs").exists() and not list(fo.rglob("final_test.json"))
+    for r in names:
+        b = pd.read_csv(fo / "runs" / "cii" / r / "poisoned" / "buffer_before_E3.csv")
+        rho = float(r.split("_r")[-1].split("_")[0])
+        assert b["flipped"].sum() == 3 * round(rho * 200) and (b.loc[b["flipped"], "true_label"] == "Syn").all()
+    summ = json.loads((fo / "rf" / "summary.json").read_text())
+    assert all(summ["clean_arm_identical_across_rho"].values()) and summ["predictions_val"]["rho_0.10"]["RC3_repair_is_gated"]["met"]
+    tv = pd.read_csv(fo / "rf" / "trajectory_val.csv")
+    assert len(tv) == 2 * 3 * 3 * 4 and set(tv.loc[tv["t"] > 0, "new_class"]) == {"refresh"}
+    vz, bz = w / "rf_val.zip", w / "rf_restore.zip"
+    run("s14_refresh.py", "zip-val", *rf, "--work", fo, "--bundle", vz)
+    run("s14_refresh.py", "bundle", *rf, "--work", fo, "--bundle", bz)
+    vn = zipfile.ZipFile(vz).namelist()
+    assert "rf/pilot.json" in vn and not any(n.endswith(".pt") or "test" in n for n in vn)
+    zipfile.ZipFile(vz).extractall(repo / "experiments" / "results" / "10_rf")
+    subprocess.run([*git, "add", "-A"], check=True)
+    subprocess.run([*git, "commit", "-q", "-m", "rf val"], check=True)
+    sha6 = subprocess.run([*git, "rev-parse", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+    fo2 = w / "rf_restored"  # a fresh session: restore first, then prepare rebuilds Stage 1b
+    run("s14_refresh.py", "restore", *rf, "--work", fo2, "--bundle", bz)
+    run("s14_refresh.py", "prepare", *rf, "--work", fo2)
+    p = s14("score-test", *rf, "--work", fo2, "--decisions-commit", sha5, "--repo", repo)
+    assert p.returncode != 0 and "not found in commit" in p.stderr, p.stderr[-500:]
+    run("s14_refresh.py", "score-test", *rf, "--work", fo2, "--decisions-commit", sha6, "--repo", repo)
+    p = s14("score-test", *rf, "--work", fo2, "--decisions-commit", sha6, "--repo", repo)
+    assert p.returncode != 0 and "scored once" in p.stderr, p.stderr[-500:]
+    tt = pd.read_csv(fo2 / "rf" / "test" / "test_trajectory.csv")
+    assert len(tt) == 2 * 3 * 3 * 4 and tt["test_rows_sha256"].nunique() == 1
+    print(f"RF (s14) ran: strict pilot proceed={fp['proceed']}; open flow pilot -> 6 runs, test once after the commit")
     print("\nSMOKE TEST PASSED (plumbing only - synthetic numbers are not results)")
 
 
