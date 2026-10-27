@@ -1,4 +1,4 @@
-# Results summary: poison sweep, 12-label runs (notebook 04), follow-ups FU1 (notebook 05) and FU2 (notebook 06), joint oracle (notebook 07), repeated-corruption pilots RC (notebook 08) and RCS (notebook 09), both stopped; RF (notebook 10, post hoc, validation)
+# Results summary: poison sweep, 12-label runs (notebook 04), follow-ups FU1 (notebook 05) and FU2 (notebook 06), joint oracle (notebook 07), repeated-corruption pilots RC (notebook 08) and RCS (notebook 09), both stopped; RF (notebook 10, post hoc, validation + test)
 
 All numbers below come from saved run files. The tables in this folder are produced by
 `python make_result_tables.py --out <nids_out>`, which reads files and trains nothing. Each section says
@@ -27,7 +27,9 @@ before E1, and the flips persist. Seeds 42-44. Test scored once per arm, after t
 
 **Not part of this result:**
 - the 12-label runs (part B; FU1);
-- the repeated-corruption experiments RC and RCS (parts F and G), which stopped before any poison was applied.
+- the repeated-corruption experiments RC and RCS (parts F and G), which stopped before any poison was applied;
+- RF (part H), a post-hoc study of fixed-class traffic refresh. It shows a limitation, not a defence: confidence
+  loss that the gate does not see.
 
 ## Setup in one paragraph
 
@@ -308,14 +310,14 @@ Files and details: `09_rcs/README.md`. Registration: `../prereg_rcs.md` (`5e4ada
   sequences of >= 5 updates from these classes are not stable under this gate and recipe. Repeated small
   corruption is still **untested**.
 
-## H. RF, notebook 10: repeated corruption under fixed-class traffic refresh (post hoc; validation only)
+## H. RF, notebook 10: repeated corruption under fixed-class traffic refresh (post hoc; validation, then test once)
 
 Files, checks and tables: `10_rf/README.md`. Registration: `../prereg_refresh.md` (`b254211`). Code: `32e890a`.
 
 **Setting.** This tests **traffic refresh with fixed classes, not new-class arrival**:
 - E0 = BENIGN + Syn + TFTP, then six updates of fresh BENIGN and TFTP rows; no fresh Syn;
 - post hoc (designed after RC and RCS stopped), CII only, seeds 42-44;
-- **no test has been scored.**
+- validation committed in `b0d6b63`, then test scored once (`10_rf/test/`, tables by `make_rf_tables.py`).
 
 **Results:**
 - **Strict clean pilot:** stable in 3/3 seeds, so the poisoned runs proceeded.
@@ -332,8 +334,22 @@ Files, checks and tables: `10_rf/README.md`. Registration: `../prereg_refresh.md
 - RF2 (silent confidence loss): **supported** in 3/3 seeds.
 - RF3 (repair is gated): **supported**, trivially, because no update was rejected.
 
-**Reading.** The corruption lowered confidence, not recall. Because the gate checks recall, it never asked for the
-repair that, per the diagnostic, would have undone the corruption.
+**Held-out test, A6, mean over 3 seeds** (42,962 rows; 19,028 benign):
+
+| Arm | Stored Syn flipped | Syn recall | Syn mean p | Benign FAR |
+|---|---|---|---|---|
+| clean | 0% | 0.9952 | 0.9922 | 0.0007 |
+| poisoned, rho 0.05 | 30% | 0.9943 | 0.9027 | 0.0007 |
+| poisoned, rho 0.10 | 60% | 0.9943 | 0.7707 | 0.0007 |
+
+**Reading:**
+- **The setting.** RF is post hoc and tests fixed-class traffic refresh. At 10% per update, the flips accumulated to
+  60% of the stored Syn replay labels.
+- **Recall held.** Test Syn recall stayed at about 0.9943.
+- **Confidence fell.** Mean Syn confidence fell to 0.7707, against 0.9922 for the clean arm.
+- **Nothing triggered.** There was no gate rejection and no deployed repair, so the repair arm equals the poisoned arm.
+- **No repair of the confidence loss is claimed.** The forced soft-R1 diagnostic is validation-only and never
+  deployed.
 
 ## What we can and cannot claim
 
@@ -346,5 +362,5 @@ repair that, per the diagnostic, would have undone the corruption.
 | The method works with 12 labels | **no**: clean updates fail the gate (one seed, capped data) |
 | The 12-label failure is mainly continual forgetting | **only partly**: a joint oracle with the same model/recipe also fails DNS/LDAP and SSDP/UDP (val; test agrees), while MSSQL/NTP/NetBIOS/SNMP/UDPLag are learnable jointly but lost by the protocol. Not evidence that the raw features are inseparable |
 | Retrying rejected clean blocks with a validation-selected recipe (FU1) fixes it | **no**: DNS/LDAP learned (test 0.83), but 6 of 12 labels in both scenarios, macro recall lower |
-| Mild (5-10%) repeated corruption | **class arrival: not tested** (RC and RCS stopped at their clean stage). **Fixed-class traffic refresh (RF, post hoc, validation only, test pending):** up to 60% of stored Syn flipped over 6 updates; all passed the gate, Syn recall unchanged (RF1 not supported), Syn confidence fell to about 0.77 (RF2 supported), repair never triggered |
+| Mild (5-10%) repeated corruption | **class arrival: not tested** (RC and RCS stopped at their clean stage). **Fixed-class traffic refresh (RF, post hoc; validation + test once):** 60% of stored Syn flipped over 6 updates; all passed the gate, test Syn recall 0.9943 vs 0.9952 clean (RF1 not supported), test Syn mean p 0.7707 vs 0.9922 clean (RF2 supported); no rejection, no deployed repair, so the confidence loss was **not** repaired |
 | Statistical significance | not claimed (3 seeds, or 1 for part B) |

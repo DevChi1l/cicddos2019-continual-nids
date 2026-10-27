@@ -141,4 +141,7 @@ Predictions on validation:
 - RF2 is supported in 3/3 seeds.
 - RF3 is supported (no C1 rejection, so the repair arm is identical to the poisoned arm).
 
-Test has not been scored yet.
+Test was scored once afterwards, at decisions commit `b0d6b63` (`results/10_rf/test/`). On A6, mean over seeds:
+- clean: Syn recall 0.9952, mean p 0.9922;
+- rho 0.05: Syn recall 0.9943, mean p 0.9027;
+- rho 0.10: Syn recall 0.9943, mean p 0.7707.
