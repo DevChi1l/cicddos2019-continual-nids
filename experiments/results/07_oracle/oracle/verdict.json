@@ -1,0 +1,31 @@
+{
+  "rule": "primary: scenario cii, median over seeds 42-44 of oracle VAL recall; per pair, the setting (e10/e20) whose median recall of the pair's weaker class is higher. Pair verdict: both classes >= 0.80 and median benign FAR <= 0.05 -> 'separable for the gate' (the 12-label failure of this pair is primarily continual); weaker class < 0.70 -> 'feature limit' (joint training also fails); otherwise 'borderline'. Overall: both pairs separable -> 'primarily continual'; both feature limit -> 'primarily features'; else 'mixed'. Any other class with oracle median val recall >= 0.80 that a continual model lost (test recall 0) is listed as lost by the protocol.",
+  "pairs": {
+    "DNS/LDAP": {
+      "setting": "e20",
+      "median_val_recall_DNS": 0.5990382413556217,
+      "median_val_recall_LDAP": 0.6389372822299652,
+      "median_benign_far": 0.002419270011570422,
+      "verdict": "feature limit"
+    },
+    "SSDP/UDP": {
+      "setting": "e10",
+      "median_val_recall_SSDP": 0.7373887240356083,
+      "median_val_recall_UDP": 0.4775792927451695,
+      "median_benign_far": 0.0032607552329862208,
+      "verdict": "feature limit"
+    }
+  },
+  "overall": "primarily features",
+  "other_classes_best_median_val_recall": {
+    "BENIGN": 0.9975807299884296,
+    "Syn": 0.9624979072492885,
+    "MSSQL": 0.9022731340612136,
+    "NTP": 0.9846513179846513,
+    "NetBIOS": 0.927536231884058,
+    "SNMP": 0.9053863223724027,
+    "TFTP": 0.994994159853162,
+    "UDPLag": 0.8614735226400614
+  },
+  "note": "validation only; 'lost by the protocol' is filled in from committed continual test tables in the results README, not by this command"
+}

@@ -1,4 +1,4 @@
-# Results summary: poison sweep, 12-label runs (notebook 04), follow-ups FU1 (notebook 05) and FU2 (notebook 06)
+# Results summary: poison sweep, 12-label runs (notebook 04), follow-ups FU1 (notebook 05) and FU2 (notebook 06), joint oracle (notebook 07)
 
 All numbers below come from saved run files. The tables in this folder are produced by
 `python make_result_tables.py --out <nids_out>`, which reads files and trains nothing. Each section says
@@ -199,6 +199,31 @@ registered repair (soft R1) still fails at f = 1.0.
     works here because the teacher predicts nearly every flipped row as Syn with p >= 0.9.
   - 3 seeds, so no significance claim.
 
+## E. Joint-training oracle on the capped 12-label rows (diagnostic, validation only so far)
+
+Details, checks and full table: [`07_oracle/README.md`](07_oracle/README.md). Pre-registration:
+`../prereg_oracle.md` (`d69666d`). One model is trained on all 159,595 all12 training rows at once (no updates, gate
+or replay), with the all12 architecture and recipe (e10 / e20 epochs). It is scored on the same 61,608 validation
+rows. CII uses seeds 42-44, CI seed 42. Test is not scored yet.
+
+| pair (CII, median of 3 seeds, setting chosen on val) | val recall | rule outcome |
+|---|---|---|
+| DNS / LDAP (e20) | 0.599 / 0.639 | "feature limit" (weaker < 0.70) |
+| SSDP / UDP (e10) | 0.737 / 0.478 | "feature limit" |
+| overall | | "primarily features" |
+
+- **What this means:**
+  - "Feature limit" is the registered name, and it means **for this model and recipe**. The tested joint
+    FT-Transformer-style recipe struggles with DNS/LDAP and SSDP/UDP even without continual learning.
+  - So the 12-label rejections at these pairs are not mainly continual forgetting.
+- **What it does not mean:** that the raw features cannot separate these pairs. On the same features, exact 1-NN
+  (pair-only, post hoc) reaches 0.84 / 0.85 on DNS/LDAP, and FU1 reached 0.83 / 0.83 on test. SSDP/UDP is weak for
+  every method tried (1-NN 0.58 / 0.55), which is consistent with strong overlap, but this is not a bound.
+- **Other classes:** joint best median val recall is MSSQL 0.90, NTP 0.98, NetBIOS 0.93, SNMP 0.91, TFTP 0.99 and
+  UDPLag 0.86. MSSQL, NTP, NetBIOS, SNMP and UDPLag had test recall 0 in an all12 or FU1 continual model, so their
+  loss is caused by the protocol.
+- **Predictions:** O1 met; O2 not met; O3 not met overall (its class part met).
+
 ## What we can and cannot claim
 
 | Claim | Status |
@@ -208,6 +233,7 @@ registered repair (soft R1) still fails at f = 1.0.
 | The gate stops corrupted updates, but without repair the model stops learning | 9/12 runs miss LDAP |
 | Relabel-to-teacher fixes f = 1.0 | **post-hoc follow-up FU2** (chosen after the sweep diagnostic): deployed, E2 accepted 3/3 on validation, test LDAP/UDP 0.98/1.00 vs 0 for gate-only and soft repair; 3 seeds, CII, one attacked class |
 | The method works with 12 labels | **no**: clean updates fail the gate (one seed, capped data) |
+| The 12-label failure is mainly continual forgetting | **only partly**: a joint oracle with the same model/recipe also fails DNS/LDAP and SSDP/UDP (val), while MSSQL/NTP/NetBIOS/SNMP/UDPLag are learnable jointly but lost by the protocol. Not evidence that the raw features are inseparable |
 | Retrying rejected clean blocks with a validation-selected recipe (FU1) fixes it | **no**: DNS/LDAP learned (test 0.83), but 6 of 12 labels in both scenarios, macro recall lower |
 | Mild (5-10%) repeated corruption | registered (`../prereg_repeated_corruption.md`), not run |
 | Statistical significance | not claimed (3 seeds, or 1 for part B) |

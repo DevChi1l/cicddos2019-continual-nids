@@ -41,7 +41,7 @@ Real-data runs so far: `main`, the poison sweep, the 12-label runs, follow-up FU
 repair deployed at f = 1.0, chosen post hoc after the sweep diagnostic). Each follow-up had validation and then one
 test scoring; see `experiments/results/SUMMARY.md`, `experiments/results/05_fu1/README.md` and
 `experiments/results/06_fu2/README.md`.
-Prepared, not run: joint-training oracle diagnostic on the 12-label rows (`experiments/prereg_oracle.md`,
-`s11_oracle.py`, `notebooks/07_oracle_joint.ipynb`).
+Joint-training oracle on the 12-label rows: validation done and committed (`experiments/results/07_oracle/`);
+test not yet scored.
 Registered, not built: repeated small corruption per update (`experiments/prereg_repeated_corruption.md`).
 Not run: shortcut/header-length ablation.
