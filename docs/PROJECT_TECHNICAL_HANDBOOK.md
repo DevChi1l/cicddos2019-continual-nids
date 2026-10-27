@@ -1105,7 +1105,18 @@ Reading: recall held and no update was rejected, so no repair was deployed; the 
 | `main` run demos (a test flow, the poisoned buffer, the gate) | `python demo.py flow` / `poison` / `gate --arm poisoned` | the `main` results zip and the Stage 1 parquet (not in git) |
 | Rebuild an experiment's committed test tables from its zip | `make_result_tables.py`, `make_fu1_tables.py`, `make_fu2_tables.py`, `make_oracle_tables.py`, `make_rf_tables.py` | the Kaggle output zips (not in git) |
 
-### 12.5 Where the slides come from
+### 12.5 Storyboard figures and the guided demo (added after the handbook's first version)
+
+| Purpose | Command |
+|---|---|
+| Write the 7 storyboard figures and their plotted-data CSVs to `docs/figures/` | `python make_figures.py` |
+| Rebuild in a temporary folder; fail (exit 1) if any plotted number differs from `docs/figures/*_data.csv` or from the committed result tables | `python make_figures.py --check` |
+| Execute `notebooks/11_results_storyboard.ipynb` end to end, with a temporary kernel spec for the current interpreter | `python make_figures.py --execute-notebook` |
+| Guided 3-minute walkthrough of the FU2 defence; switch to the RF limitation; pause between steps | `python demo.py walkthrough` / `--story rf` / `--pause` |
+
+`docs/figures/README.md` lists each figure's claim, limitation and sources.
+
+### 12.6 Where the slides come from
 
 `docs/slides_outline.md` lists each slide's source. Every number on a slide must come from `docs/RESULT_TABLES.md` or a
 committed README, and the live demo is `python demo.py fu2` (with `python demo.py rf` optional).

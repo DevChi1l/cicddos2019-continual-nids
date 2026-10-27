@@ -84,7 +84,10 @@ Notes: RF1 (recall ratchet) not supported; RF2 (confidence loss) supported. Thre
 - Random flow-level splits; header-length and `Inbound` effects not ablated; the teacher knows only BENIGN/Syn.
 - Reference paper: different dataset (CICIDS2017), model and attack, so its numbers are not comparable.
 
+**Figures:** `docs/figures/fig1`-`fig7` (index: `docs/figures/README.md`), with slides 3, 7, 8, 9, 10, 12 and 13.
+
 ## 14. Demo (2-3 minutes; committed files only, CPU)
+0. Preferred: `python demo.py walkthrough --pause` (five timed steps, saved decisions only); `--story rf` for the limitation.
 1. `python demo.py fu2 --seed 42`:
    - the attack (2,000/2,000 flipped);
    - every gate inequality, with C1 failing by 0.9453 and R1 passing;

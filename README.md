@@ -21,7 +21,10 @@
 **Verify without data or GPU:**
 - `python make_report_tables.py --check` checks the tables against the committed files;
 - `python demo.py fu2` demonstrates the primary result;
-- `python demo.py rf` demonstrates the limitation.
+- `python demo.py rf` demonstrates the limitation;
+- `python demo.py walkthrough` gives a guided 3-minute run of the primary result (`--story rf` for the limitation);
+- `python make_figures.py --check` checks the storyboard figures (`docs/figures/`, index in its README);
+- `python make_figures.py --execute-notebook` runs notebook 11 end to end.
 
 ## Easiest: run `notebooks/00_audit.ipynb` -> `01_splits_experiences.ipynb` -> `02_train_evaluate.ipynb` on Kaggle (they call the scripts below).
 Local plumbing check (synthetic, needs torch): `python smoke_test.py --work /tmp/nids_smoke`.

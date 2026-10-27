@@ -1,0 +1,10 @@
+experiment,labels,pre-registered,post hoc,validation,held-out test,outcome,evidence
+main (02),4,no,no,yes,yes*,completed,02_main
+sweep (04A),4,yes,no,yes,yes*,completed,04_sweep
+all12 (04B),12,no,no,yes,yes*,"completed, exploratory",04b_all12
+FU1 (05),12,yes,no,yes,yes,"completed, negative",05_fu1
+FU2 (06),4,yes,YES,yes,yes,"completed, PRIMARY",06_fu2
+oracle (07),12,yes,no,yes,yes,"completed, diagnostic",07_oracle
+RC (08),7,yes,no,clean pilot,no,STOPPED,08_rc
+RCS (09),6-7,yes,no,clean screen,no,STOPPED,09_rcs
+RF (10),3,yes,YES,yes,yes,"completed, limitation",10_rf
