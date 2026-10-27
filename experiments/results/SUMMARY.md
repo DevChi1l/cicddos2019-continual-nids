@@ -1,4 +1,4 @@
-# Results summary: poison sweep, 12-label runs (notebook 04), follow-ups FU1 (notebook 05) and FU2 (notebook 06), joint oracle (notebook 07), repeated-corruption pilot (notebook 08, stopped)
+# Results summary: poison sweep, 12-label runs (notebook 04), follow-ups FU1 (notebook 05) and FU2 (notebook 06), joint oracle (notebook 07), repeated-corruption pilots RC (notebook 08) and RCS (notebook 09), both stopped
 
 All numbers below come from saved run files. The tables in this folder are produced by
 `python make_result_tables.py --out <nids_out>`, which reads files and trains nothing. Each section says
@@ -9,6 +9,25 @@ Provenance: notebook 04 at code commit `3e7807c` (Kaggle T4, 2026-10-21 10:35-11
 `notebook04_run2.ipynb`. Its 13 four-class runs are bit-identical to the first execution, whose validation
 files were committed in `eebc990` before any test table was made. Every checkpoint, metric and table is
 identical; only wall-clock `seconds` differ. Deviations D1 and D2 are in `../prereg_sweep.md`.
+
+## Completed defence result (held-out test; frozen, nothing below changes it)
+
+Four-class CII sequence (BENIGN/Syn -> LDAP -> UDP). The attacker flips stored Syn replay labels to BENIGN once,
+before E1, and the flips persist. Seeds 42-44. Test scored once per arm, after the validation files were committed.
+
+| Attack share f | Defence | Status | Held-out test |
+|---|---|---|---|
+| 0.75-0.95 | registered soft R1 (sweep, part A) | pre-registered | all 4 classes learned in 9/9 repair runs vs 3/9 for gate only; Syn 0.980-0.995, LDAP 0.975-0.988, UDP 0.997-1.000, benign FAR <= 0.0018 |
+| 1.0 | teacher relabelling R1 (FU2, part D) | **post hoc**: chosen after the sweep's forced diagnostic | all 4 classes learned in 3/3 seeds; Syn 0.995, LDAP 0.983 (0.977-0.988), UDP 0.998, benign FAR 0.0011, within about 0.01 of the clean arm; gate-only and soft repair learn 0/3 |
+
+**Scope:**
+- CII only, one attacked class (Syn), a teacher that knows only BENIGN and Syn, and 3 seeds;
+- no significance claim;
+- FU2's E1 replays the sweep diagnostic, so its new evidence is E2 and the test.
+
+**Not part of this result:**
+- the 12-label runs (part B; FU1);
+- the repeated-corruption experiments RC and RCS (parts F and G), which stopped before any poison was applied.
 
 ## Setup in one paragraph
 
@@ -270,6 +289,25 @@ Files and details: `08_rc/README.md`. Registration: `../prereg_repeated_corrupti
 - **Syn in the clean arm** stayed at 0.995-0.996 throughout. This is descriptive only.
 - **RC1-RC4 were not tested.** No conclusion about repeated corruption follows from this run.
 
+## G. RCS, notebook 09 (separate from RC): stopped at its registered clean screen
+
+Files and details: `09_rcs/README.md`. Registration: `../prereg_rcs.md` (`5e4ada3`).
+
+- **What ran.** Clean arm only, seeds 42-44, validation, for two schedules fixed in advance:
+  - `rcs6`: RC's six classes, with LDAP last;
+  - `rcs5`: the same, with LDAP dropped.
+
+  It took 406 s of T4 time.
+- **Outcome: `SELECTED = None`.** Both schedules were stable in 0/3 seeds; in every run at least one update was
+  rejected. No confirmation, poisoned arm or test was run.
+- **Why updates were rejected:**
+  - in `rcs6`, the final LDAP update erased SNMP (2/3 seeds) or MSSQL (1/3);
+  - in `rcs5`, the SNMP update erased MSSQL (3/3).
+- **Syn in the clean arm** never moved by more than 0.001.
+- **RC and RCS together:** 15 clean runs, all failing on overlapping non-Syn amplification classes. Class-incremental
+  sequences of >= 5 updates from these classes are not stable under this gate and recipe. Repeated small
+  corruption is still **untested**.
+
 ## What we can and cannot claim
 
 | Claim | Status |
@@ -281,5 +319,5 @@ Files and details: `08_rc/README.md`. Registration: `../prereg_repeated_corrupti
 | The method works with 12 labels | **no**: clean updates fail the gate (one seed, capped data) |
 | The 12-label failure is mainly continual forgetting | **only partly**: a joint oracle with the same model/recipe also fails DNS/LDAP and SSDP/UDP (val; test agrees), while MSSQL/NTP/NetBIOS/SNMP/UDPLag are learnable jointly but lost by the protocol. Not evidence that the raw features are inseparable |
 | Retrying rejected clean blocks with a validation-selected recipe (FU1) fixes it | **no**: DNS/LDAP learned (test 0.83), but 6 of 12 labels in both scenarios, macro recall lower |
-| Mild (5-10%) repeated corruption | **not tested**: the registered RC experiment stopped at its clean pilot (the gate rejected SNMP/MSSQL updates because LDAP was forgotten); no poisoned arm ran |
+| Mild (5-10%) repeated corruption | **not tested**: RC and RCS both stopped at their registered clean stage (no class-incremental sequence of >= 5 updates was stable without poison); no poisoned arm ran |
 | Statistical significance | not claimed (3 seeds, or 1 for part B) |

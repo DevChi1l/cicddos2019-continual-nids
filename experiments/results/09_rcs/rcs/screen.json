@@ -1,0 +1,418 @@
+{
+  "selected": null,
+  "classes": null,
+  "priority": [
+    "rcs6",
+    "rcs5"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "candidates": {
+    "rcs6": {
+      "classes": [
+        "MSSQL",
+        "NTP",
+        "SNMP",
+        "SSDP",
+        "TFTP",
+        "LDAP"
+      ],
+      "stable_seeds": 0,
+      "per_seed": {
+        "42": {
+          "run": "rcs_rcs6_r0.10_s42",
+          "A0_Syn_recall": 0.995312238406161,
+          "updates": [
+            {
+              "t": 1,
+              "new_class": "MSSQL",
+              "accepted": true,
+              "min_margin": 0.04842221520984538,
+              "binding": "benign FAR",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 2,
+              "new_class": "NTP",
+              "accepted": true,
+              "min_margin": 0.02800035771776077,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 3,
+              "new_class": "SNMP",
+              "accepted": false,
+              "min_margin": -0.05910391700947948,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": [
+                "old MSSQL recall 0.867 < floor 0.926"
+              ]
+            },
+            {
+              "t": 4,
+              "new_class": "SSDP",
+              "accepted": true,
+              "min_margin": 0.04115782449115779,
+              "binding": "old NTP",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 5,
+              "new_class": "TFTP",
+              "accepted": true,
+              "min_margin": 0.04141477374351643,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 6,
+              "new_class": "LDAP",
+              "accepted": false,
+              "min_margin": -0.020470398855303107,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": [
+                "old MSSQL recall 0.906 < floor 0.927"
+              ]
+            }
+          ],
+          "all_accepted": false,
+          "min_margin": -0.05910391700947948,
+          "max_abs_Syn_change": 0.0,
+          "stable": false
+        },
+        "43": {
+          "run": "rcs_rcs6_r0.10_s43",
+          "A0_Syn_recall": 0.995312238406161,
+          "updates": [
+            {
+              "t": 1,
+              "new_class": "MSSQL",
+              "accepted": true,
+              "min_margin": 0.049158514778584204,
+              "binding": "benign FAR",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 2,
+              "new_class": "NTP",
+              "accepted": true,
+              "min_margin": 0.02692720443570029,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 3,
+              "new_class": "SNMP",
+              "accepted": true,
+              "min_margin": 0.013333929529601218,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 4,
+              "new_class": "SSDP",
+              "accepted": true,
+              "min_margin": 0.03587014845287073,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 5,
+              "new_class": "TFTP",
+              "accepted": true,
+              "min_margin": 0.04141477374351643,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 6,
+              "new_class": "LDAP",
+              "accepted": false,
+              "min_margin": -0.2737134207870837,
+              "binding": "old SNMP",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": [
+                "old SNMP recall 0.654 < floor 0.928"
+              ]
+            }
+          ],
+          "all_accepted": false,
+          "min_margin": -0.2737134207870837,
+          "max_abs_Syn_change": 0.0,
+          "stable": false
+        },
+        "44": {
+          "run": "rcs_rcs6_r0.10_s44",
+          "A0_Syn_recall": 0.9958144985769295,
+          "updates": [
+            {
+              "t": 1,
+              "new_class": "MSSQL",
+              "accepted": true,
+              "min_margin": 0.04663405911433681,
+              "binding": "benign FAR",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 2,
+              "new_class": "NTP",
+              "accepted": true,
+              "min_margin": 0.027642639957073945,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 3,
+              "new_class": "SNMP",
+              "accepted": true,
+              "min_margin": 0.017447683777499612,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 4,
+              "new_class": "SSDP",
+              "accepted": true,
+              "min_margin": 0.03298298298298308,
+              "binding": "old NTP",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 5,
+              "new_class": "TFTP",
+              "accepted": true,
+              "min_margin": 0.03569128957252732,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 6,
+              "new_class": "LDAP",
+              "accepted": false,
+              "min_margin": -0.4755297679112008,
+              "binding": "old SNMP",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": [
+                "old SNMP recall 0.451 < floor 0.926",
+                "new-class FAR 0.069 > 0.05"
+              ]
+            }
+          ],
+          "all_accepted": false,
+          "min_margin": -0.4755297679112008,
+          "max_abs_Syn_change": 0.0005022601707684871,
+          "stable": false
+        }
+      }
+    },
+    "rcs5": {
+      "classes": [
+        "MSSQL",
+        "NTP",
+        "SNMP",
+        "SSDP",
+        "TFTP"
+      ],
+      "stable_seeds": 0,
+      "per_seed": {
+        "42": {
+          "run": "rcs_rcs5_r0.10_s42",
+          "A0_Syn_recall": 0.995312238406161,
+          "updates": [
+            {
+              "t": 1,
+              "new_class": "MSSQL",
+              "accepted": true,
+              "min_margin": 0.04863258651519933,
+              "binding": "benign FAR",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 2,
+              "new_class": "NTP",
+              "accepted": true,
+              "min_margin": 0.030325523162225143,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 3,
+              "new_class": "SNMP",
+              "accepted": false,
+              "min_margin": -0.036567698086209965,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": [
+                "old MSSQL recall 0.892 < floor 0.928"
+              ]
+            },
+            {
+              "t": 4,
+              "new_class": "SSDP",
+              "accepted": true,
+              "min_margin": 0.01696696696696698,
+              "binding": "old NTP",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 5,
+              "new_class": "TFTP",
+              "accepted": true,
+              "min_margin": 0.029232888323797446,
+              "binding": "old SSDP",
+              "Syn_recall": 0.9956470785200067,
+              "gate_reasons": []
+            }
+          ],
+          "all_accepted": false,
+          "min_margin": -0.036567698086209965,
+          "max_abs_Syn_change": 0.00033484011384565804,
+          "stable": false
+        },
+        "43": {
+          "run": "rcs_rcs5_r0.10_s43",
+          "A0_Syn_recall": 0.995312238406161,
+          "updates": [
+            {
+              "t": 1,
+              "new_class": "MSSQL",
+              "accepted": true,
+              "min_margin": 0.0353791942779005,
+              "binding": "benign FAR",
+              "Syn_recall": 0.9959819186338523,
+              "gate_reasons": []
+            },
+            {
+              "t": 2,
+              "new_class": "NTP",
+              "accepted": true,
+              "min_margin": 0.03354498300840647,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 3,
+              "new_class": "SNMP",
+              "accepted": false,
+              "min_margin": -0.00830799499195134,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": [
+                "old MSSQL recall 0.923 < floor 0.932"
+              ]
+            },
+            {
+              "t": 4,
+              "new_class": "SSDP",
+              "accepted": false,
+              "min_margin": -0.04059059059059056,
+              "binding": "old NTP",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": [
+                "old NTP recall 0.904 < floor 0.944"
+              ]
+            },
+            {
+              "t": 5,
+              "new_class": "TFTP",
+              "accepted": true,
+              "min_margin": 0.03068324092291186,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.9951448183492383,
+              "gate_reasons": []
+            }
+          ],
+          "all_accepted": false,
+          "min_margin": -0.04059059059059056,
+          "max_abs_Syn_change": 0.0006696802276913161,
+          "stable": false
+        },
+        "44": {
+          "run": "rcs_rcs5_r0.10_s44",
+          "A0_Syn_recall": 0.995312238406161,
+          "updates": [
+            {
+              "t": 1,
+              "new_class": "MSSQL",
+              "accepted": true,
+              "min_margin": 0.04842221520984538,
+              "binding": "benign FAR",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 2,
+              "new_class": "NTP",
+              "accepted": true,
+              "min_margin": 0.02621176891432664,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 3,
+              "new_class": "SNMP",
+              "accepted": false,
+              "min_margin": -0.02404757646217126,
+              "binding": "old MSSQL",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": [
+                "old MSSQL recall 0.900 < floor 0.924"
+              ]
+            },
+            {
+              "t": 4,
+              "new_class": "SSDP",
+              "accepted": true,
+              "min_margin": 0.026643309976643437,
+              "binding": "old NTP",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            },
+            {
+              "t": 5,
+              "new_class": "TFTP",
+              "accepted": true,
+              "min_margin": 0.028173341809705432,
+              "binding": "old SSDP",
+              "Syn_recall": 0.995312238406161,
+              "gate_reasons": []
+            }
+          ],
+          "all_accepted": false,
+          "min_margin": -0.02404757646217126,
+          "max_abs_Syn_change": 0.0,
+          "stable": false
+        }
+      }
+    }
+  },
+  "rule": "stable run: every C1 accepted, every C1's smallest gate margin >= 0.01, max |Syn val recall(A_t) - A0| <= 0.02; a stage passes if every seed is stable; select the first candidate in priority order that passes; none -> STOP",
+  "min_margin": 0.01,
+  "syn_band": 0.02,
+  "utc": "2026-10-27T19:00:26+00:00"
+}

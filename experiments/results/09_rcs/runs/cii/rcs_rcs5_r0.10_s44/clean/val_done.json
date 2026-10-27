@@ -1,0 +1,7 @@
+{
+  "arm": "clean",
+  "final_ckpt": "A5.pt",
+  "final_sha256": "ebed00285125c7dbb65b65cf2ae07dad4a3476fecb80470f025c948b8b024da8",
+  "n_attempts": 5,
+  "test_scored": false
+}

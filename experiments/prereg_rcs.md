@@ -159,4 +159,11 @@ Stage 1b tag.
 
 ## Deviations
 
-None yet.
+None.
+
+## Outcome (added 2026-10-28; the design above is unchanged)
+
+Stopped by stopping rule 1 at Stage S (Kaggle, code `c33e961`): `SELECTED = None`, with both candidates stable in
+0/3 screening seeds. No confirmation, poisoned run or test was performed. Files: `results/09_rcs/`. The predictions
+remain untested. Per the user's instruction, no further schedule search follows; any next experiment is a new
+registration.

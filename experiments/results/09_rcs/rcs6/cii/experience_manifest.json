@@ -1,0 +1,132 @@
+{
+  "scenario": "cii",
+  "schedule": [
+    [
+      "Syn"
+    ],
+    [
+      "MSSQL"
+    ],
+    [
+      "NTP"
+    ],
+    [
+      "SNMP"
+    ],
+    [
+      "SSDP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "LDAP"
+    ]
+  ],
+  "attack_cap": 9312,
+  "seed": 42,
+  "counts_per_experience": {
+    "E0": {
+      "Syn": 9312,
+      "BENIGN": 8167
+    },
+    "E1": {
+      "MSSQL": 9312,
+      "BENIGN": 8166
+    },
+    "E2": {
+      "NTP": 9312,
+      "BENIGN": 8166
+    },
+    "E3": {
+      "SNMP": 9312,
+      "BENIGN": 8166
+    },
+    "E4": {
+      "SSDP": 9312,
+      "BENIGN": 8166
+    },
+    "E5": {
+      "TFTP": 9312,
+      "BENIGN": 8166
+    },
+    "E6": {
+      "LDAP": 9312,
+      "BENIGN": 8166
+    }
+  },
+  "scaler_const_in_e0": [
+    "bwd psh flags",
+    "fwd urg flags",
+    "bwd urg flags",
+    "fin flag count",
+    "psh flag count",
+    "ece flag count",
+    "fwd avg bytes/bulk",
+    "fwd avg packets/bulk",
+    "fwd avg bulk rate",
+    "bwd avg bytes/bulk",
+    "bwd avg packets/bulk",
+    "bwd avg bulk rate"
+  ],
+  "protected_exclusions": {
+    "file": "protected_exclusions.json",
+    "rids_sha256": "591957051c924a8810f18415723d523990e3154ef3f43a6e0c38dac9200143ca",
+    "n_excluded": 303,
+    "kept_by_split_class": {
+      "calib": {
+        "BENIGN": 9513,
+        "Syn": 5973,
+        "MSSQL": 5594,
+        "NTP": 5993,
+        "SNMP": 4963,
+        "SSDP": 4717,
+        "TFTP": 5993,
+        "LDAP": 2289
+      },
+      "val": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "MSSQL": 5591,
+        "NTP": 5994,
+        "SNMP": 4955,
+        "SSDP": 4719,
+        "TFTP": 5993,
+        "LDAP": 2301
+      },
+      "test": {
+        "BENIGN": 19028,
+        "Syn": 11946,
+        "MSSQL": 11177,
+        "NTP": 11991,
+        "SNMP": 9929,
+        "SSDP": 9438,
+        "TFTP": 11990,
+        "LDAP": 4578
+      }
+    }
+  },
+  "scaled_input_overlap_before_exclusion": {
+    "calib": 74,
+    "val": 76,
+    "test": 153
+  },
+  "scaled_input_overlap": {
+    "calib": {
+      "rows": 45035,
+      "equal_to_a_train_input": 0,
+      "share": 0.0
+    },
+    "val": {
+      "rows": 45033,
+      "equal_to_a_train_input": 0,
+      "share": 0.0
+    },
+    "test": {
+      "rows": 90077,
+      "equal_to_a_train_input": 0,
+      "share": 0.0
+    }
+  },
+  "protected": "calib/val/test are never inside any experience; excluded rows are never scored"
+}

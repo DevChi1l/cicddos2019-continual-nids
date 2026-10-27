@@ -1,0 +1,122 @@
+{
+  "scenario": "cii",
+  "schedule": [
+    [
+      "Syn"
+    ],
+    [
+      "MSSQL"
+    ],
+    [
+      "NTP"
+    ],
+    [
+      "SNMP"
+    ],
+    [
+      "SSDP"
+    ],
+    [
+      "TFTP"
+    ]
+  ],
+  "attack_cap": 9312,
+  "seed": 42,
+  "counts_per_experience": {
+    "E0": {
+      "BENIGN": 9528,
+      "Syn": 9312
+    },
+    "E1": {
+      "BENIGN": 9527,
+      "MSSQL": 9312
+    },
+    "E2": {
+      "BENIGN": 9527,
+      "NTP": 9312
+    },
+    "E3": {
+      "BENIGN": 9527,
+      "SNMP": 9312
+    },
+    "E4": {
+      "BENIGN": 9527,
+      "SSDP": 9312
+    },
+    "E5": {
+      "BENIGN": 9527,
+      "TFTP": 9312
+    }
+  },
+  "scaler_const_in_e0": [
+    "bwd psh flags",
+    "fwd urg flags",
+    "bwd urg flags",
+    "fin flag count",
+    "psh flag count",
+    "ece flag count",
+    "fwd avg bytes/bulk",
+    "fwd avg packets/bulk",
+    "fwd avg bulk rate",
+    "bwd avg bytes/bulk",
+    "bwd avg packets/bulk",
+    "bwd avg bulk rate"
+  ],
+  "protected_exclusions": {
+    "file": "protected_exclusions.json",
+    "rids_sha256": "e31c457c51a472bc4d2a388ffc43384d40c1aabb02c9f37bad445c66c0224ff2",
+    "n_excluded": 198,
+    "kept_by_split_class": {
+      "calib": {
+        "BENIGN": 9513,
+        "Syn": 5973,
+        "MSSQL": 5594,
+        "NTP": 5993,
+        "SNMP": 4967,
+        "SSDP": 4717,
+        "TFTP": 5993
+      },
+      "val": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "MSSQL": 5591,
+        "NTP": 5994,
+        "SNMP": 4959,
+        "SSDP": 4719,
+        "TFTP": 5993
+      },
+      "test": {
+        "BENIGN": 19028,
+        "Syn": 11946,
+        "MSSQL": 11177,
+        "NTP": 11991,
+        "SNMP": 9934,
+        "SSDP": 9438,
+        "TFTP": 11990
+      }
+    }
+  },
+  "scaled_input_overlap_before_exclusion": {
+    "calib": 44,
+    "val": 58,
+    "test": 96
+  },
+  "scaled_input_overlap": {
+    "calib": {
+      "rows": 42750,
+      "equal_to_a_train_input": 0,
+      "share": 0.0
+    },
+    "val": {
+      "rows": 42736,
+      "equal_to_a_train_input": 0,
+      "share": 0.0
+    },
+    "test": {
+      "rows": 85504,
+      "equal_to_a_train_input": 0,
+      "share": 0.0
+    }
+  },
+  "protected": "calib/val/test are never inside any experience; excluded rows are never scored"
+}

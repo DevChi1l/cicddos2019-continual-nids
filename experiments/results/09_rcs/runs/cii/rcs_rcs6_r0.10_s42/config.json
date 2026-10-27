@@ -1,0 +1,93 @@
+{
+  "args": {
+    "out": "/kaggle/working/nids_out",
+    "scenario": "cii",
+    "run": "rcs_rcs6_r0.10_s42",
+    "epochs0": 10,
+    "epochs_update": 5,
+    "batch": 512,
+    "lr": 0.001,
+    "d": 32,
+    "heads": 4,
+    "layers": 3,
+    "dropout": 0.1,
+    "mem_per_class": 2000,
+    "poison_target": "Syn",
+    "poison_to": "BENIGN",
+    "poison_frac": 0.1,
+    "gate_old_drop": 0.05,
+    "gate_new_min": 0.8,
+    "gate_far_max": 0.05,
+    "gate_newfar_max": 0.05,
+    "gate_conf_drop": null,
+    "seed": 42,
+    "repair_rule": "soft",
+    "relabel_to_teacher": false,
+    "tw_keep": 0.9,
+    "tw_quarantine": 0.1,
+    "tw_mid_weight": 0.5,
+    "forced_r1": "soft",
+    "tag": "rcs6",
+    "poison_every_update": true,
+    "defer_test": true,
+    "forced_r1_arms": "poisoned"
+  },
+  "seed": 42,
+  "schedule": [
+    [
+      "Syn"
+    ],
+    [
+      "MSSQL"
+    ],
+    [
+      "NTP"
+    ],
+    [
+      "SNMP"
+    ],
+    [
+      "SSDP"
+    ],
+    [
+      "TFTP"
+    ],
+    [
+      "LDAP"
+    ]
+  ],
+  "inputs": {
+    "split_manifest.json": "bb1f5acbd8ca2cbced88236bf5dc864d9541f267ab8f744a0f059faca987c724",
+    "class_map.json": "24925278bb16fde4c1f3cf99b395246000b7ccfd963357640e8933a4a350bba6",
+    "clean_train.parquet": "379e005649890b48295d7fbc8bdda5822a45924cc875514a9df3e596543aa8b6",
+    "clean_val.parquet": "b47c2469fa0b3198ea3af864f1ab4b511d8dce07e716ac72ad12c5daa397e0e3",
+    "clean_test.parquet": "1019948deae5835078b87eddcddc9238319e9ed29485ed1621db2e42c1e140b2",
+    "rcs6/protected_exclusions.json": "e1156c35fd363f80868d12c88e221b224a1dbc740ff338bc37f5794143e74e69",
+    "rcs6/cii/experience_rids.npz": "9fca899b4b47dedce0e17ec03ab5c7fb01b2fb9454219dd46f63b7391d962a09",
+    "rcs6/cii/scaler.json": "2b55c28b630989853cc0d09eacc911b98d742a51285d9f718ab95a6e2bbbf6c9",
+    "rcs6/cii/experience_manifest.json": "9d93b5cf5eac499d3536098af96bd6ba00aacac42dcd369dcc0cf266d7862ed4"
+  },
+  "protected_excluded_rows": 303,
+  "val_rows": {
+    "BENIGN": 9507,
+    "Syn": 5973,
+    "MSSQL": 5591,
+    "NTP": 5994,
+    "SNMP": 4955,
+    "SSDP": 4719,
+    "TFTP": 5993,
+    "LDAP": 2301
+  },
+  "test_rows": {
+    "BENIGN": 19028,
+    "Syn": 11946,
+    "MSSQL": 11177,
+    "NTP": 11991,
+    "SNMP": 9929,
+    "SSDP": 9438,
+    "TFTP": 11990,
+    "LDAP": 4578
+  },
+  "device": "cuda",
+  "torch": "2.11.0+cu128"
+}
