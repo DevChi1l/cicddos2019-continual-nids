@@ -1,0 +1,19 @@
+{
+  "T_sha256": "ed999840ca388ee47c5f8b8bfcce1601220da8b7500517fcea810bc1a175aa94",
+  "T_unchanged": true,
+  "T_classes": [
+    "BENIGN",
+    "Syn"
+  ],
+  "inputs": {
+    "split_manifest.json": "bb1f5acbd8ca2cbced88236bf5dc864d9541f267ab8f744a0f059faca987c724",
+    "class_map.json": "24925278bb16fde4c1f3cf99b395246000b7ccfd963357640e8933a4a350bba6",
+    "clean_train.parquet": "379e005649890b48295d7fbc8bdda5822a45924cc875514a9df3e596543aa8b6",
+    "clean_val.parquet": "b47c2469fa0b3198ea3af864f1ab4b511d8dce07e716ac72ad12c5daa397e0e3",
+    "clean_test.parquet": "1019948deae5835078b87eddcddc9238319e9ed29485ed1621db2e42c1e140b2",
+    "rep6/protected_exclusions.json": "d708d12f21c54e3386d87dc4a3c2cda18037298d4d48741fa721786cee1bc83f",
+    "rep6/cii/experience_rids.npz": "3fb7bd8442c9bd865fb50d9bec2652f67834d6cc43e6f95d3003ef90971ea09e",
+    "rep6/cii/scaler.json": "2b55c28b630989853cc0d09eacc911b98d742a51285d9f718ab95a6e2bbbf6c9",
+    "rep6/cii/experience_manifest.json": "3d641ee2c3cc56569b96b0779408cc04043e26bb6524d26626f2ea8035f12291"
+  }
+}

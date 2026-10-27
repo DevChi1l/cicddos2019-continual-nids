@@ -161,3 +161,12 @@ real data**. No RC result existed when they were fixed. They pin down details th
     - It scores each arm's deployed A0..A6 on the protected test rows.
     - It asserts that the test-row hash is the same for every model.
     - The test trajectory is descriptive. No decision uses it.
+
+## Outcome (added 2026-10-28; the design above is unchanged)
+
+Stopped by stopping rule 1 at the clean feasibility pilot (Kaggle, 2026-10-27, code `0d2c31c`):
+- 0/3 seeds accepted all six updates;
+- the fallback would leave 4 updates (< 5), so the fallback pilot was not run;
+- no poisoned or repair arm was trained, and no test was scored.
+
+Files: `results/08_rc/`. RC1-RC4 remain untested. A follow-up with another schedule must be a new registration.

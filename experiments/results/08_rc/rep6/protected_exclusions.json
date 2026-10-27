@@ -1,0 +1,805 @@
+{
+  "rule": "A protected (calib/val/test) row is excluded if, under the frozen scaler of ANY scenario, its model input equals that of ANY row used for training in ANY scenario. The same row ids are then removed for CI and CII, so both are scored on identical rows. Only features are compared (no labels, no model, no metric), and training rows are left untouched. Writes protected_exclusions.json (counts per split and class, causes, residual check). Refuses if a split/class loses more than --max-excluded-share, if fewer than --min-benign-protected benign val/test rows remain, or if any residual overlap is left.",
+  "schedule": [
+    [
+      "Syn"
+    ],
+    [
+      "LDAP"
+    ],
+    [
+      "MSSQL"
+    ],
+    [
+      "NTP"
+    ],
+    [
+      "SNMP"
+    ],
+    [
+      "SSDP"
+    ],
+    [
+      "TFTP"
+    ]
+  ],
+  "attack_cap": 9312,
+  "seed": 42,
+  "scenarios": [
+    "ci",
+    "cii"
+  ],
+  "n_training_rows_compared": 122347,
+  "n_excluded": 301,
+  "rids_sha256": "190cf7a9012d713c20396e60200bb85f906ad300b5270db545fb4f59fd722845",
+  "by_split_class": {
+    "calib": {
+      "BENIGN": {
+        "rows": 9527,
+        "excluded": 14,
+        "kept": 9513,
+        "share_excluded": 0.0014695077149155032
+      },
+      "Syn": {
+        "rows": 5973,
+        "excluded": 0,
+        "kept": 5973,
+        "share_excluded": 0.0
+      },
+      "LDAP": {
+        "rows": 2315,
+        "excluded": 25,
+        "kept": 2290,
+        "share_excluded": 0.01079913606911447
+      },
+      "MSSQL": {
+        "rows": 5603,
+        "excluded": 10,
+        "kept": 5593,
+        "share_excluded": 0.001784758165268606
+      },
+      "NTP": {
+        "rows": 5994,
+        "excluded": 0,
+        "kept": 5994,
+        "share_excluded": 0.0
+      },
+      "SNMP": {
+        "rows": 4983,
+        "excluded": 17,
+        "kept": 4966,
+        "share_excluded": 0.0034115994380895043
+      },
+      "SSDP": {
+        "rows": 4719,
+        "excluded": 2,
+        "kept": 4717,
+        "share_excluded": 0.0004238186056367875
+      },
+      "TFTP": {
+        "rows": 5995,
+        "excluded": 0,
+        "kept": 5995,
+        "share_excluded": 0.0
+      }
+    },
+    "val": {
+      "BENIGN": {
+        "rows": 9527,
+        "excluded": 20,
+        "kept": 9507,
+        "share_excluded": 0.002099296735593576
+      },
+      "Syn": {
+        "rows": 5973,
+        "excluded": 0,
+        "kept": 5973,
+        "share_excluded": 0.0
+      },
+      "LDAP": {
+        "rows": 2315,
+        "excluded": 18,
+        "kept": 2297,
+        "share_excluded": 0.007775377969762419
+      },
+      "MSSQL": {
+        "rows": 5603,
+        "excluded": 11,
+        "kept": 5592,
+        "share_excluded": 0.0019632339817954665
+      },
+      "NTP": {
+        "rows": 5994,
+        "excluded": 0,
+        "kept": 5994,
+        "share_excluded": 0.0
+      },
+      "SNMP": {
+        "rows": 4983,
+        "excluded": 22,
+        "kept": 4961,
+        "share_excluded": 0.004415011037527594
+      },
+      "SSDP": {
+        "rows": 4719,
+        "excluded": 0,
+        "kept": 4719,
+        "share_excluded": 0.0
+      },
+      "TFTP": {
+        "rows": 5995,
+        "excluded": 1,
+        "kept": 5994,
+        "share_excluded": 0.00016680567139282736
+      }
+    },
+    "test": {
+      "BENIGN": {
+        "rows": 19055,
+        "excluded": 27,
+        "kept": 19028,
+        "share_excluded": 0.0014169509315140384
+      },
+      "Syn": {
+        "rows": 11946,
+        "excluded": 0,
+        "kept": 11946,
+        "share_excluded": 0.0
+      },
+      "LDAP": {
+        "rows": 4630,
+        "excluded": 56,
+        "kept": 4574,
+        "share_excluded": 0.012095032397408207
+      },
+      "MSSQL": {
+        "rows": 11207,
+        "excluded": 38,
+        "kept": 11169,
+        "share_excluded": 0.003390737931649862
+      },
+      "NTP": {
+        "rows": 11991,
+        "excluded": 0,
+        "kept": 11991,
+        "share_excluded": 0.0
+      },
+      "SNMP": {
+        "rows": 9970,
+        "excluded": 38,
+        "kept": 9932,
+        "share_excluded": 0.003811434302908726
+      },
+      "SSDP": {
+        "rows": 9441,
+        "excluded": 1,
+        "kept": 9440,
+        "share_excluded": 0.00010592098294672174
+      },
+      "TFTP": {
+        "rows": 11990,
+        "excluded": 1,
+        "kept": 11989,
+        "share_excluded": 8.340283569641368e-05
+      }
+    }
+  },
+  "residual": {
+    "ci": {
+      "calib": {
+        "rows": 45041,
+        "equal_to_a_train_input": 0,
+        "share": 0.0
+      },
+      "val": {
+        "rows": 45037,
+        "equal_to_a_train_input": 0,
+        "share": 0.0
+      },
+      "test": {
+        "rows": 90069,
+        "equal_to_a_train_input": 0,
+        "share": 0.0
+      }
+    },
+    "cii": {
+      "calib": {
+        "rows": 45041,
+        "equal_to_a_train_input": 0,
+        "share": 0.0
+      },
+      "val": {
+        "rows": 45037,
+        "equal_to_a_train_input": 0,
+        "share": 0.0
+      },
+      "test": {
+        "rows": 90069,
+        "equal_to_a_train_input": 0,
+        "share": 0.0
+      }
+    }
+  },
+  "diagnosis": {
+    "ci": {
+      "calib": {
+        "rows": 45109,
+        "collisions": 66,
+        "first_step": {
+          "clip": 40,
+          "slog_f64": 19,
+          "float32": 7
+        },
+        "same_label_as_train": 57,
+        "different_label_from_train": 9,
+        "features_that_differed": {
+          "fwd header length": {
+            "clip": 40,
+            "rounding": 0
+          },
+          "fwd header length.1": {
+            "clip": 40,
+            "rounding": 0
+          },
+          "min_seg_size_forward": {
+            "clip": 21,
+            "rounding": 0
+          },
+          "flow packets/s": {
+            "clip": 0,
+            "rounding": 20
+          },
+          "flow iat mean": {
+            "clip": 0,
+            "rounding": 4
+          },
+          "fwd iat mean": {
+            "clip": 0,
+            "rounding": 4
+          },
+          "flow bytes/s": {
+            "clip": 0,
+            "rounding": 2
+          },
+          "flow iat std": {
+            "clip": 0,
+            "rounding": 1
+          },
+          "fwd iat std": {
+            "clip": 0,
+            "rounding": 1
+          }
+        }
+      },
+      "val": {
+        "rows": 45109,
+        "collisions": 72,
+        "first_step": {
+          "clip": 48,
+          "slog_f64": 19,
+          "float32": 5
+        },
+        "same_label_as_train": 68,
+        "different_label_from_train": 4,
+        "features_that_differed": {
+          "fwd header length": {
+            "clip": 48,
+            "rounding": 0
+          },
+          "fwd header length.1": {
+            "clip": 48,
+            "rounding": 0
+          },
+          "flow packets/s": {
+            "clip": 0,
+            "rounding": 22
+          },
+          "min_seg_size_forward": {
+            "clip": 21,
+            "rounding": 0
+          },
+          "flow bytes/s": {
+            "clip": 0,
+            "rounding": 3
+          }
+        }
+      },
+      "test": {
+        "rows": 90230,
+        "collisions": 158,
+        "first_step": {
+          "clip": 108,
+          "slog_f64": 35,
+          "float32": 14,
+          "standardize_f64": 1
+        },
+        "same_label_as_train": 139,
+        "different_label_from_train": 19,
+        "features_that_differed": {
+          "fwd header length": {
+            "clip": 108,
+            "rounding": 0
+          },
+          "fwd header length.1": {
+            "clip": 108,
+            "rounding": 0
+          },
+          "min_seg_size_forward": {
+            "clip": 59,
+            "rounding": 0
+          },
+          "flow packets/s": {
+            "clip": 0,
+            "rounding": 36
+          },
+          "flow bytes/s": {
+            "clip": 0,
+            "rounding": 9
+          },
+          "flow iat mean": {
+            "clip": 0,
+            "rounding": 9
+          },
+          "fwd iat mean": {
+            "clip": 0,
+            "rounding": 9
+          },
+          "flow iat std": {
+            "clip": 0,
+            "rounding": 4
+          },
+          "fwd iat std": {
+            "clip": 0,
+            "rounding": 4
+          },
+          "bwd iat mean": {
+            "clip": 0,
+            "rounding": 1
+          }
+        }
+      }
+    },
+    "cii": {
+      "calib": {
+        "rows": 45109,
+        "collisions": 68,
+        "first_step": {
+          "clip": 42,
+          "slog_f64": 19,
+          "float32": 6,
+          "standardize_f64": 1
+        },
+        "same_label_as_train": 59,
+        "different_label_from_train": 9,
+        "features_that_differed": {
+          "fwd header length": {
+            "clip": 40,
+            "rounding": 0
+          },
+          "fwd header length.1": {
+            "clip": 40,
+            "rounding": 0
+          },
+          "min_seg_size_forward": {
+            "clip": 23,
+            "rounding": 0
+          },
+          "flow packets/s": {
+            "clip": 0,
+            "rounding": 20
+          },
+          "flow iat mean": {
+            "clip": 0,
+            "rounding": 4
+          },
+          "fwd iat mean": {
+            "clip": 0,
+            "rounding": 4
+          },
+          "flow bytes/s": {
+            "clip": 0,
+            "rounding": 2
+          },
+          "flow iat std": {
+            "clip": 0,
+            "rounding": 1
+          },
+          "fwd iat std": {
+            "clip": 0,
+            "rounding": 1
+          }
+        }
+      },
+      "val": {
+        "rows": 45109,
+        "collisions": 72,
+        "first_step": {
+          "clip": 48,
+          "slog_f64": 19,
+          "float32": 5
+        },
+        "same_label_as_train": 68,
+        "different_label_from_train": 4,
+        "features_that_differed": {
+          "fwd header length": {
+            "clip": 48,
+            "rounding": 0
+          },
+          "fwd header length.1": {
+            "clip": 48,
+            "rounding": 0
+          },
+          "flow packets/s": {
+            "clip": 0,
+            "rounding": 22
+          },
+          "min_seg_size_forward": {
+            "clip": 21,
+            "rounding": 0
+          },
+          "flow bytes/s": {
+            "clip": 0,
+            "rounding": 3
+          }
+        }
+      },
+      "test": {
+        "rows": 90230,
+        "collisions": 161,
+        "first_step": {
+          "clip": 111,
+          "slog_f64": 35,
+          "standardize_f64": 8,
+          "float32": 7
+        },
+        "same_label_as_train": 141,
+        "different_label_from_train": 20,
+        "features_that_differed": {
+          "fwd header length": {
+            "clip": 108,
+            "rounding": 0
+          },
+          "fwd header length.1": {
+            "clip": 108,
+            "rounding": 0
+          },
+          "min_seg_size_forward": {
+            "clip": 62,
+            "rounding": 0
+          },
+          "flow packets/s": {
+            "clip": 0,
+            "rounding": 36
+          },
+          "flow bytes/s": {
+            "clip": 0,
+            "rounding": 9
+          },
+          "flow iat mean": {
+            "clip": 0,
+            "rounding": 9
+          },
+          "fwd iat mean": {
+            "clip": 0,
+            "rounding": 9
+          },
+          "flow iat std": {
+            "clip": 0,
+            "rounding": 4
+          },
+          "fwd iat std": {
+            "clip": 0,
+            "rounding": 4
+          },
+          "bwd iat mean": {
+            "clip": 0,
+            "rounding": 1
+          }
+        }
+      }
+    }
+  },
+  "excluded_rids": [
+    2541,
+    16488,
+    39039,
+    53207,
+    56237,
+    58290,
+    64298,
+    79232,
+    105220,
+    114636,
+    128285,
+    135576,
+    136654,
+    169519,
+    172924,
+    173038,
+    177288,
+    184914,
+    188650,
+    195374,
+    195725,
+    197746,
+    209361,
+    209857,
+    225320,
+    227014,
+    230728,
+    230879,
+    231280,
+    232367,
+    244227,
+    244388,
+    247870,
+    249064,
+    250710,
+    259175,
+    270099,
+    275189,
+    276609,
+    290465,
+    297445,
+    298396,
+    298662,
+    303354,
+    304820,
+    305438,
+    309349,
+    312060,
+    313369,
+    314208,
+    317612,
+    318916,
+    323610,
+    323925,
+    326965,
+    329614,
+    331203,
+    331869,
+    332986,
+    333174,
+    335304,
+    340073,
+    344123,
+    345059,
+    346173,
+    346629,
+    349218,
+    350125,
+    353025,
+    353326,
+    354575,
+    357413,
+    357460,
+    358112,
+    358553,
+    359602,
+    359651,
+    360698,
+    360922,
+    361549,
+    362168,
+    362216,
+    366948,
+    368591,
+    369819,
+    369938,
+    370062,
+    370699,
+    371674,
+    373145,
+    373734,
+    375483,
+    379063,
+    379389,
+    379677,
+    382451,
+    384525,
+    385415,
+    386787,
+    387188,
+    389119,
+    391686,
+    391718,
+    393660,
+    393730,
+    393880,
+    395471,
+    395604,
+    395785,
+    399672,
+    399964,
+    400497,
+    402058,
+    405001,
+    407914,
+    408351,
+    409307,
+    413618,
+    413887,
+    415665,
+    416874,
+    417673,
+    418923,
+    419249,
+    419328,
+    419566,
+    419805,
+    419980,
+    422267,
+    422277,
+    422314,
+    422579,
+    422752,
+    423046,
+    423233,
+    426284,
+    426719,
+    430577,
+    430911,
+    430992,
+    431408,
+    434481,
+    435581,
+    435886,
+    435985,
+    435992,
+    436912,
+    441891,
+    442160,
+    442802,
+    443918,
+    444734,
+    446898,
+    450801,
+    451305,
+    451796,
+    452812,
+    453098,
+    453138,
+    454162,
+    454463,
+    455048,
+    455673,
+    457183,
+    459305,
+    460118,
+    463067,
+    463961,
+    465615,
+    465786,
+    467726,
+    470495,
+    470963,
+    472517,
+    473189,
+    474854,
+    476904,
+    479438,
+    482610,
+    483682,
+    484850,
+    486648,
+    488994,
+    490120,
+    491418,
+    491680,
+    491887,
+    493403,
+    494325,
+    495820,
+    496200,
+    501804,
+    503860,
+    508271,
+    509052,
+    510756,
+    511642,
+    512469,
+    513805,
+    513901,
+    514902,
+    515139,
+    515887,
+    517035,
+    517388,
+    520208,
+    522538,
+    523734,
+    526084,
+    526746,
+    527152,
+    527210,
+    530200,
+    530391,
+    530700,
+    532689,
+    533058,
+    533360,
+    533962,
+    534123,
+    535335,
+    535930,
+    538739,
+    539425,
+    539516,
+    542395,
+    542873,
+    544592,
+    547069,
+    551356,
+    553760,
+    554406,
+    555929,
+    557759,
+    558269,
+    558612,
+    559091,
+    560860,
+    562494,
+    563595,
+    564167,
+    567104,
+    567199,
+    569034,
+    570780,
+    570898,
+    571337,
+    571705,
+    572652,
+    574149,
+    575209,
+    575931,
+    576214,
+    576905,
+    577057,
+    578619,
+    582051,
+    582749,
+    582856,
+    584581,
+    585239,
+    585351,
+    585662,
+    586266,
+    586599,
+    587049,
+    587606,
+    587779,
+    587859,
+    588119,
+    588204,
+    588765,
+    589147,
+    590124,
+    593875,
+    594280,
+    596939,
+    597460,
+    601996,
+    602591,
+    603104,
+    603182,
+    603463,
+    604198,
+    607997,
+    608126,
+    608327,
+    608748,
+    609266,
+    609334,
+    610977,
+    612825,
+    612954,
+    613231,
+    613807,
+    614247,
+    614408,
+    614904,
+    615078,
+    615573,
+    615916
+  ]
+}

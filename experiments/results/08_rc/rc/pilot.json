@@ -1,0 +1,60 @@
+{
+  "proceed": false,
+  "tag": "rep6",
+  "classes": [
+    "LDAP",
+    "NTP",
+    "SSDP",
+    "TFTP"
+  ],
+  "reason": "pilot failed; fallback would leave 4 updates (< 5)",
+  "attempts": [
+    {
+      "tag": "rep6",
+      "classes": [
+        "LDAP",
+        "MSSQL",
+        "NTP",
+        "SNMP",
+        "SSDP",
+        "TFTP"
+      ],
+      "accepted_by_seed": {
+        "42": {
+          "LDAP": true,
+          "MSSQL": true,
+          "NTP": true,
+          "SNMP": false,
+          "SSDP": true,
+          "TFTP": true
+        },
+        "43": {
+          "LDAP": true,
+          "MSSQL": false,
+          "NTP": true,
+          "SNMP": false,
+          "SSDP": true,
+          "TFTP": true
+        },
+        "44": {
+          "LDAP": true,
+          "MSSQL": false,
+          "NTP": true,
+          "SNMP": false,
+          "SSDP": true,
+          "TFTP": true
+        }
+      },
+      "seeds_accepting_all": 0,
+      "rejections_per_class": {
+        "LDAP": 0,
+        "MSSQL": 2,
+        "NTP": 0,
+        "SNMP": 3,
+        "SSDP": 0,
+        "TFTP": 0
+      }
+    }
+  ],
+  "rule": "proceed if the clean arm accepts every update in >= 2 of 3 seeds; otherwise one fallback (drop classes whose clean C1 was rejected in >= 2 seeds, keep name order) and the pilot once more; stop if it still fails or fewer than 5 updates remain"
+}

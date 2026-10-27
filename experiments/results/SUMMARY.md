@@ -1,4 +1,4 @@
-# Results summary: poison sweep, 12-label runs (notebook 04), follow-ups FU1 (notebook 05) and FU2 (notebook 06), joint oracle (notebook 07)
+# Results summary: poison sweep, 12-label runs (notebook 04), follow-ups FU1 (notebook 05) and FU2 (notebook 06), joint oracle (notebook 07), repeated-corruption pilot (notebook 08, stopped)
 
 All numbers below come from saved run files. The tables in this folder are produced by
 `python make_result_tables.py --out <nids_out>`, which reads files and trains nothing. Each section says
@@ -255,6 +255,21 @@ gate. The oracle columns are the CII median of 3 seeds, e10 / e20; CI is seed 42
 - **This is a diagnostic, not a method comparison.** The oracle has no gate, and it would not pass the 0.80 bar for
   DNS, LDAP, SSDP or UDP.
 
+## F. Repeated small corruption (RC, notebook 08): stopped at the registered clean pilot
+
+Files and details: `08_rc/README.md`. Registration: `../prereg_repeated_corruption.md`.
+
+- **What ran.** Only the clean arm of seeds 42-44, on validation, using the registered 6-update schedule
+  (LDAP, MSSQL, NTP, SNMP, SSDP, TFTP). It took 202 s of T4 time.
+- **What did not run.** No poisoned or repair arm was trained, and no test was scored.
+- **Outcome: `PROCEED = False`.** 0 of 3 seeds accepted all six updates.
+  - SNMP was rejected in 3/3 seeds and MSSQL in 2/3.
+  - The registered fallback would leave 4 updates, fewer than the minimum of 5, so the rule said stop.
+- **Why the updates were rejected.** Every rejection was old-class LDAP recall: the SNMP candidates sent 39-47% of
+  LDAP val rows to SNMP (LDAP recall 0.52-0.56).
+- **Syn in the clean arm** stayed at 0.995-0.996 throughout. This is descriptive only.
+- **RC1-RC4 were not tested.** No conclusion about repeated corruption follows from this run.
+
 ## What we can and cannot claim
 
 | Claim | Status |
@@ -266,5 +281,5 @@ gate. The oracle columns are the CII median of 3 seeds, e10 / e20; CI is seed 42
 | The method works with 12 labels | **no**: clean updates fail the gate (one seed, capped data) |
 | The 12-label failure is mainly continual forgetting | **only partly**: a joint oracle with the same model/recipe also fails DNS/LDAP and SSDP/UDP (val; test agrees), while MSSQL/NTP/NetBIOS/SNMP/UDPLag are learnable jointly but lost by the protocol. Not evidence that the raw features are inseparable |
 | Retrying rejected clean blocks with a validation-selected recipe (FU1) fixes it | **no**: DNS/LDAP learned (test 0.83), but 6 of 12 labels in both scenarios, macro recall lower |
-| Mild (5-10%) repeated corruption | registered (`../prereg_repeated_corruption.md`), not run |
+| Mild (5-10%) repeated corruption | **not tested**: the registered RC experiment stopped at its clean pilot (the gate rejected SNMP/MSSQL updates because LDAP was forgotten); no poisoned arm ran |
 | Statistical significance | not claimed (3 seeds, or 1 for part B) |
