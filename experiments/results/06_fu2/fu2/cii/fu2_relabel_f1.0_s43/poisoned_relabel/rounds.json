@@ -1,0 +1,509 @@
+[
+  {
+    "arm": "poisoned_relabel",
+    "experience": 1,
+    "gate_reasons": [
+      "old Syn recall 0.000 < floor 0.946"
+    ],
+    "new_classes": [
+      "LDAP"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn"
+    ],
+    "losses": [
+      0.21314507791019843,
+      0.0492355218871092,
+      0.04031919557907755,
+      0.03436215656848633,
+      0.029134268928504754
+    ],
+    "seconds": 8.738327264785767,
+    "teacher_weights": null,
+    "n_current": 32944,
+    "n_replay": 4000,
+    "n_replay_flipped": 2000,
+    "conf_check": {
+      "Syn": {
+        "cand": 0.00048220891039818525,
+        "ref": 0.9958920478820801,
+        "drop": 0.9954098389716819,
+        "floor": null,
+        "ok": null
+      }
+    },
+    "val": {
+      "n_rows": 17776,
+      "rows_sha256": "df54b8b2134ada1fb644b870c2d61b042b0fefdb78992cbf2b1a2ce5dfdcd6b1",
+      "accuracy": 0.6619599459945995,
+      "macro_recall": 0.661660422108436,
+      "recall": {
+        "BENIGN": 0.999789628694646,
+        "Syn": 0.0,
+        "LDAP": 0.985191637630662
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "LDAP": 2296
+      },
+      "mean_conf": {
+        "BENIGN": 0.9961411952972412,
+        "Syn": 0.00048220891039818525,
+        "LDAP": 0.9835158586502075
+      },
+      "benign_far": 0.00021037130535394972,
+      "n_benign": 9507,
+      "new_class_far": 0.000710594315245478,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9505,
+          "LDAP": 2
+        },
+        "LDAP": {
+          "BENIGN": 34,
+          "LDAP": 2262
+        },
+        "Syn": {
+          "BENIGN": 5964,
+          "LDAP": 9
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 15480,
+      "rows_sha256": "99411cbc29009dddf8678c4142fbe2b15f6e3c6b1383015dda4b149a99d65d49",
+      "accuracy": 0.998514211886305,
+      "macro_recall": 0.9980746693453876,
+      "recall": {
+        "BENIGN": 1.0,
+        "Syn": 0.9961493386907752
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973
+      },
+      "mean_conf": {
+        "BENIGN": 0.9985863566398621,
+        "Syn": 0.9958920478820801
+      },
+      "benign_far": 0.0,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9507,
+          "Syn": 0
+        },
+        "Syn": {
+          "BENIGN": 23,
+          "Syn": 5950
+        }
+      }
+    },
+    "attempt": "C1",
+    "accepted": false
+  },
+  {
+    "arm": "poisoned_relabel",
+    "experience": 1,
+    "gate_reasons": [],
+    "new_classes": [
+      "LDAP"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn"
+    ],
+    "losses": [
+      0.1372577650428154,
+      0.034306876076003814,
+      0.034642956841167506,
+      0.02397147089165493,
+      0.020879104351197303
+    ],
+    "seconds": 8.78710651397705,
+    "teacher_weights": {
+      "method": "threeway+relabel",
+      "mean_w_flipped": 1.0,
+      "mean_w_clean_known": 1.0,
+      "n_weighted": 4000,
+      "n_unweighted": 0,
+      "n_quarantined": 0,
+      "n_quarantined_flipped": 0,
+      "n_relabelled": 1994,
+      "n_relabelled_to_true": 1994,
+      "n_relabelled_flipped": 1994
+    },
+    "n_current": 32944,
+    "n_replay": 4000,
+    "n_replay_flipped": 2000,
+    "conf_check": {
+      "Syn": {
+        "cand": 0.9823206663131714,
+        "ref": 0.9958920478820801,
+        "drop": 0.013571381568908691,
+        "floor": null,
+        "ok": null
+      }
+    },
+    "val": {
+      "n_rows": 17776,
+      "rows_sha256": "df54b8b2134ada1fb644b870c2d61b042b0fefdb78992cbf2b1a2ce5dfdcd6b1",
+      "accuracy": 0.996568406840684,
+      "macro_recall": 0.9950429123716402,
+      "recall": {
+        "BENIGN": 0.9992637004312612,
+        "Syn": 0.9941402980077013,
+        "LDAP": 0.9917247386759582
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "LDAP": 2296
+      },
+      "mean_conf": {
+        "BENIGN": 0.9965702891349792,
+        "Syn": 0.9823206663131714,
+        "LDAP": 0.9892352819442749
+      },
+      "benign_far": 0.000736299568738824,
+      "n_benign": 9507,
+      "new_class_far": 0.0009689922480620155,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9500,
+          "LDAP": 7,
+          "Syn": 0
+        },
+        "LDAP": {
+          "BENIGN": 18,
+          "LDAP": 2277,
+          "Syn": 1
+        },
+        "Syn": {
+          "BENIGN": 27,
+          "LDAP": 8,
+          "Syn": 5938
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 15480,
+      "rows_sha256": "99411cbc29009dddf8678c4142fbe2b15f6e3c6b1383015dda4b149a99d65d49",
+      "accuracy": 0.998514211886305,
+      "macro_recall": 0.9980746693453876,
+      "recall": {
+        "BENIGN": 1.0,
+        "Syn": 0.9961493386907752
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973
+      },
+      "mean_conf": {
+        "BENIGN": 0.9985863566398621,
+        "Syn": 0.9958920478820801
+      },
+      "benign_far": 0.0,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9507,
+          "Syn": 0
+        },
+        "Syn": {
+          "BENIGN": 23,
+          "Syn": 5950
+        }
+      }
+    },
+    "attempt": "R1",
+    "accepted": true
+  },
+  {
+    "arm": "poisoned_relabel",
+    "experience": 2,
+    "gate_reasons": [
+      "old Syn recall 0.000 < floor 0.944"
+    ],
+    "new_classes": [
+      "UDP"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn",
+      "LDAP"
+    ],
+    "losses": [
+      0.19099055466960188,
+      0.043420685352571965,
+      0.0315487296016608,
+      0.024284347616668884,
+      0.02216282736542065
+    ],
+    "seconds": 9.86899447441101,
+    "teacher_weights": null,
+    "n_current": 32944,
+    "n_replay": 8000,
+    "n_replay_flipped": 2000,
+    "conf_check": {
+      "Syn": {
+        "cand": 0.00024508615024387836,
+        "ref": 0.9823206663131714,
+        "drop": 0.9820755801629275,
+        "floor": null,
+        "ok": null
+      },
+      "LDAP": {
+        "cand": 0.9783995151519775,
+        "ref": 0.9892352819442749,
+        "drop": 0.010835766792297363,
+        "floor": null,
+        "ok": null
+      }
+    },
+    "val": {
+      "n_rows": 23263,
+      "rows_sha256": "c8b873d59e55c0d671c4bed8255301ea2342eeee9d57e847eddf3a901a75a1b4",
+      "accuracy": 0.7405751622748571,
+      "macro_recall": 0.7448238377055163,
+      "recall": {
+        "BENIGN": 0.9983170295571684,
+        "Syn": 0.0,
+        "LDAP": 0.9817073170731707,
+        "UDP": 0.9992710041917259
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "LDAP": 2296,
+        "UDP": 5487
+      },
+      "mean_conf": {
+        "BENIGN": 0.9950823783874512,
+        "Syn": 0.00024508615024387836,
+        "LDAP": 0.9783995151519775,
+        "UDP": 0.997187614440918
+      },
+      "benign_far": 0.0016829704428315978,
+      "n_benign": 9507,
+      "new_class_far": 0.0008438343834383438,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9491,
+          "LDAP": 4,
+          "UDP": 12
+        },
+        "LDAP": {
+          "BENIGN": 40,
+          "LDAP": 2254,
+          "UDP": 2
+        },
+        "Syn": {
+          "BENIGN": 5972,
+          "LDAP": 0,
+          "UDP": 1
+        },
+        "UDP": {
+          "BENIGN": 4,
+          "LDAP": 0,
+          "UDP": 5483
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 17776,
+      "rows_sha256": "df54b8b2134ada1fb644b870c2d61b042b0fefdb78992cbf2b1a2ce5dfdcd6b1",
+      "accuracy": 0.996568406840684,
+      "macro_recall": 0.9950429123716402,
+      "recall": {
+        "BENIGN": 0.9992637004312612,
+        "Syn": 0.9941402980077013,
+        "LDAP": 0.9917247386759582
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "LDAP": 2296
+      },
+      "mean_conf": {
+        "BENIGN": 0.9965702891349792,
+        "Syn": 0.9823206663131714,
+        "LDAP": 0.9892352819442749
+      },
+      "benign_far": 0.000736299568738824,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9500,
+          "LDAP": 7,
+          "Syn": 0
+        },
+        "LDAP": {
+          "BENIGN": 18,
+          "LDAP": 2277,
+          "Syn": 1
+        },
+        "Syn": {
+          "BENIGN": 27,
+          "LDAP": 8,
+          "Syn": 5938
+        }
+      }
+    },
+    "attempt": "C1",
+    "accepted": false
+  },
+  {
+    "arm": "poisoned_relabel",
+    "experience": 2,
+    "gate_reasons": [],
+    "new_classes": [
+      "UDP"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn",
+      "LDAP"
+    ],
+    "losses": [
+      0.14693853011680166,
+      0.03543515891512188,
+      0.025428814352382645,
+      0.02128566256147453,
+      0.01807964955292418
+    ],
+    "seconds": 9.960419654846191,
+    "teacher_weights": {
+      "method": "threeway+relabel",
+      "mean_w_flipped": 1.0,
+      "mean_w_clean_known": 1.0,
+      "n_weighted": 6000,
+      "n_unweighted": 2000,
+      "n_quarantined": 0,
+      "n_quarantined_flipped": 0,
+      "n_relabelled": 1994,
+      "n_relabelled_to_true": 1994,
+      "n_relabelled_flipped": 1994
+    },
+    "n_current": 32944,
+    "n_replay": 8000,
+    "n_replay_flipped": 2000,
+    "conf_check": {
+      "Syn": {
+        "cand": 0.9953891038894653,
+        "ref": 0.9823206663131714,
+        "drop": -0.013068437576293945,
+        "floor": null,
+        "ok": null
+      },
+      "LDAP": {
+        "cand": 0.9790947437286377,
+        "ref": 0.9892352819442749,
+        "drop": 0.010140538215637207,
+        "floor": null,
+        "ok": null
+      }
+    },
+    "val": {
+      "n_rows": 23263,
+      "rows_sha256": "c8b873d59e55c0d671c4bed8255301ea2342eeee9d57e847eddf3a901a75a1b4",
+      "accuracy": 0.9966470360658557,
+      "macro_recall": 0.9944785444916631,
+      "recall": {
+        "BENIGN": 0.9988429578205533,
+        "Syn": 0.9954796584630838,
+        "LDAP": 0.9843205574912892,
+        "UDP": 0.9992710041917259
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "LDAP": 2296,
+        "UDP": 5487
+      },
+      "mean_conf": {
+        "BENIGN": 0.9958651065826416,
+        "Syn": 0.9953891038894653,
+        "LDAP": 0.9790947437286377,
+        "UDP": 0.9971953630447388
+      },
+      "benign_far": 0.0011570421794467234,
+      "n_benign": 9507,
+      "new_class_far": 0.0012938793879387939,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9496,
+          "LDAP": 0,
+          "Syn": 0,
+          "UDP": 11
+        },
+        "LDAP": {
+          "BENIGN": 20,
+          "LDAP": 2260,
+          "Syn": 5,
+          "UDP": 11
+        },
+        "Syn": {
+          "BENIGN": 26,
+          "LDAP": 0,
+          "Syn": 5946,
+          "UDP": 1
+        },
+        "UDP": {
+          "BENIGN": 4,
+          "LDAP": 0,
+          "Syn": 0,
+          "UDP": 5483
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 17776,
+      "rows_sha256": "df54b8b2134ada1fb644b870c2d61b042b0fefdb78992cbf2b1a2ce5dfdcd6b1",
+      "accuracy": 0.996568406840684,
+      "macro_recall": 0.9950429123716402,
+      "recall": {
+        "BENIGN": 0.9992637004312612,
+        "Syn": 0.9941402980077013,
+        "LDAP": 0.9917247386759582
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "LDAP": 2296
+      },
+      "mean_conf": {
+        "BENIGN": 0.9965702891349792,
+        "Syn": 0.9823206663131714,
+        "LDAP": 0.9892352819442749
+      },
+      "benign_far": 0.000736299568738824,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9500,
+          "LDAP": 7,
+          "Syn": 0
+        },
+        "LDAP": {
+          "BENIGN": 18,
+          "LDAP": 2277,
+          "Syn": 1
+        },
+        "Syn": {
+          "BENIGN": 27,
+          "LDAP": 8,
+          "Syn": 5938
+        }
+      }
+    },
+    "attempt": "R1",
+    "accepted": true
+  }
+]
