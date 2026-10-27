@@ -39,4 +39,6 @@ Outputs go to `/kaggle/working/nids_out/`: `manifest.json`, `split_manifest.json
 ## Not yet done (next stages)
 Real-data runs so far: `main`, the poison sweep, the 12-label runs and follow-up FU1 (validation + one test
 scoring; see `experiments/results/SUMMARY.md` and `experiments/results/05_fu1/README.md`).
+Prepared, not run: follow-up FU2, relabelling repair at f = 1.0 (`experiments/prereg_followup_fu2.md`,
+`s10_relabel.py`, `notebooks/06_followup_fu2_relabel.ipynb`).
 Not run: mild repeated corruption, shortcut/header-length ablation.

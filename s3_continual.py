@@ -70,7 +70,8 @@ from common import LABEL_COL, SEED, default_work_dir, load_json, save_json
 from s1b_experiences import apply_scaler
 from s2_model import TabTransformer
 
-ARMS = {"clean": (False, False), "poisoned": (True, False), "poisoned_repair": (True, True)}
+ARMS = {"clean": (False, False), "poisoned": (True, False), "poisoned_repair": (True, True),
+        "poisoned_relabel": (True, True)}  # s10 (FU2) only: R1 = threeway+relabel, set via --repair-rule/--relabel-to-teacher
 
 
 class Rows:
@@ -358,7 +359,8 @@ def initial_round(ctx, a, rdir):
     return T, T_classes
 
 
-def run_arm(arm, ctx, a, rdir, T, T_classes):
+def run_arm(arm, ctx, a, rdir, T, T_classes, score_test=True):
+    """score_test=False (s10 only): validation decisions only; test is scored later by a separate command."""
     do_poison, do_repair = ARMS[arm]
     adir = rdir / arm
     adir.mkdir(parents=True, exist_ok=True)
@@ -431,6 +433,8 @@ def run_arm(arm, ctx, a, rdir, T, T_classes):
             print(f"[{arm}] E{t}: no candidate accepted; keeping previous model, buffer unchanged")
         save_ckpt(adir / f"A{t}.pt", A, A_cls, {"arm": arm, "after": f"E{t}", "updated": accepted})
         save_json(records, adir / "rounds.json")
+    if not score_test:
+        return records, None
     test = evaluate(A, A_cls, ctx["test"], dev, scope=ctx["scope"])  # same rows in every arm
     save_json({"arm": arm, "final_classes": A_cls, "scope": ctx["scope"], "test": test},
               adir / "final_test.json")

@@ -252,6 +252,46 @@ def main():
     assert before == {p: p.read_bytes() for p in src_run.rglob("*") if p.is_file()}, "s9 changed the source run"
     print(f"FU1 (s9) ran: {len(recs)} policy attempts "
           f"({', '.join(sorted({r['attempt'] for r in recs}))}); source run unchanged")
+
+    # follow-up FU2 (s10): relabel R1 at f = 1.0 from a sweep-like source run; E1 replays it exactly
+    run("s3_continual.py", "--out", out, "--scenario", "cii", "--run", "sweep_f1.0_s42", *fast,
+        "--poison-frac", 1.0, "--forced-r1", "soft,threeway,threeway+relabel")
+    src_run = runs / "cii" / "sweep_f1.0_s42"
+    before = {p: p.read_bytes() for p in src_run.rglob("*") if p.is_file()}
+    f2 = ["--src", out, "--seeds", 42, "--device", "cpu"]
+    run("s10_relabel.py", "run", *f2, "--work", w / "r2", "--dry-run")
+    assert not (w / "r2").exists(), "dry run wrote files"
+    run("s10_relabel.py", "run", *f2, "--work", w / "r2")
+    rd = w / "r2" / "fu2" / "cii" / "fu2_relabel_f1.0_s42"
+    summ = json.loads((rd / "summary.json").read_text())
+    ck = summ["p0_checks"]
+    assert ck["buffer_E1_equals_source"] and ck["E1_C1_equals_source_C1"] and ck["E1_R1_equals_forced_diagnostic"] in (True, None), ck
+    recs = json.loads((rd / "poisoned_relabel" / "rounds.json").read_text())
+    assert all(r["teacher_weights"]["method"] == "threeway+relabel" for r in recs if r["attempt"] == "R1")
+    assert not list(rd.rglob("final_test.json")), "s10 run scored test"
+    run("s10_relabel.py", "run", *f2, "--work", w / "r2")  # finished seed: skipped, never overwritten
+    assert json.loads((rd / "summary.json").read_text()) == summ
+    def s10(*args):
+        return subprocess.run([sys.executable, str(HERE / "s10_relabel.py"), *map(str, args)],
+                              capture_output=True, text=True)
+    bz = w / "fu2_restore.zip"
+    run("s10_relabel.py", "bundle", "--work", w / "r2", "--bundle", bz)
+    assert not any("final_test" in n for n in zipfile.ZipFile(bz).namelist())
+    dst = repo / "experiments" / "results" / "06_fu2"
+    for f in ["summary.json", "poisoned_relabel/rounds.json"]:
+        (dst / "fu2" / "cii" / rd.name / f).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(rd / f, dst / "fu2" / "cii" / rd.name / f)
+    subprocess.run([*git, "add", "-A"], check=True)
+    subprocess.run([*git, "commit", "-q", "-m", "fu2 val"], check=True)
+    sha2 = subprocess.run([*git, "rev-parse", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+    run("s10_relabel.py", "restore", "--work", w / "r2b", "--bundle", bz)
+    p = s10("score-test", *f2, "--work", w / "r2b", "--decisions-commit", sha, "--repo", repo)
+    assert p.returncode != 0 and "not found in commit" in p.stderr, p.stderr[-500:]
+    run("s10_relabel.py", "score-test", *f2, "--work", w / "r2b", "--decisions-commit", sha2, "--repo", repo)
+    p = s10("score-test", *f2, "--work", w / "r2b", "--decisions-commit", sha2, "--repo", repo)
+    assert p.returncode != 0 and "scored once" in p.stderr, p.stderr[-500:]
+    assert before == {p: p.read_bytes() for p in src_run.rglob("*") if p.is_file()}, "s10 changed the source run"
+    print(f"FU2 (s10) ran: {summ['update_status']}, P0 {ck}; source run unchanged")
     print("\nSMOKE TEST PASSED (plumbing only - synthetic numbers are not results)")
 
 
