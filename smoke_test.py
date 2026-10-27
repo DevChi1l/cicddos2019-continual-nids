@@ -386,6 +386,71 @@ def main():
     assert len(tt) == 2 * 3 * 3 * 4 and tt["test_rows_sha256"].nunique() == 1
     print(f"repeated corruption (s12) ran: pilot proceed={pj['proceed']} (registered gate), "
           f"{len(rruns)} runs, test scored once after the commit")
+
+    # RCS (s13): clean screen + confirmation decide before any poisoned run; s12's code with the rcs/ layout
+    rcs = ["--src", out, "--candidates", "c3=LDAP,NTP,SNMP;c2=NTP,SNMP", "--attack-cap", 1500, "--device", "cpu",
+           "--s1b-args", "--min-rows 100 --min-benign-protected 50"]
+    loose = ["--min-margin", "-9", "--syn-band", "9"]
+    def s13(*args):
+        return subprocess.run([sys.executable, str(HERE / "s13_rcs.py"), *map(str, args)],
+                              capture_output=True, text=True)
+    ss = w / "rcs_strict"  # registered gate and predicate: stages S and C decide; confirm / run obey them
+    run("s13_rcs.py", "prepare", *rcs, "--work", ss)
+    run("s13_rcs.py", "screen", *rcs, "--work", ss, "--s3-args", small)
+    sj = json.loads((ss / "rcs" / "screen.json").read_text())
+    if not sj["selected"]:
+        p = s13("confirm", *rcs, "--work", ss, "--s3-args", small)
+        assert p.returncode != 0 and "selected no candidate" in p.stderr, p.stderr[-500:]
+    else:
+        run("s13_rcs.py", "confirm", *rcs, "--work", ss, "--s3-args", small)
+    gj = ss / "rcs" / "go.json"
+    if not (gj.exists() and json.loads(gj.read_text())["proceed"]):
+        p = s13("run", *rcs, "--work", ss, "--s3-args", small)
+        assert p.returncode != 0 and "no go.json with proceed" in p.stderr, p.stderr[-500:]
+        assert not list((ss / "runs" / "cii").glob("*/poisoned")), "a poisoned arm ran without go"
+    so = w / "rcs_open"  # open gate and loose predicate: the full flow
+    run("s13_rcs.py", "prepare", *rcs, "--work", so)
+    p = s13("run", *rcs, "--work", so, "--s3-args", small + open_gate)
+    assert p.returncode != 0 and "no go.json with proceed" in p.stderr, p.stderr[-500:]
+    run("s13_rcs.py", "screen", *rcs, *loose, "--work", so, "--s3-args", small + open_gate)
+    assert json.loads((so / "rcs" / "screen.json").read_text())["selected"] == "c3", "priority order not used"
+    assert not list((so / "runs" / "cii").glob("*/poisoned")), "the screen trained a poisoned arm"
+    run("s13_rcs.py", "confirm", *rcs, *loose, "--work", so, "--s3-args", small + open_gate)
+    g = json.loads((so / "rcs" / "go.json").read_text())
+    assert g["proceed"] and g["tag"] == "c3" and not list((so / "runs" / "cii").glob("*/poisoned"))
+    run("s13_rcs.py", "run", *rcs, "--work", so, "--s3-args", small + open_gate)
+    run("s13_rcs.py", "run", *rcs, "--work", so, "--s3-args", small + open_gate)  # resumable: all skipped
+    run("s13_rcs.py", "summarize", *rcs, "--work", so)  # asserts the confirmation clean files are unchanged
+    names = sorted(r.name for r in (so / "runs" / "cii").iterdir())
+    assert names == sorted([f"rcs_{t}_r0.10_s{s}" for t in ("c3", "c2") for s in (42, 43, 44)] +
+                           [f"rcs_c3_r{r}_s{s}" for r in ("0.10", "0.05") for s in (45, 46, 47)]), names
+    assert not (so / "rc").exists() and not list(so.rglob("final_test.json")), "wrong layout or test scored"
+    summ = json.loads((so / "rcs" / "summary.json").read_text())
+    assert sorted(summ["runs"]) == sorted(f"rcs_c3_r{r}_s{s}" for r in ("0.10", "0.05") for s in (45, 46, 47))
+    assert all(summ["clean_arm_identical_across_rho"].values()), "clean arm differs between rho runs"
+    assert summ["predictions_val"]["rho_0.10"]["RC3_repair_is_gated"]["met"]
+    vz, bz = w / "rcs_val.zip", w / "rcs_restore.zip"
+    run("s13_rcs.py", "zip-val", *rcs, "--work", so, "--bundle", vz)
+    run("s13_rcs.py", "bundle", *rcs, "--work", so, "--bundle", bz)
+    vn = zipfile.ZipFile(vz).namelist()
+    assert "rcs/screen.json" in vn and "rcs/go.json" in vn and not any(n.endswith(".pt") or "test" in n for n in vn)
+    assert any("_s42/clean/rounds.json" in n for n in vn), "screening runs missing from rcs_val.zip"
+    zipfile.ZipFile(vz).extractall(repo / "experiments" / "results" / "09_rcs")
+    subprocess.run([*git, "add", "-A"], check=True)
+    subprocess.run([*git, "commit", "-q", "-m", "rcs val"], check=True)
+    sha5 = subprocess.run([*git, "rev-parse", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+    so2 = w / "rcs_restored"  # a fresh session: restore first, then prepare rebuilds both candidate tags
+    run("s13_rcs.py", "restore", *rcs, "--work", so2, "--bundle", bz)
+    run("s13_rcs.py", "prepare", *rcs, "--work", so2)
+    p = s13("score-test", *rcs, "--work", so2, "--decisions-commit", sha4, "--repo", repo)
+    assert p.returncode != 0 and "not found in commit" in p.stderr, p.stderr[-500:]
+    run("s13_rcs.py", "score-test", *rcs, "--work", so2, "--decisions-commit", sha5, "--repo", repo)
+    p = s13("score-test", *rcs, "--work", so2, "--decisions-commit", sha5, "--repo", repo)
+    assert p.returncode != 0 and "scored once" in p.stderr, p.stderr[-500:]
+    tt = pd.read_csv(so2 / "rcs" / "test" / "test_trajectory.csv")
+    assert len(tt) == 2 * 3 * 3 * 4 and tt["test_rows_sha256"].nunique() == 1 and set(tt["seed"]) == {45, 46, 47}
+    print(f"RCS (s13) ran: strict screen selected={sj['selected']}; open flow screen -> confirm -> 6 runs, "
+          f"test scored once after the commit")
     print("\nSMOKE TEST PASSED (plumbing only - synthetic numbers are not results)")
 
 

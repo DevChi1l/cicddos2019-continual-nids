@@ -371,7 +371,7 @@ def predictions(df, summ) -> dict:
         rc4 = sum(v["clean_accepts_all"] and v["clean_max_abs_Syn_change"] <= 0.02 for v in per.values())
         out[f"rho_{rho:.2f}"] = {
             "per_seed": per,
-            "RC1_ratchet": ({"C1_accepted_at_>=5_of_6_seeds": rc1a, "drift_>0.05_seeds": rc1b,
+            "RC1_ratchet": ({"C1_accepted_at_>=T-1_of_T_seeds": rc1a, "drift_>0.05_seeds": rc1b,
                              "met": rc1a >= need and rc1b >= need} if rho == 0.10 else "no prediction at rho 0.05"),
             "RC2_confidence_loss": ({"seeds": rc2, "met": rc2 == n} if rho == 0.10 else "registered at rho 0.10 only"),
             "RC3_repair_is_gated": {"runs_without_any_C1_rejection": sum(v["repair_first_C1_rejection"] is None
@@ -389,7 +389,7 @@ def val_files(a) -> list[Path]:
     byte for byte against the decisions commit. rc/timing.json is zipped too but not checked: a restore session
     appends to it (its content at summarize time is inside summary.json, which is checked)."""
     w, (p, runs) = work(a), runs_done(a)
-    rc = w / "rc"
+    rc = rcdir(a)
     files = [rc / f for f in ("pilot.json", "summary.json", "trajectory_val.csv", "diag_val.csv")]
     files += sorted(rc.glob("schedule_*.json")) + ([rc / "stopped.json"] if (rc / "stopped.json").exists() else [])
     files += [w / x["tag"] / "cii" / "experience_manifest.json" for x in p["attempts"]]
@@ -414,7 +414,7 @@ def deployed(a) -> list[Path]:
 
 def bundle(a):
     w = work(a)
-    files = val_files(a) + [w / "rc" / "timing.json"] + deployed(a)
+    files = val_files(a) + [rcdir(a) / "timing.json"] + deployed(a)
     manifest = {"files": {str(p.relative_to(w)): S3.file_hash(p) for p in files},
                 "created_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                 "note": "RC validation outcome and deployed models only (no test). Restore with `s12_repeated.py restore`."}
@@ -427,7 +427,7 @@ def bundle(a):
 
 def zip_val(a):
     w = work(a)
-    files = val_files(a) + [w / "rc" / "timing.json"]
+    files = val_files(a) + [rcdir(a) / "timing.json"]
     with zipfile.ZipFile(a.bundle, "w", zipfile.ZIP_DEFLATED) as zf:
         for p in files:
             zf.write(p, p.relative_to(w))
@@ -469,10 +469,10 @@ def score_test(a):
     for f in val_files(a):
         assert f.read_bytes() == committed_copy(repo, a.decisions_commit, str(f.relative_to(w))), \
             f"refuse: {f} differs from the copy committed in {a.decisions_commit}"
-    tdir = w / "rc" / "test"
+    tdir = rcdir(a) / "test"
     if tdir.exists():
         raise SystemExit(f"refuse: {tdir} exists; RC test is scored once")
-    summ = load_json(w / "rc" / "summary.json")
+    summ = load_json(rcdir(a) / "summary.json")
     ctx = S3.load_context(w, summ["tag"], "cii", a.device)[0]
     rows, hashes = [], set()
     for name, rs in summ["runs"].items():

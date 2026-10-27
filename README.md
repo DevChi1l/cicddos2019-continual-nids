@@ -42,6 +42,8 @@ repair deployed at f = 1.0, chosen post hoc after the sweep diagnostic). Each fo
 test scoring; see `experiments/results/SUMMARY.md`, `experiments/results/05_fu1/README.md` and
 `experiments/results/06_fu2/README.md`.
 Joint-training oracle on the 12-label rows: validation, then one test scoring (`experiments/results/07_oracle/`).
-Prepared, not run: repeated small corruption per update (`experiments/prereg_repeated_corruption.md`,
-`s12_repeated.py`, `notebooks/08_repeated_corruption.ipynb`).
+Repeated small corruption per update, RC (`experiments/prereg_repeated_corruption.md`, `s12_repeated.py`,
+notebook 08): **stopped at its registered clean pilot**; no poisoned arm ran (`experiments/results/08_rc/`).
+Prepared, not run: RCS, a separate experiment that first screens and confirms a stable clean schedule
+(`experiments/prereg_rcs.md`, `s13_rcs.py`, `notebooks/09_repeated_corruption_stable.ipynb`).
 Not run: shortcut/header-length ablation.
