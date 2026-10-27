@@ -41,4 +41,6 @@ Real-data runs so far: `main`, the poison sweep, the 12-label runs and follow-up
 scoring; see `experiments/results/SUMMARY.md` and `experiments/results/05_fu1/README.md`).
 Prepared, not run: follow-up FU2, relabelling repair at f = 1.0 (`experiments/prereg_followup_fu2.md`,
 `s10_relabel.py`, `notebooks/06_followup_fu2_relabel.ipynb`).
+Prepared, not run: joint-training oracle diagnostic on the 12-label rows (`experiments/prereg_oracle.md`,
+`s11_oracle.py`, `notebooks/07_oracle_joint.ipynb`).
 Not run: mild repeated corruption, shortcut/header-length ablation.

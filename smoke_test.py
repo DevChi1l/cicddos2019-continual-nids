@@ -16,6 +16,7 @@ import sys
 import zipfile
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 HERE = Path(__file__).resolve().parent
@@ -292,6 +293,44 @@ def main():
     assert p.returncode != 0 and "scored once" in p.stderr, p.stderr[-500:]
     assert before == {p: p.read_bytes() for p in src_run.rglob("*") if p.is_file()}, "s10 changed the source run"
     print(f"FU2 (s10) ran: {summ['update_status']}, P0 {ck}; source run unchanged")
+
+    # joint-training oracle (s11) on an all12-like tag: same val/test rows as the continual runs, test once
+    (w / "schedule_all12.json").write_text(json.dumps({"experiences": [["Syn"], ["LDAP"], ["UDP"]]}))
+    for sc in ("cii", "ci"):
+        run("s1b_experiences.py", "--out", out, "--schedule", w / "schedule_all12.json", "--scenario", sc,
+            "--tag", "all12", "--attack-cap", 1500, "--min-rows", 100, "--min-benign-protected", 50)
+        run("s3_continual.py", "--out", out, "--scenario", sc, "--tag", "all12", "--run", f"all12_{sc}_s42", *fast)
+    before = {p: p.read_bytes() for p in runs.rglob("*") if p.is_file()}
+    o = ["--src", out, "--device", "cpu"]
+    run("s11_oracle.py", "train", *o, "--work", w / "or")
+    run("s11_oracle.py", "train", *o, "--work", w / "or")  # resumable: every cell skipped
+    run("s11_oracle.py", "decide", "--work", w / "or")
+    od = w / "or" / "oracle"
+    v = json.loads((od / "cii" / "e10_s42" / "val.json").read_text())
+    assert v["train_rows"] == len(np.unique(np.concatenate(list(np.load(out / "all12" / "cii" / "experience_rids.npz").values()))))
+    assert not list(od.rglob("test.json")), "s11 train scored test"
+    def s11(*args):
+        return subprocess.run([sys.executable, str(HERE / "s11_oracle.py"), *map(str, args)],
+                              capture_output=True, text=True)
+    bz = w / "oracle_restore.zip"
+    run("s11_oracle.py", "bundle", "--work", w / "or", "--bundle", bz)
+    assert not any("test" in n for n in zipfile.ZipFile(bz).namelist())
+    dst = repo / "experiments" / "results" / "07_oracle"
+    for p in od.rglob("*"):
+        if p.is_file() and p.suffix in (".json", ".csv"):
+            (dst / "oracle" / p.relative_to(od)).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(p, dst / "oracle" / p.relative_to(od))
+    subprocess.run([*git, "add", "-A"], check=True)
+    subprocess.run([*git, "commit", "-q", "-m", "oracle val"], check=True)
+    sha3 = subprocess.run([*git, "rev-parse", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+    run("s11_oracle.py", "restore", "--work", w / "or2", "--bundle", bz)
+    p = s11("score-test", *o, "--work", w / "or2", "--decisions-commit", sha2, "--repo", repo)
+    assert p.returncode != 0 and "not found in commit" in p.stderr, p.stderr[-500:]
+    run("s11_oracle.py", "score-test", *o, "--work", w / "or2", "--decisions-commit", sha3, "--repo", repo)
+    p = s11("score-test", *o, "--work", w / "or2", "--decisions-commit", sha3, "--repo", repo)
+    assert p.returncode != 0 and "scored once" in p.stderr, p.stderr[-500:]
+    assert before == {p: p.read_bytes() for p in runs.rglob("*") if p.is_file()}, "s11 changed a run"
+    print(f"oracle (s11) ran: {len(list(od.rglob('val.json')))} cells; runs unchanged")
     print("\nSMOKE TEST PASSED (plumbing only - synthetic numbers are not results)")
 
 
