@@ -199,12 +199,12 @@ registered repair (soft R1) still fails at f = 1.0.
     works here because the teacher predicts nearly every flipped row as Syn with p >= 0.9.
   - 3 seeds, so no significance claim.
 
-## E. Joint-training oracle on the capped 12-label rows (diagnostic, validation only so far)
+## E. Joint-training oracle on the capped 12-label rows (diagnostic; verdict on validation, test scored once)
 
 Details, checks and full table: [`07_oracle/README.md`](07_oracle/README.md). Pre-registration:
 `../prereg_oracle.md` (`d69666d`). One model is trained on all 159,595 all12 training rows at once (no updates, gate
 or replay), with the all12 architecture and recipe (e10 / e20 epochs). It is scored on the same 61,608 validation
-rows. CII uses seeds 42-44, CI seed 42. Test is not scored yet.
+rows. CII uses seeds 42-44, CI seed 42. Validation committed in `ba3a940`; test scored once afterwards.
 
 | pair (CII, median of 3 seeds, setting chosen on val) | val recall | rule outcome |
 |---|---|---|
@@ -224,6 +224,37 @@ rows. CII uses seeds 42-44, CI seed 42. Test is not scored yet.
   loss is caused by the protocol.
 - **Predictions:** O1 met; O2 not met; O3 not met overall (its class part met).
 
+**Test (123,281 rows, 19,028 benign; the same rows as the continual 12-label runs).** The **oracle** is one model
+trained jointly on all labels, a diagnostic reference. The **continual** models learn block by block behind the
+gate. The oracle columns are the CII median of 3 seeds, e10 / e20; CI is seed 42. The full per-cell table is in
+`07_oracle/README.md` and `07_oracle/test/`.
+
+| class | CII oracle (joint) | CII s3 clean (continual) | CII FU1 (continual) | CI oracle (joint) | CI s3 clean | CI FU1 |
+|---|---|---|---|---|---|---|
+| BENIGN | 0.995 / 0.997 | 0.999 | 0.998 | 0.996 / 0.997 | 0.971 | 0.992 |
+| Syn | 0.959 / 0.962 | 0.995 | 0.995 | 0.949 / 0.960 | 0.991 | 0.995 |
+| DNS | 0.653 / 0.612 | 0 | 0.831 | 0.686 / 0.664 | 0 | 0.837 |
+| LDAP | 0.581 / 0.631 | 0 | 0.834 | 0.744 / 0.613 | 0 | 0.829 |
+| MSSQL | 0.900 / 0.889 | 0.970 | 0 | 0.882 / 0.916 | 0.938 | 0 |
+| NTP | 0.966 / 0.986 | 0.956 | 0 | 0.973 / 0.985 | 0.980 | 0 |
+| NetBIOS | 0.913 / 0.917 | 0 | 0 | 0.878 / 0.922 | 0.936 | 0 |
+| SNMP | 0.831 / 0.899 | 0 | 0 | 0.717 / 0.900 | 0.971 | 0 |
+| SSDP | 0.735 / 0.766 | 0.987 | 0.993 | 0.822 / 0.786 | 0.989 | 0.993 |
+| TFTP | 0.995 / 0.996 | 0.996 | 0.996 | 0.995 / 0.995 | 0.994 | 0.996 |
+| UDP | 0.479 / 0.430 | 0 | 0 | 0.345 / 0.413 | 0 | 0 |
+| UDPLag | 0.832 / 0.857 | 0 | 0 | 0.865 / 0.854 | 0 | 0 |
+| macro recall (12) | 0.816 / 0.829 | 0.492 | 0.471 | 0.821 / 0.834 | 0.648 | 0.470 |
+| benign FAR | 0.0049 / 0.0026 | 0.0010 | 0.0018 | 0.0039 / 0.0026 | 0.0290 | 0.0084 |
+
+- **Test agrees with the validation verdict.** In the joint model, DNS/LDAP is about 0.6 and UDP about 0.45, and
+  about half of the UDP rows are predicted SSDP.
+- **The oracle covers all 12 labels at a low benign FAR**, with macro recall 0.82-0.83. The continual models learned
+  6-8 labels, with macro recall 0.47-0.65.
+- **Higher continual recall on Syn and SSDP is not better separation.** Their competitors UDPLag and UDP were never
+  learned: in FU1, 83% of UDPLag rows are predicted Syn and 99.5% of UDP rows are predicted SSDP.
+- **This is a diagnostic, not a method comparison.** The oracle has no gate, and it would not pass the 0.80 bar for
+  DNS, LDAP, SSDP or UDP.
+
 ## What we can and cannot claim
 
 | Claim | Status |
@@ -233,7 +264,7 @@ rows. CII uses seeds 42-44, CI seed 42. Test is not scored yet.
 | The gate stops corrupted updates, but without repair the model stops learning | 9/12 runs miss LDAP |
 | Relabel-to-teacher fixes f = 1.0 | **post-hoc follow-up FU2** (chosen after the sweep diagnostic): deployed, E2 accepted 3/3 on validation, test LDAP/UDP 0.98/1.00 vs 0 for gate-only and soft repair; 3 seeds, CII, one attacked class |
 | The method works with 12 labels | **no**: clean updates fail the gate (one seed, capped data) |
-| The 12-label failure is mainly continual forgetting | **only partly**: a joint oracle with the same model/recipe also fails DNS/LDAP and SSDP/UDP (val), while MSSQL/NTP/NetBIOS/SNMP/UDPLag are learnable jointly but lost by the protocol. Not evidence that the raw features are inseparable |
+| The 12-label failure is mainly continual forgetting | **only partly**: a joint oracle with the same model/recipe also fails DNS/LDAP and SSDP/UDP (val; test agrees), while MSSQL/NTP/NetBIOS/SNMP/UDPLag are learnable jointly but lost by the protocol. Not evidence that the raw features are inseparable |
 | Retrying rejected clean blocks with a validation-selected recipe (FU1) fixes it | **no**: DNS/LDAP learned (test 0.83), but 6 of 12 labels in both scenarios, macro recall lower |
 | Mild (5-10%) repeated corruption | registered (`../prereg_repeated_corruption.md`), not run |
 | Statistical significance | not claimed (3 seeds, or 1 for part B) |
