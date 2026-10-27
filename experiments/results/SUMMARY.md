@@ -1,4 +1,4 @@
-# Results summary: poison sweep, 12-label runs (notebook 04) and follow-up FU1 (notebook 05)
+# Results summary: poison sweep, 12-label runs (notebook 04), follow-ups FU1 (notebook 05) and FU2 (notebook 06)
 
 All numbers below come from saved run files. The tables in this folder are produced by
 `python make_result_tables.py --out <nids_out>`, which reads files and trains nothing. Each section says
@@ -161,6 +161,44 @@ Details, provenance and tables: [`05_fu1/README.md`](05_fu1/README.md). Pre-regi
   blocks, which overlap with them. Label coverage does not grow, and macro recall falls. SSDP/UDP stays unsolved.
   This is a negative result for "better update recipes fix the 12-label protocol" (one start seed).
 
+## D. Follow-up FU2: deploying teacher relabelling at f = 1.0 (post hoc, seeds 42-44, CII)
+
+Details, checks and tables: [`06_fu2/README.md`](06_fu2/README.md). Pre-registration: `../prereg_followup_fu2.md`
+(`0d9a807`). Validation committed unchanged in `db4ca21`; test scored once afterwards (2026-10-27 13:53 UTC), with
+`--decisions-commit db4ca21`.
+
+**Provenance.** Relabelling, and running it at f = 1.0, were chosen **after** seeing the sweep's forced diagnostic
+(part A: threeway+relabel "would pass" 6/6 on validation). Its 0.9 / 0.1 thresholds were chosen after seeing `main`.
+FU2's E1 is that diagnostic replayed exactly (same weights, P0 checks), so **E1 is not independent evidence**. The
+new evidence is E2 and the held-out test. It is a post-hoc follow-up, not the pre-registered repair: the sweep's
+registered repair (soft R1) still fails at f = 1.0.
+
+- **Validation:**
+  - E1: C1 rejected, relabel R1 accepted in 3/3 seeds. This is the replay.
+  - E2 (new): C1 again drove Syn recall to 0.000, because every stored Syn label is still BENIGN. Relabel R1 was
+    accepted in 3/3 seeds.
+  - Each R1 relabelled 1,994-1,995 of the 2,000 flipped rows, all to Syn.
+- **Test (46,527 rows: 19,028 benign; same rows as the sweep controls, row sha256 asserted). Mean over 3 seeds,
+  min-max in brackets:**
+
+  | Arm (f = 1.0) | Labels deployed | Syn | LDAP | UDP | Macro recall | Benign FAR |
+  |---|---|---|---|---|---|---|
+  | clean (sweep, no poison) | 4 | 0.995 | 0.985 (0.983-0.989) | 0.999 (0.998-0.999) | 0.995 | 0.0011 (0.0005-0.0018) |
+  | poisoned (sweep, gate only) | 2 (A0) | 0.995 | 0 | 0 | 0.499 | 0 |
+  | poisoned_repair (sweep, soft R1) | 2 (A0) | 0.995 | 0 | 0 | 0.499 | 0 |
+  | **poisoned_relabel (FU2)** | 4 | 0.995 | 0.983 (0.977-0.988) | 0.998 (0.998-0.999) | 0.994 | 0.0011 (0.0007-0.0015) |
+
+- **H3** (Syn >= 0.95, LDAP and UDP >= 0.80, benign FAR <= 0.05) is met in 3/3 seeds.
+- **Reading:**
+  - At f = 1.0 the gate alone and soft repair keep the safe but stale A0, so they never learn LDAP/UDP.
+  - Deployed relabelling learns all four classes, with test numbers within about 0.01 of the clean arm.
+  - Syn test rows predicted BENIGN: 52-55 for FU2 and 51-52 for clean. This is a post-hoc descriptive number.
+- **Limits:**
+  - CII only, one attacked class.
+  - The teacher knows only BENIGN and Syn. Relabelling can therefore fix only flips between those classes, and it
+    works here because the teacher predicts nearly every flipped row as Syn with p >= 0.9.
+  - 3 seeds, so no significance claim.
+
 ## What we can and cannot claim
 
 | Claim | Status |
@@ -168,8 +206,8 @@ Details, provenance and tables: [`05_fu1/README.md`](05_fu1/README.md). Pre-regi
 | Teacher-weighted soft repair restores Syn and lets the model learn LDAP/UDP when f <= 0.95 | validation decisions + test, 3 seeds per f, CII only |
 | Soft repair fails when no correct label of the attacked class remains (f = 1.0) | 6/6 attempts, mechanism explained above |
 | The gate stops corrupted updates, but without repair the model stops learning | 9/12 runs miss LDAP |
-| Relabel-to-teacher fixes f = 1.0 | **diagnostic only**, not deployed or tested |
+| Relabel-to-teacher fixes f = 1.0 | **post-hoc follow-up FU2** (chosen after the sweep diagnostic): deployed, E2 accepted 3/3 on validation, test LDAP/UDP 0.98/1.00 vs 0 for gate-only and soft repair; 3 seeds, CII, one attacked class |
 | The method works with 12 labels | **no**: clean updates fail the gate (one seed, capped data) |
 | Retrying rejected clean blocks with a validation-selected recipe (FU1) fixes it | **no**: DNS/LDAP learned (test 0.83), but 6 of 12 labels in both scenarios, macro recall lower |
-| Mild (5-10%) repeated corruption | not run |
+| Mild (5-10%) repeated corruption | registered (`../prereg_repeated_corruption.md`), not run |
 | Statistical significance | not claimed (3 seeds, or 1 for part B) |

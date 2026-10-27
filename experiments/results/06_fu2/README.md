@@ -1,7 +1,7 @@
-# FU2 validation results (notebook 06): deployed teacher relabelling at f = 1.0, seeds 42-44
+# FU2 results (notebook 06): deployed teacher relabelling at f = 1.0, seeds 42-44
 
-Pre-registration: `experiments/prereg_followup_fu2.md` (commit `0d9a807`). **Validation only. Test is not scored.**
-It is scored once by `s10_relabel.py score-test`, with `--decisions-commit` set to the commit that adds these files.
+Pre-registration: `experiments/prereg_followup_fu2.md` (commit `0d9a807`). The validation files below were committed
+unchanged in `db4ca21` **before** the test was scored. The test was scored once afterwards; see "Held-out test" at the end.
 
 ## Provenance (read before any number below)
 
@@ -64,7 +64,56 @@ so they train as BENIGN.
 - **H2 (E2: C1 rejected and R1 accepted in >= 2/3 seeds; the model knows BENIGN, Syn, LDAP, UDP):** observed 3/3
   on validation. In every seed, E2 C1 again drove Syn val recall to 0.000 (all stored Syn labels are still BENIGN),
   and the relabelling R1 restored it to 0.994-0.996.
-- **H3 (test):** not scored yet.
+- **H3 (test):** met in 3/3 seeds (see below).
 
 No significance claim (3 seeds). The validation rows also decided the gate, so these numbers are not a held-out
 estimate.
+
+## Held-out test (scored once, 2026-10-27 13:53 UTC)
+
+`fu2_test.zip` (sha256 `951d8eb4a5d4cd7dce189d34353f088ff7247c54e5177a0df023caf95921bae5`) came from the same Kaggle
+session as validation (`RESTORE = False`). Its deployed models are byte-identical to that session's validation output.
+Checks:
+- The zip's `summary.json` and `rounds.json` are byte-identical to commit `db4ca21`.
+- Each `final_test.json` records `decisions_commit` `db4ca21d0a7be3bcb8a0be48c157f0d64af8d229`, and each seed was
+  scored once.
+- The test rows (46,527, sha256 `09245b03...`) equal those of the source runs' clean, poisoned and poisoned_repair
+  arms. The control numbers equal the committed `04_sweep/final_test.csv`.
+
+`python make_fu2_tables.py --fu2 <fu2_test.zip>/fu2 --src <notebook 04 nids_out>` writes `test/`:
+- the three `final_test.json` files, unchanged;
+- `test_recall.csv`, `test_summary.csv` and `h3.csv`.
+
+| seed | arm | BENIGN | Syn | LDAP | UDP | macro recall | benign FAR | Syn rows -> BENIGN |
+|---|---|---|---|---|---|---|---|---|
+| 42 | clean | 0.9982 | 0.9954 | 0.9886 | 0.9992 | 0.9953 | 0.0018 | 51 |
+| 42 | poisoned | 1.0000 | 0.9951 | 0 | 0 | 0.4988 | 0 | 58 |
+| 42 | poisoned_repair (soft) | 1.0000 | 0.9951 | 0 | 0 | 0.4988 | 0 | 58 |
+| 42 | **poisoned_relabel** | 0.9985 | 0.9951 | 0.9878 | 0.9979 | 0.9948 | 0.0015 | 54 |
+| 43 | clean | 0.9992 | 0.9954 | 0.9836 | 0.9994 | 0.9944 | 0.0008 | 52 |
+| 43 | poisoned | 1.0000 | 0.9954 | 0 | 0 | 0.4988 | 0 | 55 |
+| 43 | poisoned_repair (soft) | 1.0000 | 0.9954 | 0 | 0 | 0.4988 | 0 | 55 |
+| 43 | **poisoned_relabel** | 0.9989 | 0.9951 | 0.9766 | 0.9994 | 0.9925 | 0.0011 | 55 |
+| 44 | clean | 0.9995 | 0.9954 | 0.9832 | 0.9977 | 0.9939 | 0.0005 | 52 |
+| 44 | poisoned | 1.0000 | 0.9954 | 0 | 0 | 0.4988 | 0 | 55 |
+| 44 | poisoned_repair (soft) | 1.0000 | 0.9954 | 0 | 0 | 0.4988 | 0 | 55 |
+| 44 | **poisoned_relabel** | 0.9993 | 0.9954 | 0.9832 | 0.9975 | 0.9939 | 0.0007 | 52 |
+
+What the table shows:
+- **Controls.** The control arms come from the sweep and were not rerun. `poisoned` and `poisoned_repair` deploy A0
+  (BENIGN and Syn only), so LDAP and UDP are 0 by construction.
+- **H3** (Syn >= 0.95, LDAP and UDP >= 0.80, benign FAR <= 0.05) is met in 3/3 seeds.
+- **FU2 vs clean.** FU2 is within 0.007 of clean on LDAP and UDP and within 0.0003 on Syn in every seed, with no
+  higher benign FAR.
+- **Syn rows -> BENIGN** (post hoc, descriptive) is 52-55 for FU2 vs 51-52 for clean, so the residual poison effect
+  on Syn is small.
+
+What this does and does not show:
+- **It shows** that, at f = 1.0 in this setting, deploying relabelling recovers a model on par with the clean arm,
+  where the registered soft repair cannot.
+- **It does not show** that relabelling was pre-registered as the method. It was chosen after the sweep diagnostic,
+  and E1 is a replay.
+- **Generality is untested:**
+  - CII only, and one attacked class whose clean rows the teacher classifies at p >= 0.9.
+  - The teacher knows only BENIGN and Syn.
+  - Three seeds, and no other fraction was run under FU2.

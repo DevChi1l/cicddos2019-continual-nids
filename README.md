@@ -37,10 +37,10 @@ Outputs go to `/kaggle/working/nids_out/`: `manifest.json`, `split_manifest.json
 - `--cap` truncates huge attack files; BENIGN is tiny so it is kept whole. Check the per-split counts table: a rare class with a few dozen validation flows cannot support a recall gate.
 
 ## Not yet done (next stages)
-Real-data runs so far: `main`, the poison sweep, the 12-label runs and follow-up FU1 (validation + one test
-scoring; see `experiments/results/SUMMARY.md` and `experiments/results/05_fu1/README.md`).
-Prepared, not run: follow-up FU2, relabelling repair at f = 1.0 (`experiments/prereg_followup_fu2.md`,
-`s10_relabel.py`, `notebooks/06_followup_fu2_relabel.ipynb`).
+Real-data runs so far: `main`, the poison sweep, the 12-label runs, follow-up FU1 and follow-up FU2 (relabelling
+repair deployed at f = 1.0, chosen post hoc after the sweep diagnostic). Each follow-up had validation and then one
+test scoring; see `experiments/results/SUMMARY.md`, `experiments/results/05_fu1/README.md` and
+`experiments/results/06_fu2/README.md`.
 Prepared, not run: joint-training oracle diagnostic on the 12-label rows (`experiments/prereg_oracle.md`,
 `s11_oracle.py`, `notebooks/07_oracle_joint.ipynb`).
 Registered, not built: repeated small corruption per update (`experiments/prereg_repeated_corruption.md`).
