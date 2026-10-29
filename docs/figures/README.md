@@ -3,7 +3,10 @@
 Regenerate:
 - `python make_figures.py` writes every figure;
 - `python make_figures.py --check` verifies them;
-- `python make_figures.py --execute-notebook` runs `notebooks/11_results_storyboard.ipynb` end to end.
+- `python make_figures.py --execute-notebook` runs `notebooks/11_results_storyboard.ipynb` end to end;
+- On Kaggle: import `notebooks/11_results_storyboard.ipynb`, set Internet **On** and Accelerator **None (CPU)** with no
+  datasets, then *Run All*. The first cell clones this public repository into `/kaggle/working/` (rerun-safe) and
+  reads committed files only.
 
 Every PNG has a `*_data.csv` with exactly the plotted numbers (the table view). `--check` rebuilds the figures and
 asserts that those numbers equal the committed result tables.
