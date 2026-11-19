@@ -84,10 +84,48 @@ def results():
         rft.append({"rho": float(rho), "seed": int(seed), "arm": j["arm"], "Syn_recall": last["recall"]["Syn"],
                     "Syn_mean_p": last["mean_conf"]["Syn"], "benign_far": last["benign_far"]})
     d["rf_test"] = rft
-    cg = confgate()
-    if cg:
-        d["confgate"] = cg
+    d["followups"] = [x for x in (confgate(), five()) if x]
     return d
+
+
+def five():
+    """FIVE follow-up (post hoc): fifth class TFTP. pilot.json / summary.json (validation) and test.json."""
+    base = R / "12_five"
+    pp, sp, tp = base / "pilot.json", base / "summary.json", base / "test.json"
+    title = "Follow-up: a fifth class (E3 adds TFTP)"
+    if sp.exists():
+        summ = json.loads(sp.read_text())
+    elif pp.exists():
+        pil = json.loads(pp.read_text())
+        if not pil["proceed"]:
+            bad = [f"seed {s}: " + "; ".join("; ".join(x["reasons"]) for x in v if not x["accepted"])
+                   for s, v in pil["per_seed"].items() if not all(x["accepted"] for x in v)]
+            return {"title": title, "tag": "post hoc, stopped",
+                    "html": "<div>The registered clean pilot did not pass, so no poisoned run was made. Rejected clean "
+                            "updates: " + " | ".join(bad) + "</div>"}
+        return None
+    else:
+        return None
+    test = {r["name"]: r for r in json.loads(tp.read_text())["runs"]} if tp.exists() else {}
+    cls = ["BENIGN", "Syn", "LDAP", "UDP", "TFTP"]
+    rows = []
+    for f, label in ((0.9, "90% flipped, soft repair"), (1.0, "100% flipped, relabel repair")):
+        runs = [e for e in summ["runs"] if abs(e["frac"] - f) < 1e-9]
+        for arm, nm in (("clean", "Clean"), ("poisoned", "Gate only"), ("poisoned_repair", "Gate + repair")):
+            r1 = f'{sum(e[arm]["r1_accepted"] for e in runs)}/{sum(e[arm]["r1_ran"] for e in runs)}'
+            t = [test[e["name"]][arm] for e in runs if e["name"] in test]
+            learned = f'{sum(all(x["recall"].get(k, 0) > 0 for k in cls) for x in t)}/{len(t)}' if t else ""
+            per = "".join(f"<td class='num'>{sum(x['recall'].get(k, 0) for x in t) / len(t):.4f}</td>" if t else
+                          "<td></td>" for k in cls)
+            far = f"{sum(x['benign_far'] for x in t) / len(t):.4f}" if t else ""
+            rows.append(f"<tr><td>{label if arm == 'clean' else ''}</td><td>{nm}</td><td class='num'>{r1}</td>"
+                        f"<td class='num'>{learned}</td>{per}<td class='num'>{far}</td></tr>")
+    html = ("<table class='t'><tr><th>Setting</th><th>Arm</th><th>R1 passed/ran</th><th>All 5 learned</th>"
+            + "".join(f"<th>{k}</th>" for k in cls) + "<th>Benign FAR</th></tr>" + "".join(rows) + "</table>"
+            "<div class='note'>Recall columns: held-out test, mean of 3 seeds. Pre-registration: "
+            "experiments/prereg_five.md. " + ("Test scored once after the decisions were committed." if test else
+                                               "Validation decisions only; test not yet scored.") + "</div>")
+    return {"title": title, "tag": "post hoc, 2026-11-19", "html": html}
 
 
 def confgate():
@@ -126,7 +164,7 @@ def confgate():
             "logs before the run (experiments/prereg_confgate.md). 3 seeds per row; test columns are means. "
             + ("Held-out test scored once after the decisions were committed." if test else
                "Validation decisions only; test not yet scored.") + "</div>")
-    return {"date": "2026-11-19", "html": html}
+    return {"title": "Follow-up: a confidence-aware gate", "tag": "post hoc, 2026-11-19", "html": html}
 
 
 def main():

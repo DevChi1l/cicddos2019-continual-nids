@@ -127,7 +127,8 @@ canvas#buf{width:100%;height:auto;display:block;border-radius:6px}
 .funnel .bx{height:24px;border-radius:5px;display:flex;align-items:center;padding:0 9px;color:#fff;font-size:12.5px;font-family:var(--mono);white-space:nowrap}
 .funnel .lb{font-size:12.5px;color:var(--ink2);margin-top:2px}
 .cols3{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:start}
-pre{font-family:var(--mono);font-size:12.5px;background:var(--panel);border-radius:8px;padding:12px 14px;overflow:auto;margin:8px 0}
+pre{font-family:var(--mono);font-size:12px;background:var(--paper);border-radius:8px;padding:12px 14px;margin:8px 0;white-space:pre-wrap;word-break:break-all}
+#followups table.t td:nth-child(2),#followups table.t th:nth-child(2){text-align:left}
 details summary{cursor:pointer;font-size:13px;color:var(--teal);margin-top:12px}
 .all77{max-height:300px;overflow:auto;margin-top:8px;border:1px solid var(--line);border-radius:8px}
 .all77 table{border-collapse:collapse;width:100%;font-size:12px}
@@ -203,7 +204,6 @@ svg text{font-family:var(--sans)}
         <div id="rfchart"></div>
         <div class="note" id="rfnote"></div>
       </div>
-      <div id="confgate"></div>
     </div>
     <div>
       <div class="card">
@@ -218,6 +218,7 @@ python dashboard/build_dashboard.py --assets dashboard/dashboard_assets.json --c
       </div>
     </div>
   </div>
+  <div id="followups"></div>
 </section>
 </main>
 <footer>Code, pre-registrations and every result file: github.com/DevChi1l/cicddos2019-continual-nids · Scope: four classes, one attacked class (Syn), CII schedule, 3 seeds; no significance claim. Splits are random at flow level.</footer>
@@ -589,7 +590,7 @@ function initT3() {
   } else ig.push(`<div>No model weights in this build (results tabs only).</div>`);
   ig.push(`<div style="margin-top:6px">Tab 2 and this tab read the committed run records only (sweep decisions, FU2 rounds, test tables, RF trajectories).</div>`);
   $("#integrity").innerHTML = ig.join("");
-  if (RES.confgate) confGate();
+  if (RES.followups && RES.followups.length) followups();
 }
 function rfChart() {
   const tr = RES.rf_traj.filter(r => r.rho === 0.1);
@@ -606,9 +607,8 @@ function rfChart() {
   const tt = RES.rf_test.filter(x => x.rho === 0.1);
   $("#rfnote").innerHTML = `Validation, mean of 3 seeds; 10% more stored Syn labels flipped before each of six updates (60% at the end). Every update passed the recall gate, so repair never ran. Held-out test after U6: Syn recall <span class="num">${f4(mean(tt.filter(x => x.arm === "poisoned").map(x => x.Syn_recall)))}</span> vs clean <span class="num">${f4(mean(tt.filter(x => x.arm === "clean").map(x => x.Syn_recall)))}</span>; mean confidence <span class="num">${f4(mean(tt.filter(x => x.arm === "poisoned").map(x => x.Syn_mean_p)))}</span> vs <span class="num">${f4(mean(tt.filter(x => x.arm === "clean").map(x => x.Syn_mean_p)))}</span>.`;
 }
-function confGate() { /* filled when the confidence-gate follow-up is committed */
-  const c = RES.confgate;
-  $("#confgate").innerHTML = `<div class="card" style="margin-top:18px"><h3>Follow-up: a confidence-aware gate <span class="ev post">post hoc, ${c.date}</span></h3><div style="font-size:13.5px">${c.html}</div></div>`;
+function followups() { /* filled from experiments/results/11_confgate and 12_five once committed */
+  $("#followups").innerHTML = RES.followups.map(c => `<div class="card white" style="margin-top:22px"><h3>${c.title} <span class="ev post">${c.tag}</span></h3><div style="font-size:13px;overflow-x:auto">${c.html}</div></div>`).join("");
 }
 const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
 
