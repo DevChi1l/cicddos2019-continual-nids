@@ -4,7 +4,7 @@
 import glob, shutil, subprocess, sys
 from pathlib import Path
 
-DECISIONS_COMMIT = "__FILL_ME__"
+DECISIONS_COMMIT = "ef4adec7ec806d1fedee6502a0305dd51e85bfef"
 REPO = "https://github.com/DevChi1l/cicddos2019-continual-nids"
 CODE = Path("/kaggle/working/code")
 subprocess.run(["git", "clone", REPO, str(CODE)], check=True)  # full clone: s15 reads the decisions commit
