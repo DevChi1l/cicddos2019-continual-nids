@@ -1,11 +1,14 @@
 # Poison-resilient continual NIDS on CICDDoS2019
 
 **Start here:**
-- `docs/PROJECT_TECHNICAL_HANDBOOK.md`: the full walkthrough from raw CSVs to claims, with history, data, model,
-  protocol, results, problems, related work and viva Q&A;
-- `docs/ARCHITECTURE.md`: one-page model and update-loop diagram;
-- `docs/RESULT_TABLES.md`: generated tables;
-- `experiments/results/SUMMARY.md`: the results and the claims table.
+1. [`dashboard/index.html`](dashboard/index.html): offline live dashboard (real deployed models; see [how to open](dashboard/README.md#how-to-open)).
+2. [`experiments/results/SUMMARY.md`](experiments/results/SUMMARY.md): the results and the claims table.
+3. [`experiments/results/11_confgate/README.md`](experiments/results/11_confgate/README.md): confidence-aware gate follow-up (**POST HOC**).
+4. [`experiments/results/12_five/README.md`](experiments/results/12_five/README.md): fifth-class (TFTP) follow-up (**POST HOC**).
+5. [`docs/RESULT_TABLES.md`](docs/RESULT_TABLES.md): generated tables.
+
+Background: [`docs/PROJECT_TECHNICAL_HANDBOOK.md`](docs/PROJECT_TECHNICAL_HANDBOOK.md) (full walkthrough, viva Q&A) and
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) (model and update loop).
 
 **Status (all runs are on Kaggle T4; the evidence is committed under `experiments/results/`):**
 - **Primary positive result: four labels, CII** (BENIGN, Syn, LDAP, UDP). With every stored Syn replay label flipped

@@ -6,8 +6,8 @@
 <title>Continual NIDS under replay poisoning: live dashboard</title>
 <style>
 :root{
-  --ink:#1c1d1f; --ink2:#4b4f55; --ink3:#7a7f86; --line:#e3e5e8; --panel:#f5f6f7; --paper:#fff;
-  --maroon:#6e2617; --teal:#2b7488; --red:#b5372a; --amber:#a86d12; --green:#2a7a4c; --slate:#4c5867;
+  --ink:#1c1d1f; --ink2:#4b4f55; --ink3:#5f646b; --line:#e3e5e8; --panel:#f5f6f7; --paper:#fff;
+  --maroon:#6e2617; --teal:#2b7488; --red:#b5372a; --amber:#8a5a0e; --green:#2a7a4c; --slate:#4c5867;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
   --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
@@ -103,12 +103,12 @@ canvas#buf{width:100%;height:auto;display:block;border-radius:6px}
 .step{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--paper)}
 .step .hd{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .step .hd b{font-size:14.5px}
-.step .hd span{font-size:12.5px;color:var(--ink3)}
+.step .hd>span{font-size:12.5px;color:var(--ink3)}
 .att{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
 .att .an{display:flex;justify-content:space-between;font-size:13px;font-weight:600}
 .pill{font-size:11.5px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px}
 .pill.acc{background:#e3f1e8;color:var(--green)} .pill.rej{background:#f7e3e0;color:var(--red)} .pill.kept{background:#eceef0;color:var(--slate)}
-.chk{display:grid;grid-template-columns:1fr 150px 22px;gap:8px;font-size:12.5px;align-items:center;margin:3px 0}
+.chk{display:grid;grid-template-columns:1fr 150px 52px;gap:8px;font-size:12.5px;align-items:center;margin:3px 0}
 .chk .gauge{height:7px;background:#eceef0;border-radius:4px;position:relative}
 .chk .gauge .f{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
 .chk .gauge .th{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
@@ -127,7 +127,7 @@ canvas#buf{width:100%;height:auto;display:block;border-radius:6px}
 .funnel .bx{height:24px;border-radius:5px;display:flex;align-items:center;padding:0 9px;color:#fff;font-size:12.5px;font-family:var(--mono);white-space:nowrap}
 .funnel .lb{font-size:12.5px;color:var(--ink2);margin-top:2px}
 .cols3{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:start}
-pre{font-family:var(--mono);font-size:12px;background:var(--paper);border-radius:8px;padding:12px 14px;margin:8px 0;white-space:pre-wrap;word-break:break-all}
+pre{font-family:var(--mono);font-size:12px;background:var(--paper);border-radius:8px;padding:12px 14px;margin:8px 0;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere}
 #followups table.t td:nth-child(2),#followups table.t th:nth-child(2){text-align:left}
 details summary{cursor:pointer;font-size:13px;color:var(--teal);margin-top:12px}
 .all77{max-height:300px;overflow:auto;margin-top:8px;border:1px solid var(--line);border-radius:8px}
@@ -138,6 +138,58 @@ details summary{cursor:pointer;font-size:13px;color:var(--teal);margin-top:12px}
 footer{padding:18px 36px 40px;color:var(--ink3);font-size:12.5px;border-top:1px solid var(--line)}
 svg text{font-family:var(--sans)}
 @media (max-width:1100px){.grid1,.grid2,.cols3{grid-template-columns:1fr}.cms{grid-template-columns:repeat(2,1fr)}}
+/* ---- presentation polish ---- */
+:focus-visible{outline:2px solid var(--maroon);outline-offset:2px}
+.seg button:focus-visible,nav button:focus-visible{outline-offset:-3px}
+.toprow>div:first-child{min-width:0;flex:1}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 6px}
+.stat{display:inline-flex;align-items:baseline;gap:7px;border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12.5px;color:var(--ink2);background:var(--paper)}
+.stat b{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--maroon);white-space:nowrap}
+.stat .ev{margin-left:2px;vertical-align:1px}
+.side{display:flex;flex-direction:column;align-items:flex-end;gap:8px;position:relative;flex:none}
+.hint{display:flex;gap:6px;align-items:center}
+.hint .btn{font-size:12.5px;padding:3px 9px;color:var(--ink2)}
+.hint .btn[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.kbd{font-family:var(--mono);font-size:11px;border:1px solid #c9ccd1;border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--paper);color:var(--ink)}
+#help{position:absolute;right:0;top:100%;margin-top:6px;z-index:20;width:310px;box-shadow:0 8px 28px rgba(28,29,31,.12);font-size:13px}
+#help table{border-collapse:collapse;width:100%}
+#help td{padding:4px 0;vertical-align:top}
+#help td:first-child{white-space:nowrap;padding-right:12px}
+.story{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:8px;padding:9px 14px;margin:0 0 12px;font-size:14.5px;background:var(--paper);min-height:44px}
+.cmpbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 10px;flex-wrap:wrap}
+.cmpbar .lab{font-size:12px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.models.duo .mcard{padding:20px 22px}
+.models.duo .who{font-size:17px}
+.models.duo .verdict{font-size:40px}
+.models.duo .verdict small{font-size:14px}
+.models.duo .bar{grid-template-columns:70px 1fr 86px;font-size:14px;margin:6px 0}
+.models.duo .bar .track{height:13px;border-radius:7px}
+.fade{animation:fade .15s ease-out}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.playrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.playrow .note{margin:0}
+.heat td.na{color:var(--ink3);cursor:default;font-family:var(--sans);font-size:12px}
+.nl{color:var(--red);font-family:var(--sans);font-size:11.5px;font-weight:600;margin-left:4px}
+.fucards{display:grid;grid-template-columns:1fr;gap:22px;margin-top:22px}
+.takeaway{font-family:var(--serif);font-size:18px;font-weight:600;line-height:1.35;color:var(--ink);margin:2px 0 12px;max-width:980px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+body.presenter header,body.presenter main{zoom:1.2}
+body.presenter footer{display:none}
+body.presenter .cms{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (prefers-reduced-motion:reduce){.fade{animation:none}.bar .fill,.prog div{transition:none}}
+@media print{
+  @page{margin:12mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html,body{font-size:12px}
+  body.presenter header,body.presenter main{zoom:1}
+  nav,.hint,#help,.playrow,.cmpbar .seg,details,#t1 .btnrow,#reset{display:none!important}
+  header{padding:0 0 8px}
+  main{padding:8px 0 0;max-width:none}
+  section.tab{display:block!important;break-before:page}
+  section#t1{break-before:auto}
+  .card,.mcard,.step,.rung,table,.story{break-inside:avoid}
+  footer{display:block!important;padding:10px 0 0}
+}
 </style>
 </head>
 <body>
@@ -148,44 +200,63 @@ svg text{font-family:var(--sans)}
       <h1>What happens when a learning detector's memory is poisoned</h1>
       <p class="sub">A detector that keeps learning new attacks rehearses a small replay buffer of old flows. Here an attacker has flipped the stored Syn labels to BENIGN. This page runs the real deployed models in your browser and replays the committed experiment records.</p>
     </div>
-    <div id="status" class="chip"><span class="dot"></span><span>loading</span></div>
+    <div class="side">
+      <div id="status" class="chip" role="status" aria-live="polite"><span class="dot" aria-hidden="true"></span><span>loading</span></div>
+      <div class="hint">
+        <button class="btn ghost" id="presbtn" aria-pressed="false" title="Larger fonts, no footer (key P)">Presenter mode (<span class="kbd">P</span>)</button>
+        <button class="btn ghost" id="helpbtn" aria-expanded="false" aria-controls="help" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">?</button>
+      </div>
+      <div id="help" class="card white" role="dialog" aria-label="Keyboard shortcuts" hidden>
+        <h3>Keyboard shortcuts</h3>
+        <table>
+          <tr><td><span class="kbd">1</span> <span class="kbd">2</span> <span class="kbd">3</span></td><td>switch tabs</td></tr>
+          <tr><td><span class="kbd">←</span> <span class="kbd">→</span></td><td>previous / next flow of the chosen class (tab 1)</td></tr>
+          <tr><td><span class="kbd">R</span></td><td>random flow (tab 1)</td></tr>
+          <tr><td><span class="kbd">P</span></td><td>presenter mode: larger fonts, no footer</td></tr>
+          <tr><td><span class="kbd">?</span></td><td>show or hide this list</td></tr>
+          <tr><td><span class="kbd">Esc</span></td><td>close this list, leave a slider</td></tr>
+        </table>
+      </div>
+    </div>
   </div>
-  <nav role="tablist">
-    <button role="tab" aria-selected="true" data-tab="t1">1 · Detect a flow</button>
-    <button role="tab" aria-selected="false" data-tab="t2">2 · Poison the buffer</button>
-    <button role="tab" aria-selected="false" data-tab="t3">3 · What we claim</button>
+  <div class="stats" id="stats" role="list" aria-label="Headline results"></div>
+  <nav role="tablist" aria-label="Dashboard sections">
+    <button role="tab" id="tab-t1" aria-controls="t1" aria-selected="true" data-tab="t1">1 · Detect a flow</button>
+    <button role="tab" id="tab-t2" aria-controls="t2" aria-selected="false" data-tab="t2">2 · Poison the buffer</button>
+    <button role="tab" id="tab-t3" aria-controls="t3" aria-selected="false" data-tab="t3">3 · What we claim</button>
   </nav>
 </header>
 
 <main>
 <!-- ============================================================ TAB 1 -->
-<section class="tab on" id="t1">
+<section class="tab on" id="t1" role="tabpanel" aria-labelledby="tab-t1">
   <h2>One flow in, four verdicts out <span class="ev test">held-out test flows</span></h2>
   <p class="lede">All four models saw the same stream (BENIGN + Syn, then + LDAP, then + UDP), with <b>every</b> stored Syn label flipped to BENIGN (f = 1.0, seed 42). They differ only in how an update was accepted.</p>
   <div id="t1body"></div>
 </section>
 
 <!-- ============================================================ TAB 2 -->
-<section class="tab" id="t2">
+<section class="tab" id="t2" role="tabpanel" aria-labelledby="tab-t2">
   <h2>Poison the buffer, watch the gate <span class="ev val">gate decisions: validation</span><span class="ev test">final result: held-out test</span></h2>
   <p class="lede">Choose how much of the stored Syn memory the attacker flips and which defence is running. Every number below is read from the committed run records of the pre-registered sweep and of FU2; nothing here is simulated.</p>
   <div class="grid2">
     <div>
       <div class="ctl">
-        <div><div class="lab">Stored Syn labels flipped to BENIGN</div><div class="seg" id="segF"></div></div>
-        <div><div class="lab">Seed</div><div class="seg" id="segS"></div></div>
-        <div><div class="lab">Defence</div><div class="seg" id="segA"></div></div>
+        <div><div class="lab" id="labF">Stored Syn labels flipped to BENIGN</div><div class="seg" id="segF" role="group" aria-labelledby="labF"></div></div>
+        <div><div class="lab" id="labS">Seed</div><div class="seg" id="segS" role="group" aria-labelledby="labS"></div></div>
+        <div><div class="lab" id="labA">Defence</div><div class="seg" id="segA" role="group" aria-labelledby="labA"></div></div>
+        <div class="playrow"><button class="btn" id="play" aria-pressed="false">&#9656; Play 75% &#8594; 100%</button><span class="note" id="playnote" aria-live="polite">steps through the flip fractions with the chosen defence, 1.5 s each</span></div>
       </div>
       <div class="card white">
         <h3>The replay buffer: 2,000 stored Syn flows</h3>
-        <canvas id="buf" width="800" height="640"></canvas>
+        <canvas id="buf" width="800" height="640" role="img" aria-label="Replay buffer: one cell per stored Syn flow; red cells are labels flipped to BENIGN"></canvas>
         <div class="legend" id="bufleg"></div>
         <div class="note" id="bufnote"></div>
       </div>
       <div class="card" style="margin-top:16px">
         <h3>All settings: seeds whose deployed model learned all 4 classes</h3>
         <table class="heat" id="heat"></table>
-        <div class="note">Click a cell to load it. Relabel repair exists only at f = 1.0 (FU2, post hoc).</div>
+        <div class="note">Click a cell (or focus it and press Enter) to load it. Relabel repair exists only at f = 1.0 (FU2, post hoc); n/a = not run.</div>
       </div>
     </div>
     <div class="tl" id="timeline"></div>
@@ -193,7 +264,7 @@ svg text{font-family:var(--sans)}
 </section>
 
 <!-- ============================================================ TAB 3 -->
-<section class="tab" id="t3">
+<section class="tab" id="t3" role="tabpanel" aria-labelledby="tab-t3">
   <h2>What this project claims, and what it does not</h2>
   <p class="lede">Each claim carries the kind of evidence behind it. Pre-registered means the hypothesis and thresholds were committed to git before the run.</p>
   <div class="cols3">
@@ -243,10 +314,37 @@ const ARMS = [
   {k: "poisoned_relabel", name: "Relabel repair", color: "var(--green)", desc: "Frozen teacher relabels the flipped rows (FU2).", tag: "post"},
 ];
 
-/* ---------------- tabs ---------------- */
-document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
-  document.querySelectorAll("nav button").forEach(x => x.setAttribute("aria-selected", x === b));
-  document.querySelectorAll("section.tab").forEach(s => s.classList.toggle("on", s.id === b.dataset.tab));
+/* ---------------- tabs, presenter mode, shortcuts ---------------- */
+function showTab(id) {
+  document.querySelectorAll("nav button").forEach(x => x.setAttribute("aria-selected", x.dataset.tab === id));
+  document.querySelectorAll("section.tab").forEach(s => s.classList.toggle("on", s.id === id));
+  if (id !== "t2") stopPlay();
+}
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => showTab(b.dataset.tab));
+function togglePresenter(on) {
+  on = on === undefined ? !document.body.classList.contains("presenter") : on;
+  document.body.classList.toggle("presenter", on); $("#presbtn").setAttribute("aria-pressed", on);
+}
+function toggleHelp(on) {
+  const h = $("#help"); on = on === undefined ? h.hidden : on;
+  h.hidden = !on; $("#helpbtn").setAttribute("aria-expanded", on);
+}
+document.addEventListener("click", e => { if (!$("#help").hidden && !e.target.closest("#help,#helpbtn")) toggleHelp(false); });
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const t = e.target, typing = t.closest && t.closest("input,select,textarea,[contenteditable=true]");
+  if (e.key === "Escape") { if (!$("#help").hidden) toggleHelp(false); else if (typing) t.blur(); return; }
+  if (typing) return; // sliders and number boxes keep their own arrow keys
+  const tab = document.querySelector("section.tab.on").id;
+  switch (e.key) {
+    case "1": case "2": case "3": showTab("t" + e.key); break;
+    case "p": case "P": togglePresenter(); break;
+    case "?": toggleHelp(); break;
+    case "ArrowLeft": case "ArrowRight": if (tab !== "t1" || !ROWS) return; step(e.key === "ArrowLeft" ? -1 : 1); break;
+    case "r": case "R": if (tab !== "t1" || !ROWS) return; select(Math.floor(Math.random() * ROWS.label.length)); break;
+    default: return;
+  }
+  e.preventDefault();
 });
 function setStatus(cls, text) { const s = $("#status"); s.className = "chip " + cls; s.lastElementChild.textContent = text; }
 
@@ -273,16 +371,18 @@ function initLive() {
     <div class="card">
       <h3>1 · Choose a held-out flow</h3>
       <div class="btnrow" id="clsbtn"></div>
-      <div class="btnrow" style="margin-top:8px"><button class="btn ghost" id="prev">‹ previous</button><button class="btn ghost" id="next">next ›</button><button class="btn ghost" id="rnd">random</button></div>
+      <div class="btnrow" style="margin-top:8px"><button class="btn ghost" id="prev" aria-label="previous flow (left arrow)">‹ previous</button><button class="btn ghost" id="next" aria-label="next flow (right arrow)">next ›</button><button class="btn ghost" id="rnd" aria-label="random flow (R)">random</button></div>
       <div class="flowid" id="flowid"></div>
       <h3 style="margin-top:18px">2 · Edit the flow</h3>
-      <div class="sl"><label><span>protocol</span></label><select id="proto"><option value="6">TCP (6)</option><option value="17">UDP (17)</option><option value="0">HOPOPT (0)</option></select></div>
+      <div class="sl"><label for="proto"><span>protocol</span></label><select id="proto" aria-label="protocol"><option value="6">TCP (6)</option><option value="17">UDP (17)</option><option value="0">HOPOPT (0)</option></select></div>
       <div id="sliders"></div>
       <div class="btnrow" style="margin-top:12px"><button class="btn" id="reset">reset to the recorded flow</button></div>
       <details><summary>show all 77 input features</summary><div class="all77"><table id="all77"></table></div></details>
       <div class="note">Sliders show the six features that move the relabel-repaired model's verdict most for this flow. Values are raw CICFlowMeter units; the page applies the frozen scaler itself.</div>
     </div>
     <div>
+      <div class="cmpbar"><span class="lab" id="labCmp">Compare</span><div class="seg" id="segCmp" role="group" aria-labelledby="labCmp"></div></div>
+      <div class="story" id="story" aria-live="polite"></div>
       <div class="models" id="mcards"></div>
       <div class="card white why"><h3 id="whyh">Why this verdict</h3><div id="why"></div>
         <div class="note">Sensitivity check: each bar is how far the model's probability for its chosen class falls when that one feature is replaced by a typical BENIGN value. It shows what the model relies on, not why the traffic is malicious.</div></div>
@@ -297,7 +397,9 @@ function initLive() {
   </div>`;
 
   const cb = $("#clsbtn");
-  CLASSES.forEach(k => { const b = el("button", {class: "btn"}, k); b.onclick = () => pickClass(k); cb.appendChild(b); });
+  cb.setAttribute("role", "group"); cb.setAttribute("aria-label", "true class of the flow");
+  CLASSES.forEach(k => { const b = el("button", {class: "btn", "aria-pressed": "false"}, k); b.onclick = () => pickClass(k); cb.appendChild(b); });
+  cmpSeg(); buildCards();
   $("#prev").onclick = () => step(-1); $("#next").onclick = () => step(1);
   $("#rnd").onclick = () => select(Math.floor(Math.random() * ROWS.label.length));
   $("#reset").onclick = () => select(cur);
@@ -309,7 +411,7 @@ function initLive() {
 let curClass = "LDAP";
 function pickClass(k) {
   curClass = k;
-  document.querySelectorAll("#clsbtn .btn").forEach(b => b.classList.toggle("on", b.textContent === k));
+  markClass();
   const idx = ROWS.label.map((l, i) => l === k ? i : -1).filter(i => i >= 0);
   select(idx[0]);
 }
@@ -319,37 +421,77 @@ function step(d) {
 }
 function select(i) {
   cur = i; curRaw = ROWS.num[i].slice(); curProto = ROWS.cat[i][0];
-  if (ROWS.label[i] !== curClass) { curClass = ROWS.label[i]; document.querySelectorAll("#clsbtn .btn").forEach(b => b.classList.toggle("on", b.textContent === curClass)); }
+  if (ROWS.label[i] !== curClass) { curClass = ROWS.label[i]; markClass(); }
   $("#proto").value = String(curProto);
   const idx = ROWS.label.map((l, j) => l === curClass ? j : -1).filter(j => j >= 0);
   $("#flowid").innerHTML = `Flow <b class="num">#${ROWS.rid[i]}</b> · true class <b>${ROWS.label[i]}</b> · ${idx.indexOf(i) + 1} of ${idx.length}`;
   buildAll77();
   predictAll(true);
 }
+function markClass() { document.querySelectorAll("#clsbtn .btn").forEach(b => { const on = b.textContent === curClass; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); }); }
 function buildAll77() {
   const t = $("#all77"); t.innerHTML = "";
   A.scaler.features_numeric.forEach((n, j) => {
     const tr = el("tr"); tr.appendChild(el("td", {}, n));
-    const td = el("td", {style: "text-align:right"}); const inp = el("input", {type: "number", step: "any"}); inp.value = curRaw[j];
+    const td = el("td", {style: "text-align:right"}); const inp = el("input", {type: "number", step: "any", "aria-label": n}); inp.value = curRaw[j];
     inp.onchange = () => { const v = parseFloat(inp.value); if (isFinite(v)) { curRaw[j] = v; syncSliders(); predictAll(); } };
     td.appendChild(inp); tr.appendChild(td); t.appendChild(tr);
   });
 }
 function probs(arm, raw, proto) { return MODELS[arm].forward(NIDS.scaleRow(raw, A.scaler), NIDS.protoCode(proto, A.scaler)); }
 function argmax(p) { let k = 0; for (let i = 1; i < p.length; i++) if (p[i] > p[k]) k = i; return k; }
-function predictAll(newFlow) {
-  const box = $("#mcards"); box.innerHTML = "";
-  const truth = ROWS.label[cur];
-  for (const a of ARMS) {
-    const m = MODELS[a.k], p = probs(a.k, curRaw, curProto), k = argmax(p), v = m.classes[k];
-    const c = el("div", {class: "mcard"});
-    c.innerHTML = `<div class="who"><span class="sw" style="background:${a.color}"></span>${a.name}${a.tag ? `<span class="ev ${a.tag}">${a.tag === "pre" ? "registered" : "post hoc"}</span>` : ""}</div>
+/* compare mode: all four models, or the two that tell the story side by side (big cards for a projector) */
+let CMP = "all";
+const DUO = ["poisoned", "poisoned_relabel"];
+function cmpSeg() {
+  const box = $("#segCmp"); box.innerHTML = "";
+  [["all", "All four models"], ["duo", "Gate only vs Relabel"]].forEach(([v, lab]) => {
+    const b = el("button", {"aria-pressed": CMP === v}, lab); b.classList.toggle("on", CMP === v);
+    b.onclick = () => { CMP = v; cmpSeg(); buildCards(); predictAll(); }; box.appendChild(b); });
+}
+let CARDS = [];
+function buildCards() {
+  const box = $("#mcards"); box.innerHTML = ""; box.classList.toggle("duo", CMP === "duo");
+  CARDS = ARMS.filter(a => CMP === "all" || DUO.includes(a.k)).map(a => {
+    const m = MODELS[a.k], c = el("div", {class: "mcard", role: "group", "aria-label": a.name});
+    c.innerHTML = `<div class="who"><span class="sw" style="background:${a.color}" aria-hidden="true"></span>${a.name}${a.tag ? `<span class="ev ${a.tag}">${a.tag === "pre" ? "registered" : "post hoc"}</span>` : ""}</div>
       <div class="desc">${a.desc}</div>
-      <div class="verdict">${v}<small class="${v === truth ? "y" : "n"}">${v === truth ? "correct" : "wrong"}</small></div>
-      <div class="bars">${CLASSES.map(cl => { const j = m.classes.indexOf(cl);
-        if (j < 0) return `<div class="bar na"><span>${cl}</span><div class="track"></div><span class="v">not learned</span></div>`;
-        return `<div class="bar"><span>${cl}</span><div class="track"><div class="fill" style="width:${(100 * p[j]).toFixed(2)}%;background:${a.color}"></div></div><span class="v num">${pct(p[j])}</span></div>`; }).join("")}</div>`;
+      <div class="verdict" aria-live="polite"><span class="vt"></span><small></small></div>
+      <div class="bars">${CLASSES.map(cl => m.classes.includes(cl)
+        ? `<div class="bar"><span>${cl}</span><div class="track" role="meter" aria-label="${a.name}: probability ${cl}" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0"><div class="fill" style="width:0%;background:${a.color}"></div></div><span class="v num"></span></div>`
+        : `<div class="bar na"><span>${cl}</span><div class="track"></div><span class="v">not learned</span></div>`).join("")}</div>`;
     box.appendChild(c);
+    return {a, m, c, vt: c.querySelector(".vt"), tag: c.querySelector(".verdict small"), verdict: c.querySelector(".verdict"),
+            bars: CLASSES.map(cl => { const j = m.classes.indexOf(cl); if (j < 0) return null;
+              const b = c.querySelectorAll(".bars .bar")[CLASSES.indexOf(cl)]; return {j, track: b.querySelector(".track"), fill: b.querySelector(".fill"), v: b.querySelector(".v")}; })};
+  });
+  void box.offsetWidth; // so the first widths animate from 0
+}
+const ARM_WORD = {clean: "the clean reference", poisoned: "gate only", poisoned_repair: "soft repair", poisoned_relabel: "relabel repair"};
+const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+const andList = xs => xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " and " + xs[xs.length - 1];
+/* one sentence built from the four predictions of the current flow (never fixed text) */
+function storyText(pred, truth, edited) {
+  const what = `this ${edited ? "edited " : ""}${truth === "BENIGN" ? "benign" : truth} flow${edited ? ` (recorded as ${truth})` : ""}`;
+  const right = pred.filter(x => x.v === truth), wrong = pred.filter(x => x.v !== truth);
+  if (!wrong.length) return `All four models call ${what} ${truth}.`;
+  const groups = {}; wrong.forEach(x => (groups[x.v] = groups[x.v] || []).push(ARM_WORD[x.k]));
+  const parts = Object.entries(groups).map(([v, ns], i) => `${andList(ns)} ${ns.length > 1 ? "call" : "calls"} ${i ? "it" : what} ${v}`);
+  let t = cap(parts.join("; "));
+  if (!right.length) return t + `; no model gets it right.`;
+  const rn = right.map(x => ARM_WORD[x.k]), catches = truth !== "BENIGN";
+  return t + `; ${andList(rn)} ${catches ? (rn.length > 1 ? "catch" : "catches") : (rn.length > 1 ? "get" : "gets")} it${catches ? "" : " right"}.`;
+}
+function predictAll(newFlow) {
+  const truth = ROWS.label[cur];
+  const pred = ARMS.map(a => { const p = probs(a.k, curRaw, curProto), k = argmax(p); return {k: a.k, p, v: MODELS[a.k].classes[k]}; });
+  const edited = curProto !== ROWS.cat[cur][0] || curRaw.some((v, j) => Math.abs(v - ROWS.num[cur][j]) > 1e-9);
+  $("#story").textContent = storyText(pred, truth, edited);
+  for (const c of CARDS) {
+    const {p, v} = pred.find(x => x.k === c.a.k), ok = v === truth;
+    if (c.vt.textContent !== v) { c.vt.textContent = v; c.verdict.classList.remove("fade"); void c.verdict.offsetWidth; c.verdict.classList.add("fade"); }
+    c.tag.className = ok ? "y" : "n"; c.tag.textContent = ok ? "✓ correct" : "✗ wrong";
+    c.bars.forEach(b => { if (!b) return; const q = p[b.j]; b.fill.style.width = (100 * q).toFixed(2) + "%"; b.v.textContent = pct(q); b.track.setAttribute("aria-valuenow", q.toFixed(4)); });
   }
   // sensitivity for the relabel-repaired model
   const arm = "poisoned_relabel", m = MODELS[arm], x0 = NIDS.scaleRow(curRaw, A.scaler), code = NIDS.protoCode(curProto, A.scaler);
@@ -371,13 +513,13 @@ function makeSliders(js) {
     ROWS.num.forEach(r => { const s = slog(r[j]); if (s < lo) lo = s; if (s > hi) hi = s; });
     if (hi - lo < 1e-9) { lo -= 1; hi += 1; }
     const w = el("div", {class: "sl"});
-    w.innerHTML = `<label><span title="${n}">${n}</span><span class="num" id="sv${j}">${fmt(v0)}</span></label><input type="range" min="${lo}" max="${hi}" step="${(hi - lo) / 400}" value="${slog(curRaw[j])}">`;
+    w.innerHTML = `<label><span title="${n}">${n}</span><span class="num" id="sv${j}">${fmt(v0)}</span></label><input type="range" min="${lo}" max="${hi}" step="${(hi - lo) / 400}" value="${slog(curRaw[j])}" aria-label="${n} (log scale)" aria-valuetext="${fmt(curRaw[j])}">`;
     const r = w.querySelector("input");
-    r.oninput = () => { curRaw[j] = unslog(+r.value); const s = $("#sv" + j); s.textContent = fmt(curRaw[j]); s.classList.toggle("edited", Math.abs(curRaw[j] - v0) > 1e-9); predictAll(); const inp = $("#all77").rows[j].querySelector("input"); inp.value = curRaw[j]; };
+    r.oninput = () => { curRaw[j] = unslog(+r.value); const s = $("#sv" + j); s.textContent = fmt(curRaw[j]); r.setAttribute("aria-valuetext", fmt(curRaw[j])); s.classList.toggle("edited", Math.abs(curRaw[j] - v0) > 1e-9); predictAll(); const inp = $("#all77").rows[j].querySelector("input"); inp.value = curRaw[j]; };
     box.appendChild(w); sliders.push({j, r});
   });
 }
-function syncSliders() { sliders.forEach(s => { s.r.value = slog(curRaw[s.j]); $("#sv" + s.j).textContent = fmt(curRaw[s.j]); }); }
+function syncSliders() { sliders.forEach(s => { s.r.value = slog(curRaw[s.j]); s.r.setAttribute("aria-valuetext", fmt(curRaw[s.j])); $("#sv" + s.j).textContent = fmt(curRaw[s.j]); }); }
 const slog = v => Math.sign(v) * Math.log1p(Math.abs(v)), unslog = s => { const v = Math.sign(s) * Math.expm1(Math.abs(s)); return Math.abs(v) >= 100 ? Math.round(v) : +v.toPrecision(4); };
 const fmt = v => Math.abs(v) >= 1e6 ? v.toExponential(2) : Math.abs(v) >= 100 ? Math.round(v).toLocaleString() : (+v.toPrecision(4)).toString();
 
@@ -385,7 +527,7 @@ function fullTable() {
   const ft = A.full_test, chk = A.meta.full_test_checks || {};
   let h = `<table class="t"><tr><th>Model</th>${CLASSES.map(c => `<th>${c} recall</th>`).join("")}<th>Macro recall</th><th>Benign FAR</th><th>Matches committed result</th></tr>`;
   for (const a of ARMS) { const f = ft[a.k]; if (!f) continue;
-    h += `<tr><td><span class="sw" style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${a.color};margin-right:7px"></span>${a.name}</td>${CLASSES.map(c => `<td class="num">${f.classes.includes(c) ? f4(f.recall[c]) : `<span style="color:var(--red)">${f4(f.recall[c] || 0)}</span>`}</td>`).join("")}<td class="num">${f4(f.macro_recall)}</td><td class="num">${f4(f.benign_far)}</td><td>${chk[a.k] && chk[a.k].matches ? '<span class="ok">✓ identical</span>' : '<span class="no">not verified</span>'}</td></tr>`; }
+    h += `<tr><td><span class="sw" style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${a.color};margin-right:7px"></span>${a.name}</td>${CLASSES.map(c => `<td class="num">${f.classes.includes(c) ? f4(f.recall[c]) : `<span style="color:var(--red)">${f4(f.recall[c] || 0)}</span><span class="nl">not learned</span>`}</td>`).join("")}<td class="num">${f4(f.macro_recall)}</td><td class="num">${f4(f.benign_far)}</td><td>${chk[a.k] && chk[a.k].matches ? '<span class="ok">✓ identical</span>' : '<span class="no">not verified</span>'}</td></tr>`; }
   $("#fulltab").innerHTML = h + `</table><div class="note">Benign FAR is over ${ft.clean ? ft.clean.n_benign.toLocaleString() : "–"} benign rows. A benign FAR of 0 for the gate-only model is not safety: it calls every LDAP and UDP flow benign.</div>`;
 }
 
@@ -449,8 +591,8 @@ const FRACS = [0.75, 0.9, 0.95, 1.0], SEEDS = [42, 43, 44];
 const DEF = [{k: "poisoned", n: "Gate only"}, {k: "poisoned_repair", n: "Soft repair"}, {k: "poisoned_relabel", n: "Relabel repair"}, {k: "clean", n: "No attack"}];
 function seg(id, items, get, set, dis) {
   const box = $(id); box.innerHTML = "";
-  items.forEach(it => { const b = el("button", {}, it.label); b.classList.toggle("on", get() === it.v); if (dis && dis(it.v)) b.disabled = true;
-    b.onclick = () => { set(it.v); renderT2(); }; box.appendChild(b); });
+  items.forEach(it => { const on = get() === it.v, b = el("button", {"aria-pressed": on}, it.label); b.classList.toggle("on", on); if (dis && dis(it.v)) { b.disabled = true; b.title = "not run at this flip fraction"; }
+    b.onclick = () => { stopPlay(); set(it.v); renderT2(); }; box.appendChild(b); });
 }
 function attempts(f, s, a) {
   if (a === "poisoned_relabel") return RES.fu2_rounds.filter(r => r.seed === s).map(r => ({...r, repair_method: r.attempt === "R1" ? "relabel" : null}));
@@ -469,6 +611,26 @@ function renderT2() {
   seg("#segS", SEEDS.map(v => ({v, label: String(v)})), () => T2.s, v => T2.s = v);
   seg("#segA", DEF.map(d => ({v: d.k, label: d.n})), () => T2.a, v => T2.a = v, v => v === "poisoned_relabel" && T2.f !== 1.0);
   drawBuffer(); timeline(); heat();
+}
+/* Play: 75% -> 90% -> 95% -> 100%, 1.5 s each, with the chosen defence (relabel repair exists only at 100%,
+   so soft repair stands in before that and the note says so) */
+let playT = null;
+function stopPlay() {
+  if (!playT) return; clearTimeout(playT); playT = null;
+  const b = $("#play"); b.innerHTML = "&#9656; Play 75% &#8594; 100%"; b.setAttribute("aria-pressed", "false");
+}
+function play() {
+  if (playT) { stopPlay(); $("#playnote").textContent = "stopped"; return; }
+  const want = T2.a, name = k => DEF.find(d => d.k === k).n.toLowerCase();
+  let i = 0;
+  const b = $("#play"); b.innerHTML = "&#10074;&#10074; Stop"; b.setAttribute("aria-pressed", "true");
+  const tick = () => {
+    if (i >= FRACS.length) { stopPlay(); $("#playnote").textContent = `done: ${name(T2.a)} at 100%`; return; }
+    T2.f = FRACS[i]; T2.a = want === "poisoned_relabel" && T2.f !== 1.0 ? "poisoned_repair" : want; renderT2();
+    $("#playnote").textContent = `${100 * T2.f}% flipped · ${name(T2.a)}` + (T2.a !== want ? " (relabel repair exists only at 100%)" : "");
+    i++; playT = setTimeout(tick, 1500);
+  };
+  playT = -1; tick();
 }
 /* buffer picture: 2,000 cells, one per stored Syn row. Which rows flipped is drawn in a fixed random order (an
    illustration); the counts are the experiment's. */
@@ -515,7 +677,7 @@ function drawBuffer() {
 function gaugeRow(label, val, thr, dir, max) {
   const ok = dir === "ge" ? val >= thr : val <= thr;
   const w = Math.min(100, 100 * val / max), tp = Math.min(100, 100 * thr / max);
-  return `<div class="chk"><span>${label} <span class="num">${dir === "ge" ? f4(val) + " ≥ " + f4(thr) : f4(val) + " ≤ " + thr}</span></span><div class="gauge"><div class="f" style="width:${w}%;background:${ok ? "var(--green)" : "var(--red)"}"></div><div class="th" style="left:${tp}%"></div></div><span class="${ok ? "ok" : "no"}">${ok ? "✓" : "✗"}</span></div>`;
+  return `<div class="chk"><span>${label} <span class="num">${dir === "ge" ? f4(val) + " ≥ " + f4(thr) : f4(val) + " ≤ " + thr}</span></span><div class="gauge" aria-hidden="true"><div class="f" style="width:${w}%;background:${ok ? "var(--green)" : "var(--red)"}"></div><div class="th" style="left:${tp}%"></div></div><span class="${ok ? "ok" : "no"}">${ok ? "✓ pass" : "✗ fail"}</span></div>`;
 }
 function timeline() {
   const box = $("#timeline"), at = attempts(T2.f, T2.s, T2.a);
@@ -545,7 +707,7 @@ function timeline() {
       <div class="bars">${CLASSES.map(c => `<div class="bar"><span>${c}</span><div class="track"><div class="fill" style="width:${100 * d.recall[c]}%;background:${d.recall[c] > 0 ? "var(--teal)" : "var(--red)"}"></div></div><span class="v num">${f4(d.recall[c])}</span></div>`).join("")}</div>
       <div class="note">benign false-alarm rate <span class="num">${f4(d.far)}</span> · macro recall <span class="num">${f4(d.macro)}</span>${n < 4 && d.far === 0 ? " · zero false alarms here only because LDAP/UDP traffic is called benign" : ""}</div></div>`;
   }
-  box.innerHTML = h;
+  box.innerHTML = h; box.classList.remove("fade"); void box.offsetWidth; box.classList.add("fade");
 }
 function heat() {
   const t = $("#heat");
@@ -553,15 +715,17 @@ function heat() {
   for (const f of FRACS) {
     h += `<tr><th>${100 * f}%</th>`;
     for (const d of DEF) {
-      if (d.k === "poisoned_relabel" && f !== 1.0) { h += `<td style="color:#c3c6cb;cursor:default">·</td>`; continue; }
-      const n = SEEDS.filter(s => learnedAll(f, s, d.k)).length;
+      if (d.k === "poisoned_relabel" && f !== 1.0) { h += `<td class="na" aria-label="${d.n} at ${100 * f}%: not run">n/a</td>`; continue; }
+      const n = SEEDS.filter(s => learnedAll(f, s, d.k)).length, sel = T2.f === f && T2.a === d.k;
       const bg = n === 3 ? "#d9eee1" : n === 0 ? "#f5dcd8" : "#f4e7cf";
-      h += `<td class="${T2.f === f && T2.a === d.k ? "sel" : ""}" style="background:${bg}" data-f="${f}" data-a="${d.k}">${n}/3</td>`;
+      h += `<td class="${sel ? "sel" : ""}" style="background:${bg}" data-f="${f}" data-a="${d.k}" tabindex="0" role="button" aria-pressed="${sel}" aria-label="${d.n} at ${100 * f}% flipped: ${n} of 3 seeds learned all 4 classes">${n}/3</td>`;
     }
     h += `</tr>`;
   }
   t.innerHTML = h;
-  t.querySelectorAll("td[data-f]").forEach(td => td.onclick = () => { T2.f = +td.dataset.f; T2.a = td.dataset.a; renderT2(); });
+  t.querySelectorAll("td[data-f]").forEach(td => {
+    const go = () => { stopPlay(); T2.f = +td.dataset.f; T2.a = td.dataset.a; renderT2(); const n = $(`#heat td[data-f="${td.dataset.f}"][data-a="${td.dataset.a}"]`); if (n && document.activeElement === document.body) n.focus(); };
+    td.onclick = go; td.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); $(`#heat td[data-f="${td.dataset.f}"][data-a="${td.dataset.a}"]`).focus(); } }; });
 }
 
 /* =============================================================== TAB 3 */
@@ -608,13 +772,52 @@ function rfChart() {
   $("#rfnote").innerHTML = `Validation, mean of 3 seeds; 10% more stored Syn labels flipped before each of six updates (60% at the end). Every update passed the recall gate, so repair never ran. Held-out test after U6: Syn recall <span class="num">${f4(mean(tt.filter(x => x.arm === "poisoned").map(x => x.Syn_recall)))}</span> vs clean <span class="num">${f4(mean(tt.filter(x => x.arm === "clean").map(x => x.Syn_recall)))}</span>; mean confidence <span class="num">${f4(mean(tt.filter(x => x.arm === "poisoned").map(x => x.Syn_mean_p)))}</span> vs <span class="num">${f4(mean(tt.filter(x => x.arm === "clean").map(x => x.Syn_mean_p)))}</span>.`;
 }
 function followups() { /* filled from experiments/results/11_confgate and 12_five once committed */
-  $("#followups").innerHTML = RES.followups.map(c => `<div class="card white" style="margin-top:22px"><h3>${c.title} <span class="ev post">${c.tag}</span></h3><div style="font-size:13px;overflow-x:auto">${c.html}</div></div>`).join("");
+  $("#followups").innerHTML = `<div class="fucards">` + RES.followups.map(c => { const t = takeaway(c);
+    return `<div class="card white"><h3>${c.title} <span class="ev post">${c.tag}</span></h3>${t ? `<p class="takeaway">${t}</p>` : ""}<div style="font-size:13px;overflow-x:auto">${c.html}</div></div>`; }).join("") + `</div>`;
+}
+const near = (a, b) => Math.abs(a - b) < 1e-9;
+function cgRepair() { /* test Syn confidence of repaired models at RF rho 0.10: without (RF) and with the confidence gate (CG) */
+  const cg = (RES.followups || []).find(c => c.id === "confgate");
+  const w = cg && (cg.stats || []).find(x => x.setting === "CG-RF" && near(x.frac, 0.1) && x.arm === "poisoned_repair");
+  const no = RES.rf_test.filter(x => near(x.rho, 0.1) && x.arm === "poisoned_repair").map(x => x.Syn_mean_p);
+  return w && w.Syn_mean_conf != null && no.length ? {with: w.Syn_mean_conf, without: mean(no)} : null;
+}
+/* one bold sentence per follow-up, computed from its numbers */
+function takeaway(c) {
+  const st = c.stats || [];
+  if (c.id === "confgate") {
+    const r = cgRepair(), cl = st.filter(x => x.arm === "clean");
+    if (!r) return "";
+    return `With the confidence gate, repair keeps held-out Syn confidence at ${f3(r.with)} (no confidence gate: ${f3(r.without)}), and ${cl.reduce((s, x) => s + x.updates_accepted, 0)}/${cl.reduce((s, x) => s + x.updates, 0)} clean updates are still accepted.`;
+  }
+  if (c.id === "five") {
+    if (!st.length) return "The registered clean pilot did not pass, so FIVE stopped before any poisoned run.";
+    const g = (f, a) => st.find(x => near(x.frac, f) && x.arm === a), rl = g(1.0, "poisoned_repair"), go = g(1.0, "poisoned"), sf = g(0.9, "poisoned_repair");
+    if (!rl || rl.all5 == null) return "";
+    const far = Math.max(...rl.benign_far, ...sf.benign_far);
+    return `With a fifth class, relabel repair still learns all 5 classes in ${rl.all5}/${rl.n_test} seeds at 100% flipped (gate only: ${go.all5}/${go.n_test}), soft repair in ${sf.all5}/${sf.n_test} at 90%, and no repaired model's benign false-alarm rate exceeds ${f4(far)}.`;
+  }
+  return "";
+}
+/* header: three headline numbers, all computed from DATA */
+function headline() {
+  const lo = FRACS.filter(f => f <= 0.95), tot = lo.length * SEEDS.length;
+  const cnt = a => lo.reduce((s, f) => s + SEEDS.filter(x => learnedAll(f, x, a)).length, 0);
+  const at1 = a => SEEDS.filter(x => learnedAll(1.0, x, a)).length;
+  const items = [[`${cnt("poisoned_repair")}/${tot} vs ${cnt("poisoned")}/${tot}`, `soft repair vs gate only, f ${lo[0]}–${lo[lo.length - 1]}`, "runs whose deployed model learned all 4 classes (held-out test)"],
+                 [`${at1("poisoned_relabel")}/${SEEDS.length} vs ${at1("poisoned")}/${SEEDS.length}`, "relabel vs gate only, 100% flipped", "seeds whose deployed model learned all 4 classes (held-out test)"]];
+  const r = cgRepair();
+  if (r) items.push([`${r.without.toFixed(2)} → ${r.with.toFixed(2)}`, "repaired Syn confidence, without → with confidence gate", "RF, 10% more flips per update, mean of 3 seeds (held-out test; post hoc)"]);
+  $("#stats").innerHTML = items.map(([v, lab, tip]) => `<div class="stat" role="listitem" title="${tip}"><b class="num">${v}</b><span>${lab}</span><span class="ev test">test</span></div>`).join("");
 }
 const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
 
 /* boot */
 try { initLive(); } catch (e) { console.error(e); setStatus("bad", "live models failed to load"); }
-renderT2(); initT3();
+renderT2(); initT3(); headline();
+$("#play").onclick = play;
+$("#presbtn").onclick = () => togglePresenter();
+$("#helpbtn").onclick = () => toggleHelp();
 </script>
 </body>
 </html>

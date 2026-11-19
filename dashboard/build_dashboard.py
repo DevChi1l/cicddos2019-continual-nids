@@ -100,7 +100,7 @@ def five():
         if not pil["proceed"]:
             bad = [f"seed {s}: " + "; ".join("; ".join(x["reasons"]) for x in v if not x["accepted"])
                    for s, v in pil["per_seed"].items() if not all(x["accepted"] for x in v)]
-            return {"title": title, "tag": "post hoc, stopped",
+            return {"id": "five", "title": title, "tag": "post hoc, stopped", "stats": [],
                     "html": "<div>The registered clean pilot did not pass, so no poisoned run was made. Rejected clean "
                             "updates: " + " | ".join(bad) + "</div>"}
         return None
@@ -108,7 +108,7 @@ def five():
         return None
     test = {r["name"]: r for r in json.loads(tp.read_text())["runs"]} if tp.exists() else {}
     cls = ["BENIGN", "Syn", "LDAP", "UDP", "TFTP"]
-    rows = []
+    rows, stats = [], []
     for f, label in ((0.9, "90% flipped, soft repair"), (1.0, "100% flipped, relabel repair")):
         runs = [e for e in summ["runs"] if abs(e["frac"] - f) < 1e-9]
         for arm, nm in (("clean", "Clean"), ("poisoned", "Gate only"), ("poisoned_repair", "Gate + repair")):
@@ -118,6 +118,10 @@ def five():
             per = "".join(f"<td class='num'>{sum(x['recall'].get(k, 0) for x in t) / len(t):.4f}</td>" if t else
                           "<td></td>" for k in cls)
             far = f"{sum(x['benign_far'] for x in t) / len(t):.4f}" if t else ""
+            stats.append({"frac": f, "arm": arm, "r1_accepted": sum(e[arm]["r1_accepted"] for e in runs),
+                          "r1_ran": sum(e[arm]["r1_ran"] for e in runs), "n_test": len(t),
+                          "all5": sum(all(x["recall"].get(k, 0) > 0 for k in cls) for x in t) if t else None,
+                          "benign_far": [x["benign_far"] for x in t]})
             rows.append(f"<tr><td>{label if arm == 'clean' else ''}</td><td>{nm}</td><td class='num'>{r1}</td>"
                         f"<td class='num'>{learned}</td>{per}<td class='num'>{far}</td></tr>")
     html = ("<table class='t'><tr><th>Setting</th><th>Arm</th><th>R1 passed/ran</th><th>All 5 learned</th>"
@@ -125,7 +129,7 @@ def five():
             "<div class='note'>Recall columns: held-out test, mean of 3 seeds. Pre-registration: "
             "experiments/prereg_five.md. " + ("Test scored once after the decisions were committed." if test else
                                                "Validation decisions only; test not yet scored.") + "</div>")
-    return {"title": title, "tag": "post hoc, 2026-11-19", "html": html}
+    return {"id": "five", "title": title, "tag": "post hoc, 2026-11-19", "html": html, "stats": stats}
 
 
 def confgate():
@@ -138,7 +142,7 @@ def confgate():
     arms = [("clean", "Clean"), ("poisoned", "Gate only"), ("poisoned_repair", "Gate + soft repair")]
     groups = [("CG-RF", 0.1, "Refresh, 10% more flips per update"), ("CG-RF", 0.05, "Refresh, 5% more flips per update"),
               ("CG-MAIN", 0.5, "Four classes, 50% flipped")]
-    rows = []
+    rows, stats = [], []
     for setting, frac, label in groups:
         runs = [e for e in summ["runs"] if e["setting"] == setting and abs(e["frac"] - frac) < 1e-9]
         if not runs:
@@ -153,6 +157,8 @@ def confgate():
             learned = None
             if setting == "CG-MAIN" and t:
                 learned = sum(all(x["recall"].get(k, 0) > 0 for k in ("BENIGN", "Syn", "LDAP", "UDP")) for x in t)
+            stats.append({"setting": setting, "frac": frac, "arm": arm, "updates_accepted": acc, "updates": tot,
+                          "n_test": len(t), "Syn_recall": rec, "Syn_mean_conf": conf})
             rows.append(f"<tr><td>{label if arm == 'clean' else ''}</td><td>{name}</td><td class='num'>{acc}/{tot}</td>"
                         f"<td class='num'>{r1}</td><td class='num'>{'' if rec is None else f'{rec:.4f}'}</td>"
                         f"<td class='num'>{'' if conf is None else f'{conf:.4f}'}</td>"
@@ -164,7 +170,8 @@ def confgate():
             "logs before the run (experiments/prereg_confgate.md). 3 seeds per row; test columns are means. "
             + ("Held-out test scored once after the decisions were committed." if test else
                "Validation decisions only; test not yet scored.") + "</div>")
-    return {"title": "Follow-up: a confidence-aware gate", "tag": "post hoc, 2026-11-19", "html": html}
+    return {"id": "confgate", "title": "Follow-up: a confidence-aware gate", "tag": "post hoc, 2026-11-19", "html": html,
+            "stats": stats}
 
 
 def main():
