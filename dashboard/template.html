@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Continual NIDS under replay poisoning: live dashboard</title>
+<style>
+:root{
+  --ink:#1c1d1f; --ink2:#4b4f55; --ink3:#7a7f86; --line:#e3e5e8; --panel:#f5f6f7; --paper:#fff;
+  --maroon:#6e2617; --teal:#2b7488; --red:#b5372a; --amber:#a86d12; --green:#2a7a4c; --slate:#4c5867;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 var(--sans)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+header{padding:22px 36px 0;border-bottom:1px solid var(--line)}
+.kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon);font-weight:600}
+h1{font-family:var(--serif);font-weight:600;font-size:30px;line-height:1.15;margin:6px 0 4px;letter-spacing:-.01em}
+.sub{color:var(--ink2);max-width:860px;margin:0 0 14px}
+.toprow{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}
+.chip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;border:1px solid var(--line);border-radius:999px;padding:4px 11px;color:var(--ink2);background:var(--paper);white-space:nowrap}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--ink3)}
+.chip.ok .dot{background:var(--green)} .chip.warn .dot{background:var(--amber)} .chip.bad .dot{background:var(--red)}
+nav{display:flex;gap:4px;margin-top:8px}
+nav button{font:inherit;font-size:14.5px;border:0;background:none;padding:10px 14px 11px;color:var(--ink2);cursor:pointer;border-bottom:2px solid transparent}
+nav button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--maroon);font-weight:600}
+nav button:hover{color:var(--ink)}
+main{padding:22px 36px 60px;max-width:1360px}
+section.tab{display:none} section.tab.on{display:block}
+h2{font-family:var(--serif);font-weight:600;font-size:21px;margin:0 0 4px}
+h3{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px;font-weight:600}
+.lede{color:var(--ink2);margin:0 0 18px;max-width:900px}
+.ev{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:4px;padding:2px 7px;margin-left:6px;vertical-align:2px}
+.ev.test{background:#e4f0f3;color:var(--teal)} .ev.val{background:#e8edf4;color:#2f4f78}
+.ev.pre{background:#e3f1e8;color:var(--green)} .ev.post{background:#f6ecd9;color:var(--amber)}
+.ev.diag{background:#eceef0;color:var(--slate)} .ev.neg{background:#f7e3e0;color:var(--red)}
+.grid1{display:grid;grid-template-columns:340px 1fr;gap:28px;align-items:start}
+.card{background:var(--panel);border-radius:10px;padding:16px 18px}
+.card.white{background:var(--paper);border:1px solid var(--line)}
+.btnrow{display:flex;flex-wrap:wrap;gap:6px}
+.btn{font:inherit;font-size:13.5px;border:1px solid var(--line);background:var(--paper);border-radius:7px;padding:6px 11px;cursor:pointer;color:var(--ink)}
+.btn:hover{border-color:#c9ccd1}
+.btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.ghost{background:none}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.flowid{margin:12px 0 2px;font-size:13.5px;color:var(--ink2)}
+.flowid b{color:var(--ink)}
+.sl{margin:12px 0 0}
+.sl label{display:flex;justify-content:space-between;font-size:13px;color:var(--ink2);gap:8px}
+.sl label span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sl input[type=range]{width:100%;accent-color:var(--maroon)}
+.sl .edited{color:var(--maroon);font-weight:600}
+select{font:inherit;font-size:13.5px;padding:5px 8px;border:1px solid var(--line);border-radius:7px;background:var(--paper)}
+.models{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.mcard{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--paper);position:relative}
+.mcard .who{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14.5px}
+.mcard .sw{width:10px;height:10px;border-radius:2px}
+.mcard .desc{font-size:12.5px;color:var(--ink3);margin:2px 0 10px;min-height:34px}
+.verdict{font-family:var(--serif);font-size:26px;font-weight:600;line-height:1.1;display:flex;align-items:baseline;gap:10px}
+.verdict small{font-family:var(--sans);font-size:12.5px;font-weight:600;padding:2px 8px;border-radius:999px}
+.verdict small.y{background:#e3f1e8;color:var(--green)} .verdict small.n{background:#f7e3e0;color:var(--red)}
+.bars{margin-top:10px}
+.bar{display:grid;grid-template-columns:62px 1fr 78px;align-items:center;gap:8px;font-size:12.5px;margin:4px 0}
+.bar .track{height:9px;background:#eceef0;border-radius:5px;overflow:hidden}
+.bar .fill{height:100%;border-radius:5px;transition:width .25s ease}
+.bar.na .track{background:repeating-linear-gradient(135deg,#eceef0 0 5px,#f7f8f9 5px 10px)}
+.bar.na .v{color:var(--ink3);font-style:italic;font-family:var(--sans)}
+.bar .v{text-align:right}
+.why{margin-top:18px}
+.inf{display:grid;grid-template-columns:200px 1fr 60px;gap:10px;align-items:center;font-size:12.5px;margin:5px 0}
+.inf .track{height:8px;background:#eceef0;border-radius:4px;position:relative}
+.inf .fill{position:absolute;top:0;bottom:0;border-radius:4px;background:var(--maroon)}
+.note{font-size:12.5px;color:var(--ink3);margin-top:8px;max-width:820px}
+.callout{border-left:0;background:#f4efe9;border-radius:8px;padding:10px 14px;font-size:13.5px;color:#4a3328;margin:0 0 16px}
+.callout b{color:var(--maroon)}
+.batch{margin-top:28px}
+.prog{height:6px;background:#eceef0;border-radius:3px;overflow:hidden;margin:8px 0 4px;max-width:560px}
+.prog div{height:100%;background:var(--teal);width:0;transition:width .2s}
+.cms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:12px}
+table.cm{border-collapse:collapse;font-size:12px;width:100%}
+table.cm th,table.cm td{padding:4px 5px;text-align:right}
+table.cm th{color:var(--ink3);font-weight:600}
+table.cm td.d{font-weight:700}
+table.cm caption{text-align:left;font-weight:600;font-size:13.5px;padding-bottom:6px}
+table.t{border-collapse:collapse;font-size:13px;width:100%}
+table.t th,table.t td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right}
+table.t th:first-child,table.t td:first-child{text-align:left}
+table.t th{color:var(--ink3);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.grid2{display:grid;grid-template-columns:420px 1fr;gap:28px;align-items:start}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;font-size:13.5px;border:0;background:var(--paper);padding:6px 12px;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--ink);color:#fff}
+.seg button:disabled{color:#c3c6cb;cursor:not-allowed}
+.ctl{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.ctl .lab{font-size:12px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:4px}
+canvas#buf{width:100%;height:auto;display:block;border-radius:6px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--ink2);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.tl{display:flex;flex-direction:column;gap:12px}
+.step{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--paper)}
+.step .hd{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.step .hd b{font-size:14.5px}
+.step .hd span{font-size:12.5px;color:var(--ink3)}
+.att{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.att .an{display:flex;justify-content:space-between;font-size:13px;font-weight:600}
+.pill{font-size:11.5px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px}
+.pill.acc{background:#e3f1e8;color:var(--green)} .pill.rej{background:#f7e3e0;color:var(--red)} .pill.kept{background:#eceef0;color:var(--slate)}
+.chk{display:grid;grid-template-columns:1fr 150px 22px;gap:8px;font-size:12.5px;align-items:center;margin:3px 0}
+.chk .gauge{height:7px;background:#eceef0;border-radius:4px;position:relative}
+.chk .gauge .f{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+.chk .gauge .th{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.ok{color:var(--green);font-weight:700} .no{color:var(--red);font-weight:700}
+.heat{border-collapse:separate;border-spacing:4px;font-size:13px}
+.heat td,.heat th{text-align:center;padding:7px 10px;border-radius:6px}
+.heat th{color:var(--ink3);font-weight:600;font-size:12px}
+.heat td{cursor:pointer;font-family:var(--mono)}
+.heat td.sel{outline:2px solid var(--ink)}
+.ladder{display:flex;flex-direction:column;gap:8px}
+.rung{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:stretch}
+.rung .n{border-radius:8px;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px}
+.rung .b{background:var(--panel);border-radius:8px;padding:9px 13px;font-size:13.5px}
+.rung .b b{display:block;font-size:12px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:2px}
+.funnel .row{display:grid;grid-template-columns:1fr;margin:7px 0}
+.funnel .bx{height:24px;border-radius:5px;display:flex;align-items:center;padding:0 9px;color:#fff;font-size:12.5px;font-family:var(--mono);white-space:nowrap}
+.funnel .lb{font-size:12.5px;color:var(--ink2);margin-top:2px}
+.cols3{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:start}
+pre{font-family:var(--mono);font-size:12.5px;background:var(--panel);border-radius:8px;padding:12px 14px;overflow:auto;margin:8px 0}
+details summary{cursor:pointer;font-size:13px;color:var(--teal);margin-top:12px}
+.all77{max-height:300px;overflow:auto;margin-top:8px;border:1px solid var(--line);border-radius:8px}
+.all77 table{border-collapse:collapse;width:100%;font-size:12px}
+.all77 td{padding:3px 8px;border-bottom:1px solid #f0f1f2}
+.all77 input{width:110px;font:12px var(--mono);border:1px solid var(--line);border-radius:4px;padding:2px 4px;text-align:right}
+.empty{padding:28px;border:1px dashed #cfd3d8;border-radius:10px;color:var(--ink2);max-width:760px}
+footer{padding:18px 36px 40px;color:var(--ink3);font-size:12.5px;border-top:1px solid var(--line)}
+svg text{font-family:var(--sans)}
+@media (max-width:1100px){.grid1,.grid2,.cols3{grid-template-columns:1fr}.cms{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="toprow">
+    <div>
+      <div class="kicker">VIT-AP Capstone · Poison-resilient continual intrusion detection</div>
+      <h1>What happens when a learning detector's memory is poisoned</h1>
+      <p class="sub">A detector that keeps learning new attacks rehearses a small replay buffer of old flows. Here an attacker has flipped the stored Syn labels to BENIGN. This page runs the real deployed models in your browser and replays the committed experiment records.</p>
+    </div>
+    <div id="status" class="chip"><span class="dot"></span><span>loading</span></div>
+  </div>
+  <nav role="tablist">
+    <button role="tab" aria-selected="true" data-tab="t1">1 · Detect a flow</button>
+    <button role="tab" aria-selected="false" data-tab="t2">2 · Poison the buffer</button>
+    <button role="tab" aria-selected="false" data-tab="t3">3 · What we claim</button>
+  </nav>
+</header>
+
+<main>
+<!-- ============================================================ TAB 1 -->
+<section class="tab on" id="t1">
+  <h2>One flow in, four verdicts out <span class="ev test">held-out test flows</span></h2>
+  <p class="lede">All four models saw the same stream (BENIGN + Syn, then + LDAP, then + UDP), with <b>every</b> stored Syn label flipped to BENIGN (f = 1.0, seed 42). They differ only in how an update was accepted.</p>
+  <div id="t1body"></div>
+</section>
+
+<!-- ============================================================ TAB 2 -->
+<section class="tab" id="t2">
+  <h2>Poison the buffer, watch the gate <span class="ev val">gate decisions: validation</span><span class="ev test">final result: held-out test</span></h2>
+  <p class="lede">Choose how much of the stored Syn memory the attacker flips and which defence is running. Every number below is read from the committed run records of the pre-registered sweep and of FU2; nothing here is simulated.</p>
+  <div class="grid2">
+    <div>
+      <div class="ctl">
+        <div><div class="lab">Stored Syn labels flipped to BENIGN</div><div class="seg" id="segF"></div></div>
+        <div><div class="lab">Seed</div><div class="seg" id="segS"></div></div>
+        <div><div class="lab">Defence</div><div class="seg" id="segA"></div></div>
+      </div>
+      <div class="card white">
+        <h3>The replay buffer: 2,000 stored Syn flows</h3>
+        <canvas id="buf" width="800" height="640"></canvas>
+        <div class="legend" id="bufleg"></div>
+        <div class="note" id="bufnote"></div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <h3>All settings: seeds whose deployed model learned all 4 classes</h3>
+        <table class="heat" id="heat"></table>
+        <div class="note">Click a cell to load it. Relabel repair exists only at f = 1.0 (FU2, post hoc).</div>
+      </div>
+    </div>
+    <div class="tl" id="timeline"></div>
+  </div>
+</section>
+
+<!-- ============================================================ TAB 3 -->
+<section class="tab" id="t3">
+  <h2>What this project claims, and what it does not</h2>
+  <p class="lede">Each claim carries the kind of evidence behind it. Pre-registered means the hypothesis and thresholds were committed to git before the run.</p>
+  <div class="cols3">
+    <div>
+      <div class="ladder" id="ladder"></div>
+      <div class="card" style="margin-top:22px">
+        <h3>The blind spot: recall holds, confidence falls <span class="ev post">post hoc (RF)</span></h3>
+        <div id="rfchart"></div>
+        <div class="note" id="rfnote"></div>
+      </div>
+      <div id="confgate"></div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>From raw data to training rows <span class="ev diag">data audit</span></h3>
+        <div class="funnel" id="funnel"></div>
+      </div>
+      <div class="card" style="margin-top:18px">
+        <h3>Integrity of this page</h3>
+        <div id="integrity" style="font-size:13px"></div>
+        <pre>python make_report_tables.py --check
+python dashboard/build_dashboard.py --assets dashboard/dashboard_assets.json --check</pre>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<footer>Code, pre-registrations and every result file: github.com/DevChi1l/cicddos2019-continual-nids · Scope: four classes, one attacked class (Syn), CII schedule, 3 seeds; no significance claim. Splits are random at flow level.</footer>
+
+<script id="data" type="application/json">__DATA__</script>
+<script>
+/*__ENGINE__*/
+</script>
+<script>
+"use strict";
+const DATA = JSON.parse(document.getElementById("data").textContent);
+const RES = DATA.results, A = DATA.assets;
+const $ = (s, r = document) => r.querySelector(s);
+const el = (tag, attrs = {}, html) => { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (html !== undefined) e.innerHTML = html; return e; };
+const f3 = v => v == null ? "–" : v.toFixed(3), f4 = v => v == null ? "–" : v.toFixed(4);
+const pct = v => (100 * v).toFixed(v > 0.999 || v < 0.001 ? 2 : 1) + "%";
+const CLASSES = ["BENIGN", "Syn", "LDAP", "UDP"];
+const ARMS = [
+  {k: "clean", name: "Clean reference", color: "var(--slate)", desc: "No poison. What the stream should produce."},
+  {k: "poisoned", name: "Gate only", color: "var(--red)", desc: "Gate rejected both poisoned updates; the E0 model kept serving."},
+  {k: "poisoned_repair", name: "Soft repair", color: "var(--amber)", desc: "Registered repair: down-weights doubted rows. Fails at 100% flips.", tag: "pre"},
+  {k: "poisoned_relabel", name: "Relabel repair", color: "var(--green)", desc: "Frozen teacher relabels the flipped rows (FU2).", tag: "post"},
+];
+
+/* ---------------- tabs ---------------- */
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("nav button").forEach(x => x.setAttribute("aria-selected", x === b));
+  document.querySelectorAll("section.tab").forEach(s => s.classList.toggle("on", s.id === b.dataset.tab));
+});
+function setStatus(cls, text) { const s = $("#status"); s.className = "chip " + cls; s.lastElementChild.textContent = text; }
+
+/* =============================================================== TAB 1: live detector */
+let MODELS = {}, ROWS = null, cur = null, curRaw = null, curProto = null, benignMed = null, sliders = [];
+function initLive() {
+  const body = $("#t1body");
+  if (!A) {
+    body.innerHTML = `<div class="empty"><b>Model weights are not bundled in this build.</b><br>Run <code>python make_dashboard_assets.py</code> on the Kaggle outputs, then <code>python dashboard/build_dashboard.py --assets dashboard/dashboard_assets.json</code>. Tabs 2 and 3 work without them.</div>`;
+    setStatus("warn", "results only (no model weights)");
+    return;
+  }
+  const hp = A.meta.hp;
+  for (const a of ARMS) MODELS[a.k] = NIDS.Model(A.models[a.k], hp);
+  ROWS = A.rows;
+  // typical BENIGN input (median of scaled values over the sampled BENIGN rows), for the sensitivity check
+  const F = A.scaler.features_numeric.length, cols = Array.from({length: F}, () => []);
+  ROWS.label.forEach((l, i) => { if (l === "BENIGN") { const x = NIDS.scaleRow(ROWS.num[i], A.scaler); for (let j = 0; j < F; j++) cols[j].push(x[j]); } });
+  benignMed = cols.map(c => { c.sort((a, b) => a - b); return c.length ? c[c.length >> 1] : 0; });
+
+  body.innerHTML = `
+  <div class="callout"><b>Try this:</b> pick an <b>LDAP</b> or <b>UDP</b> flow. The gate-only model never learned those attacks, so it calls them BENIGN with full confidence. The relabel-repaired model catches them.</div>
+  <div class="grid1">
+    <div class="card">
+      <h3>1 · Choose a held-out flow</h3>
+      <div class="btnrow" id="clsbtn"></div>
+      <div class="btnrow" style="margin-top:8px"><button class="btn ghost" id="prev">‹ previous</button><button class="btn ghost" id="next">next ›</button><button class="btn ghost" id="rnd">random</button></div>
+      <div class="flowid" id="flowid"></div>
+      <h3 style="margin-top:18px">2 · Edit the flow</h3>
+      <div class="sl"><label><span>protocol</span></label><select id="proto"><option value="6">TCP (6)</option><option value="17">UDP (17)</option><option value="0">HOPOPT (0)</option></select></div>
+      <div id="sliders"></div>
+      <div class="btnrow" style="margin-top:12px"><button class="btn" id="reset">reset to the recorded flow</button></div>
+      <details><summary>show all 77 input features</summary><div class="all77"><table id="all77"></table></div></details>
+      <div class="note">Sliders show the six features that move the relabel-repaired model's verdict most for this flow. Values are raw CICFlowMeter units; the page applies the frozen scaler itself.</div>
+    </div>
+    <div>
+      <div class="models" id="mcards"></div>
+      <div class="card white why"><h3 id="whyh">Why this verdict</h3><div id="why"></div>
+        <div class="note">Sensitivity check: each bar is how far the model's probability for its chosen class falls when that one feature is replaced by a typical BENIGN value. It shows what the model relies on, not why the traffic is malicious.</div></div>
+    </div>
+  </div>
+  <div class="batch">
+    <h2>On ${ROWS.label.length.toLocaleString()} sampled held-out flows</h2>
+    <p class="lede" id="batchlede">Each model runs on every sampled flow in a background thread; the result is compared with PyTorch's own output for the same flow.</p>
+    <div class="prog"><div id="progbar"></div></div><div class="note num" id="progtxt"></div>
+    <div class="cms" id="cms"></div>
+    <div class="card white" style="margin-top:18px"><h3>Full held-out test set, computed in PyTorch <span class="ev test">46,527 rows</span></h3><div id="fulltab"></div></div>
+  </div>`;
+
+  const cb = $("#clsbtn");
+  CLASSES.forEach(k => { const b = el("button", {class: "btn"}, k); b.onclick = () => pickClass(k); cb.appendChild(b); });
+  $("#prev").onclick = () => step(-1); $("#next").onclick = () => step(1);
+  $("#rnd").onclick = () => select(Math.floor(Math.random() * ROWS.label.length));
+  $("#reset").onclick = () => select(cur);
+  $("#proto").onchange = e => { curProto = +e.target.value; predictAll(); };
+  pickClass("LDAP");
+  fullTable();
+  runBatch();
+}
+let curClass = "LDAP";
+function pickClass(k) {
+  curClass = k;
+  document.querySelectorAll("#clsbtn .btn").forEach(b => b.classList.toggle("on", b.textContent === k));
+  const idx = ROWS.label.map((l, i) => l === k ? i : -1).filter(i => i >= 0);
+  select(idx[0]);
+}
+function step(d) {
+  const idx = ROWS.label.map((l, i) => l === curClass ? i : -1).filter(i => i >= 0);
+  let p = idx.indexOf(cur); p = (p + d + idx.length) % idx.length; select(idx[p]);
+}
+function select(i) {
+  cur = i; curRaw = ROWS.num[i].slice(); curProto = ROWS.cat[i][0];
+  if (ROWS.label[i] !== curClass) { curClass = ROWS.label[i]; document.querySelectorAll("#clsbtn .btn").forEach(b => b.classList.toggle("on", b.textContent === curClass)); }
+  $("#proto").value = String(curProto);
+  const idx = ROWS.label.map((l, j) => l === curClass ? j : -1).filter(j => j >= 0);
+  $("#flowid").innerHTML = `Flow <b class="num">#${ROWS.rid[i]}</b> · true class <b>${ROWS.label[i]}</b> · ${idx.indexOf(i) + 1} of ${idx.length}`;
+  buildAll77();
+  predictAll(true);
+}
+function buildAll77() {
+  const t = $("#all77"); t.innerHTML = "";
+  A.scaler.features_numeric.forEach((n, j) => {
+    const tr = el("tr"); tr.appendChild(el("td", {}, n));
+    const td = el("td", {style: "text-align:right"}); const inp = el("input", {type: "number", step: "any"}); inp.value = curRaw[j];
+    inp.onchange = () => { const v = parseFloat(inp.value); if (isFinite(v)) { curRaw[j] = v; syncSliders(); predictAll(); } };
+    td.appendChild(inp); tr.appendChild(td); t.appendChild(tr);
+  });
+}
+function probs(arm, raw, proto) { return MODELS[arm].forward(NIDS.scaleRow(raw, A.scaler), NIDS.protoCode(proto, A.scaler)); }
+function argmax(p) { let k = 0; for (let i = 1; i < p.length; i++) if (p[i] > p[k]) k = i; return k; }
+function predictAll(newFlow) {
+  const box = $("#mcards"); box.innerHTML = "";
+  const truth = ROWS.label[cur];
+  for (const a of ARMS) {
+    const m = MODELS[a.k], p = probs(a.k, curRaw, curProto), k = argmax(p), v = m.classes[k];
+    const c = el("div", {class: "mcard"});
+    c.innerHTML = `<div class="who"><span class="sw" style="background:${a.color}"></span>${a.name}${a.tag ? `<span class="ev ${a.tag}">${a.tag === "pre" ? "registered" : "post hoc"}</span>` : ""}</div>
+      <div class="desc">${a.desc}</div>
+      <div class="verdict">${v}<small class="${v === truth ? "y" : "n"}">${v === truth ? "correct" : "wrong"}</small></div>
+      <div class="bars">${CLASSES.map(cl => { const j = m.classes.indexOf(cl);
+        if (j < 0) return `<div class="bar na"><span>${cl}</span><div class="track"></div><span class="v">not learned</span></div>`;
+        return `<div class="bar"><span>${cl}</span><div class="track"><div class="fill" style="width:${(100 * p[j]).toFixed(2)}%;background:${a.color}"></div></div><span class="v num">${pct(p[j])}</span></div>`; }).join("")}</div>`;
+    box.appendChild(c);
+  }
+  // sensitivity for the relabel-repaired model
+  const arm = "poisoned_relabel", m = MODELS[arm], x0 = NIDS.scaleRow(curRaw, A.scaler), code = NIDS.protoCode(curProto, A.scaler);
+  const p0 = m.forward(x0, code), k0 = argmax(p0), names = A.scaler.features_numeric;
+  const inf = names.map((n, j) => { const x = Float64Array.from(x0); x[j] = benignMed[j]; return {j, n, d: p0[k0] - m.forward(x, code)[k0]}; });
+  inf.sort((a, b) => b.d - a.d);
+  $("#whyh").innerHTML = `Why the relabel-repaired model says <span style="color:var(--maroon)">${m.classes[k0]}</span>`;
+  const top = inf.slice(0, 8), mx = Math.max(1e-6, top[0].d);
+  $("#why").innerHTML = top.map(t => `<div class="inf"><span>${t.n}</span><div class="track"><div class="fill" style="width:${Math.max(0, 100 * t.d / mx)}%"></div></div><span class="num" style="text-align:right">${t.d >= 0 ? "−" : "+"}${Math.abs(100 * t.d).toFixed(1)} pt</span></div>`).join("")
+    + (top[0].d < 0.01 ? `<div class="note">No single feature changes this verdict by more than 1 point: the decision rests on many features together.</div>` : "");
+  if (newFlow) makeSliders(inf.slice(0, 6).map(t => t.j));
+}
+function makeSliders(js) {
+  const box = $("#sliders"); box.innerHTML = ""; sliders = [];
+  js.forEach(j => {
+    const n = A.scaler.features_numeric[j], v0 = ROWS.num[cur][j];
+    // slider runs on the signed-log axis, the axis the model sees, over the range of the sampled rows
+    let lo = Infinity, hi = -Infinity;
+    ROWS.num.forEach(r => { const s = slog(r[j]); if (s < lo) lo = s; if (s > hi) hi = s; });
+    if (hi - lo < 1e-9) { lo -= 1; hi += 1; }
+    const w = el("div", {class: "sl"});
+    w.innerHTML = `<label><span title="${n}">${n}</span><span class="num" id="sv${j}">${fmt(v0)}</span></label><input type="range" min="${lo}" max="${hi}" step="${(hi - lo) / 400}" value="${slog(curRaw[j])}">`;
+    const r = w.querySelector("input");
+    r.oninput = () => { curRaw[j] = unslog(+r.value); const s = $("#sv" + j); s.textContent = fmt(curRaw[j]); s.classList.toggle("edited", Math.abs(curRaw[j] - v0) > 1e-9); predictAll(); const inp = $("#all77").rows[j].querySelector("input"); inp.value = curRaw[j]; };
+    box.appendChild(w); sliders.push({j, r});
+  });
+}
+function syncSliders() { sliders.forEach(s => { s.r.value = slog(curRaw[s.j]); $("#sv" + s.j).textContent = fmt(curRaw[s.j]); }); }
+const slog = v => Math.sign(v) * Math.log1p(Math.abs(v)), unslog = s => { const v = Math.sign(s) * Math.expm1(Math.abs(s)); return Math.abs(v) >= 100 ? Math.round(v) : +v.toPrecision(4); };
+const fmt = v => Math.abs(v) >= 1e6 ? v.toExponential(2) : Math.abs(v) >= 100 ? Math.round(v).toLocaleString() : (+v.toPrecision(4)).toString();
+
+function fullTable() {
+  const ft = A.full_test, chk = A.meta.full_test_checks || {};
+  let h = `<table class="t"><tr><th>Model</th>${CLASSES.map(c => `<th>${c} recall</th>`).join("")}<th>Macro recall</th><th>Benign FAR</th><th>Matches committed result</th></tr>`;
+  for (const a of ARMS) { const f = ft[a.k]; if (!f) continue;
+    h += `<tr><td><span class="sw" style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${a.color};margin-right:7px"></span>${a.name}</td>${CLASSES.map(c => `<td class="num">${f.classes.includes(c) ? f4(f.recall[c]) : `<span style="color:var(--red)">${f4(f.recall[c] || 0)}</span>`}</td>`).join("")}<td class="num">${f4(f.macro_recall)}</td><td class="num">${f4(f.benign_far)}</td><td>${chk[a.k] && chk[a.k].matches ? '<span class="ok">✓ identical</span>' : '<span class="no">not verified</span>'}</td></tr>`; }
+  $("#fulltab").innerHTML = h + `</table><div class="note">Benign FAR is over ${ft.clean ? ft.clean.n_benign.toLocaleString() : "–"} benign rows. A benign FAR of 0 for the gate-only model is not safety: it calls every LDAP and UDP flow benign.</div>`;
+}
+
+/* background batch run + PyTorch parity */
+function runBatch() {
+  const arms = ARMS.map(a => a.k), n = ROWS.label.length, total = n * arms.length;
+  const conf = {}; arms.forEach(a => conf[a] = {});
+  let done = 0, maxd = 0, agree = 0;
+  const onRes = (arm, r, p) => {
+    const ref = A.ref[arm][r]; let am = 0, ar = 0;
+    for (let k = 0; k < p.length; k++) { const d = Math.abs(p[k] - ref[k]); if (d > maxd) maxd = d; if (p[k] > p[am]) am = k; if (ref[k] > ref[ar]) ar = k; }
+    agree += am === ar; done++;
+    const t = ROWS.label[r], pr = A.models[arm].classes[am];
+    conf[arm][t] = conf[arm][t] || {}; conf[arm][t][pr] = (conf[arm][t][pr] || 0) + 1;
+    if (done % 40 === 0 || done === total) progress();
+  };
+  const progress = () => {
+    $("#progbar").style.width = (100 * done / total) + "%";
+    $("#progtxt").textContent = `${done.toLocaleString()} / ${total.toLocaleString()} predictions · same class as PyTorch: ${agree.toLocaleString()} · largest probability difference: ${maxd.toExponential(1)}`;
+    drawCMs(conf);
+    const ok = agree === done && maxd < 1e-4;
+    if (done === total) setStatus(ok && !A.meta.dev ? "ok" : (A.meta.dev ? "warn" : "bad"),
+      A.meta.dev ? "DEV build: stand-in weights" : ok ? `real models · matches PyTorch on ${total.toLocaleString()} predictions` : "mismatch with PyTorch: see tab 1");
+    else setStatus("warn", `verifying against PyTorch… ${Math.round(100 * done / total)}%`);
+  };
+  // run in a Web Worker so the page stays responsive; fall back to the main thread in small chunks
+  try {
+    const src = document.scripts[1].textContent + `
+      let M = {}, S, R;
+      onmessage = e => { const d = e.data; S = d.scaler; R = d.rows;
+        for (const k in d.models) M[k] = NIDS.Model(d.models[k], d.hp);
+        for (let r = 0; r < R.num.length; r++) { const x = NIDS.scaleRow(R.num[r], S), c = NIDS.protoCode(R.cat[r][0], S);
+          for (const k of d.arms) postMessage([k, r, Array.from(M[k].forward(x, c))]); } };`;
+    const w = new Worker(URL.createObjectURL(new Blob([src], {type: "text/javascript"})));
+    w.onmessage = e => onRes(e.data[0], e.data[1], e.data[2]);
+    w.onerror = () => { w.terminate(); mainThread(); };
+    w.postMessage({scaler: A.scaler, rows: {num: ROWS.num, cat: ROWS.cat}, models: A.models, hp: A.meta.hp, arms});
+  } catch (err) { mainThread(); }
+  function mainThread() {
+    let r = 0; const tick = () => { const end = Math.min(n, r + 10);
+      for (; r < end; r++) { const x = NIDS.scaleRow(ROWS.num[r], A.scaler), c = NIDS.protoCode(ROWS.cat[r][0], A.scaler); for (const k of arms) onRes(k, r, MODELS[k].forward(x, c)); }
+      if (r < n) setTimeout(tick, 0); }; tick();
+  }
+  progress();
+}
+function drawCMs(conf) {
+  const box = $("#cms"); box.innerHTML = "";
+  for (const a of ARMS) {
+    const cls = A.models[a.k].classes, c = conf[a.k];
+    let h = `<table class="cm"><caption><span class="sw" style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${a.color};margin-right:6px"></span>${a.name}</caption><tr><th>true ↓ / pred →</th>${cls.map(k => `<th>${k}</th>`).join("")}<th>recall</th></tr>`;
+    for (const t of CLASSES) { const row = c[t] || {}, tot = Object.values(row).reduce((s, v) => s + v, 0);
+      h += `<tr><th style="text-align:left">${t}</th>${cls.map(k => { const v = row[k] || 0, sh = tot ? v / tot : 0;
+        return `<td class="num ${k === t ? "d" : ""}" style="background:${k === t ? `rgba(42,122,76,${0.12 + 0.5 * sh})` : v ? `rgba(181,55,42,${0.08 + 0.55 * sh})` : "transparent"}">${v || ""}</td>`; }).join("")}<td class="num">${tot ? pct((row[t] || 0) / tot) : ""}</td></tr>`; }
+    box.appendChild(el("div", {class: "card white", style: "padding:12px"}, h + "</table>"));
+  }
+}
+
+/* =============================================================== TAB 2: poison the buffer */
+const T2 = {f: 1.0, s: 42, a: "poisoned_relabel"};
+const FRACS = [0.75, 0.9, 0.95, 1.0], SEEDS = [42, 43, 44];
+const DEF = [{k: "poisoned", n: "Gate only"}, {k: "poisoned_repair", n: "Soft repair"}, {k: "poisoned_relabel", n: "Relabel repair"}, {k: "clean", n: "No attack"}];
+function seg(id, items, get, set, dis) {
+  const box = $(id); box.innerHTML = "";
+  items.forEach(it => { const b = el("button", {}, it.label); b.classList.toggle("on", get() === it.v); if (dis && dis(it.v)) b.disabled = true;
+    b.onclick = () => { set(it.v); renderT2(); }; box.appendChild(b); });
+}
+function attempts(f, s, a) {
+  if (a === "poisoned_relabel") return RES.fu2_rounds.filter(r => r.seed === s).map(r => ({...r, repair_method: r.attempt === "R1" ? "relabel" : null}));
+  return RES.sweep_decisions.filter(r => r.poison_frac === f && r.seed === s && r.arm === a);
+}
+function deployed(f, s, a) {
+  if (a === "poisoned_relabel") { const r = RES.fu2_test.find(x => x.seed === s && x.arm === "poisoned_relabel");
+    return r && {recall: {BENIGN: r.BENIGN, Syn: r.Syn, LDAP: r.LDAP, UDP: r.UDP}, far: r.benign_far, macro: r.macro_recall}; }
+  const r = RES.sweep_deployed.find(x => x.poison_frac === f && x.seed === s && x.arm === a);
+  return r && {recall: {BENIGN: r.test_recall_BENIGN, Syn: r.test_recall_Syn, LDAP: r.test_recall_LDAP, UDP: r.test_recall_UDP}, far: r.test_benign_far, macro: r.test_macro_recall};
+}
+function learnedAll(f, s, a) { const d = deployed(f, s, a); return d ? CLASSES.every(c => d.recall[c] > 0) : null; }
+function renderT2() {
+  if (T2.a === "poisoned_relabel" && T2.f !== 1.0) T2.a = "poisoned_repair";
+  seg("#segF", FRACS.map(v => ({v, label: (100 * v) + "%"})), () => T2.f, v => T2.f = v);
+  seg("#segS", SEEDS.map(v => ({v, label: String(v)})), () => T2.s, v => T2.s = v);
+  seg("#segA", DEF.map(d => ({v: d.k, label: d.n})), () => T2.a, v => T2.a = v, v => v === "poisoned_relabel" && T2.f !== 1.0);
+  drawBuffer(); timeline(); heat();
+}
+/* buffer picture: 2,000 cells, one per stored Syn row. Which rows flipped is drawn in a fixed random order (an
+   illustration); the counts are the experiment's. */
+const ORDER = (() => { const o = Array.from({length: 2000}, (_, i) => i); let s = 7; for (let i = o.length - 1; i > 0; i--) { s = (s * 16807) % 2147483647; const j = s % (i + 1); [o[i], o[j]] = [o[j], o[i]]; } return o; })();
+const RANK = new Int32Array(2000); ORDER.forEach((v, i) => RANK[v] = i);
+let bufAnim = null, bufState = new Float32Array(2000);
+function drawBuffer() {
+  const f = T2.a === "clean" ? 0 : T2.f, nflip = Math.round(f * 2000), flipped = new Uint8Array(2000);
+  for (let i = 0; i < nflip; i++) flipped[ORDER[i]] = 1;
+  const rec = attempts(T2.f, T2.s, T2.a).find(r => r.attempt === "R1" && r.experience === 1);
+  const relab = T2.a === "poisoned_relabel" && rec ? rec.n_relabelled : 0;
+  const target = new Float32Array(2000);
+  for (let i = 0; i < 2000; i++) target[i] = flipped[i] ? 1 : 0;
+  const cv = $("#buf"), ctx = cv.getContext("2d"), cols = 50, rows = 40, cw = cv.width / cols, ch = cv.height / rows;
+  cancelAnimationFrame(bufAnim);
+  const start = bufState.slice(), t0 = performance.now();
+  const frame = now => {
+    const k = Math.min(1, (now - t0) / 600);
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    for (let i = 0; i < 2000; i++) {
+      const rank = RANK[i], delay = Math.min(0.6, rank / 2000 * 0.6), kk = Math.min(1, Math.max(0, (k - delay) / 0.4));
+      const v = start[i] + (target[i] - start[i]) * kk; bufState[i] = v;
+      const x = (i % cols) * cw, y = Math.floor(i / cols) * ch;
+      let col;
+      if (v < 0.5) col = "#2b7488"; else col = "#b5372a";
+      ctx.globalAlpha = 1;
+      if (T2.a === "poisoned_repair" && target[i] === 1 && k === 1) ctx.globalAlpha = 0.18;
+      ctx.fillStyle = col; ctx.fillRect(x + 1, y + 1, cw - 2, ch - 2);
+      if (relab && target[i] === 1 && rank < relab && k === 1) { ctx.globalAlpha = 1; ctx.strokeStyle = "#2a7a4c"; ctx.lineWidth = 2.2; ctx.strokeRect(x + 2.2, y + 2.2, cw - 4.4, ch - 4.4); }
+    }
+    ctx.globalAlpha = 1;
+    if (k < 1) bufAnim = requestAnimationFrame(frame);
+  };
+  bufAnim = requestAnimationFrame(frame);
+  $("#bufleg").innerHTML = `<span><i style="background:#2b7488"></i>stored label Syn (correct)</span><span><i style="background:#b5372a"></i>flipped to BENIGN</span>`
+    + (T2.a === "poisoned_repair" ? `<span><i style="background:#b5372a;opacity:.2"></i>soft repair: weight ≈ ${rec && rec.w_flipped != null ? rec.w_flipped.toFixed(3) : "0.003"}</span>` : "")
+    + (T2.a === "poisoned_relabel" ? `<span><i style="background:#fff;outline:2px solid #2a7a4c;outline-offset:-2px"></i>teacher restores Syn for this training run</span>` : "");
+  let note = T2.a === "clean" ? "No attack: all 2,000 stored Syn labels are correct." :
+    `<b class="num">${nflip.toLocaleString()}</b> of 2,000 stored Syn labels say BENIGN; <b class="num">${(2000 - nflip).toLocaleString()}</b> correct Syn labels survive.`;
+  if (T2.a === "poisoned_repair") note += nflip === 2000 ? " Soft repair can delete the wrong labels but has no correct one left to learn from." : " Soft repair mutes the flipped rows, so the surviving correct rows decide.";
+  if (T2.a === "poisoned_relabel" && rec) note += ` The frozen teacher relabelled <b class="num">${rec.n_relabelled.toLocaleString()}</b> rows, <b class="num">${rec.n_relabelled_to_true.toLocaleString()}</b> of them to their true class. The stored buffer itself is never rewritten.`;
+  $("#bufnote").innerHTML = note + `<br><span style="color:var(--ink3)">Which cells are drawn as flipped is illustrative; the counts are exact.</span>`;
+}
+function gaugeRow(label, val, thr, dir, max) {
+  const ok = dir === "ge" ? val >= thr : val <= thr;
+  const w = Math.min(100, 100 * val / max), tp = Math.min(100, 100 * thr / max);
+  return `<div class="chk"><span>${label} <span class="num">${dir === "ge" ? f4(val) + " ≥ " + f4(thr) : f4(val) + " ≤ " + thr}</span></span><div class="gauge"><div class="f" style="width:${w}%;background:${ok ? "var(--green)" : "var(--red)"}"></div><div class="th" style="left:${tp}%"></div></div><span class="${ok ? "ok" : "no"}">${ok ? "✓" : "✗"}</span></div>`;
+}
+function timeline() {
+  const box = $("#timeline"), at = attempts(T2.f, T2.s, T2.a);
+  const newOf = {1: "LDAP", 2: "UDP"};
+  let h = `<div class="step"><div class="hd"><b>E0 · learn BENIGN + Syn</b><span>the frozen teacher T is a copy of this model</span></div></div>`;
+  const repairName = T2.a === "poisoned_repair" ? "soft repair" : "relabel repair";
+  for (const e of [1, 2]) {
+    const rows = at.filter(r => r.experience === e);
+    const acc = rows.find(r => r.accepted);
+    h += `<div class="step"><div class="hd"><b>E${e} · new attack ${newOf[e]} arrives</b><span>${acc ? `<span class="pill acc">${acc.attempt} DEPLOYED</span>` : `<span class="pill kept">OLD MODEL KEPT</span>`}</span></div>`;
+    for (const r of rows) {
+      const nm = r.attempt === "C1" ? "C1 · plain update" : `R1 · ${repairName}`;
+      h += `<div class="att"><div class="an"><span>${nm}</span><span class="pill ${r.accepted ? "acc" : "rej"}">${r.accepted ? "ACCEPT" : "REJECT"}</span></div>
+        ${gaugeRow("old Syn recall", r.Syn_val_recall, r.Syn_floor, "ge", 1)}
+        ${gaugeRow(`new ${newOf[e]} recall`, r.new_recall_min, 0.8, "ge", 1)}
+        ${gaugeRow("benign false alarms", r.benign_far, 0.05, "le", 0.1)}
+        ${r.new_class_far != null ? gaugeRow("new-class false alarms", r.new_class_far, 0.05, "le", 0.1) : ""}
+        ${r.Syn_val_mean_p != null ? `<div class="note" style="margin-top:4px">mean confidence on Syn: <span class="num">${f3(r.Syn_val_mean_p)}</span> (not checked by this gate)</div>` : ""}</div>`;
+    }
+    if (!acc) h += `<div class="note">No candidate passed, so the last accepted model keeps serving and the buffer does not grow. ${newOf[e]} is not learned.</div>`;
+    h += `</div>`;
+  }
+  const d = deployed(T2.f, T2.s, T2.a);
+  if (d) {
+    const n = CLASSES.filter(c => d.recall[c] > 0).length;
+    h += `<div class="step" style="border-color:${n === 4 ? "#b9d8c5" : "#e8c2bc"};background:${n === 4 ? "#f6fbf8" : "#fdf6f5"}"><div class="hd"><b>Deployed model on held-out test <span class="ev test">test</span></b><span><b style="color:${n === 4 ? "var(--green)" : "var(--red)"}">${n} of 4 classes learned</b></span></div>
+      <div class="bars">${CLASSES.map(c => `<div class="bar"><span>${c}</span><div class="track"><div class="fill" style="width:${100 * d.recall[c]}%;background:${d.recall[c] > 0 ? "var(--teal)" : "var(--red)"}"></div></div><span class="v num">${f4(d.recall[c])}</span></div>`).join("")}</div>
+      <div class="note">benign false-alarm rate <span class="num">${f4(d.far)}</span> · macro recall <span class="num">${f4(d.macro)}</span>${n < 4 && d.far === 0 ? " · zero false alarms here only because LDAP/UDP traffic is called benign" : ""}</div></div>`;
+  }
+  box.innerHTML = h;
+}
+function heat() {
+  const t = $("#heat");
+  let h = `<tr><th></th>${DEF.map(d => `<th>${d.n}</th>`).join("")}</tr>`;
+  for (const f of FRACS) {
+    h += `<tr><th>${100 * f}%</th>`;
+    for (const d of DEF) {
+      if (d.k === "poisoned_relabel" && f !== 1.0) { h += `<td style="color:#c3c6cb;cursor:default">·</td>`; continue; }
+      const n = SEEDS.filter(s => learnedAll(f, s, d.k)).length;
+      const bg = n === 3 ? "#d9eee1" : n === 0 ? "#f5dcd8" : "#f4e7cf";
+      h += `<td class="${T2.f === f && T2.a === d.k ? "sel" : ""}" style="background:${bg}" data-f="${f}" data-a="${d.k}">${n}/3</td>`;
+    }
+    h += `</tr>`;
+  }
+  t.innerHTML = h;
+  t.querySelectorAll("td[data-f]").forEach(td => td.onclick = () => { T2.f = +td.dataset.f; T2.a = td.dataset.a; renderT2(); });
+}
+
+/* =============================================================== TAB 3 */
+function initT3() {
+  const L = [
+    ["var(--green)", "Pre-registered, supported", "The gate rejects more poisoned updates as f grows. Soft repair lets all four classes be learned for f ≤ 0.95: 9/9 runs vs 3/9 with the gate alone. Soft repair fails at f = 1.0 (0/6)."],
+    ["var(--amber)", "Post hoc, positive", "Relabel repair learns all four classes at f = 1.0 in 3/3 seeds, within about 0.01 of the clean model."],
+    ["var(--slate)", "Diagnostic / limitation", "A recall-based gate is blind to a large loss of confidence (runs main and RF)."],
+    ["var(--red)", "Negative / unsolved", "The 12-label continual protocol; repeated corruption while new classes arrive (untested)."],
+    ["#1c1d1f", "Not claimed", "Statistical significance, real-time deployment, time-ordered validity, other datasets, full-data training, novelty of gated acceptance."],
+  ];
+  $("#ladder").innerHTML = L.map((r, i) => `<div class="rung"><div class="n" style="background:${r[0]}">${i + 1}</div><div class="b"><b style="color:${r[0]}">${r[1]}</b>${r[2]}</div></div>`).join("");
+  const F = [[70427637, "70,427,637", "raw rows, read once (18 files, 14 labels)", "#6e2617"],
+             [10136295, "10,136,295", "distinct finite (features, label) pairs after global de-duplication", "#8b3c28"],
+             [618188, "618,188", "kept after dropping 235,261 label-conflict vectors and capping at 60,000 per attack", "#a8573f"],
+             [98833, "98,833", "four-class training rows", "#2b7488"], [46527, "46,527", "four-class test rows (19,028 BENIGN), scored once", "#24607a"]];
+  $("#funnel").innerHTML = F.map(r => `<div class="row"><div class="bx" style="width:${Math.max(18, 100 * (Math.log10(r[0]) - 3.9) / (Math.log10(F[0][0]) - 3.9))}%;background:${r[3]}">${r[1]}</div><div class="lb">${r[2]}</div></div>`).join("") + `<div class="note">Bar length on a log scale.</div>`;
+  rfChart();
+  const ig = [];
+  if (A) {
+    const ok = Object.values(A.meta.full_test_checks || {}).every(c => c.matches);
+    ig.push(`<div>Model weights: <b>${A.meta.dev ? "DEV stand-ins" : "deployed models of " + A.meta.source_run + " and " + A.meta.fu2_run}</b></div>`);
+    ig.push(`<div>Full-test recall equals the committed results: ${ok ? '<span class="ok">✓ all four models</span>' : '<span class="no">not verified</span>'}</div>`);
+    ig.push(`<div>FU2 model is byte-identical to the validated model (sha256): ${A.meta.fu2_model_is_validated_model ? '<span class="ok">✓</span>' : '<span class="no">no</span>'}</div>`);
+    ig.push(`<div style="margin-top:6px;color:var(--ink3)">sha256 · ${Object.entries(A.meta.model_sha256 || {}).map(([k, v]) => `${k} <span class="num">${String(v).slice(0, 12)}…</span>`).join(" · ")}</div>`);
+  } else ig.push(`<div>No model weights in this build (results tabs only).</div>`);
+  ig.push(`<div style="margin-top:6px">Tab 2 and this tab read the committed run records only (sweep decisions, FU2 rounds, test tables, RF trajectories).</div>`);
+  $("#integrity").innerHTML = ig.join("");
+  if (RES.confgate) confGate();
+}
+function rfChart() {
+  const tr = RES.rf_traj.filter(r => r.rho === 0.1);
+  const series = arm => [0, 1, 2, 3, 4, 5, 6].map(t => { const r = tr.filter(x => x.arm === arm && x.t === t); return {t, rec: mean(r.map(x => x.Syn_recall)), p: mean(r.map(x => x.Syn_mean_p))}; });
+  const C = series("clean"), P = series("poisoned");
+  const W = 560, H = 230, l = 44, r = 16, tp = 14, b = 30, X = t => l + t * (W - l - r) / 6, Y = v => tp + (1 - (v - 0.7) / 0.32) * (H - tp - b);
+  const path = (s, k) => s.map((d, i) => `${i ? "L" : "M"}${X(d.t).toFixed(1)},${Y(d[k]).toFixed(1)}`).join("");
+  let g = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="RF: Syn recall and confidence over six updates">`;
+  [0.7, 0.8, 0.9, 1.0].forEach(v => g += `<line x1="${l}" x2="${W - r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#eceef0"/><text x="${l - 6}" y="${Y(v) + 4}" font-size="11" text-anchor="end" fill="#7a7f86">${v.toFixed(1)}</text>`);
+  for (let t = 0; t <= 6; t++) g += `<text x="${X(t)}" y="${H - 10}" font-size="11" text-anchor="middle" fill="#7a7f86">${t === 0 ? "A0" : "U" + t}</text>`;
+  const lines = [[P, "rec", "#b5372a", "", "poisoned: Syn recall"], [P, "p", "#b5372a", "5 4", "poisoned: confidence"], [C, "p", "#4c5867", "5 4", "clean: confidence"]];
+  lines.forEach(([s, k, c, d]) => { g += `<path d="${path(s, k)}" fill="none" stroke="${c}" stroke-width="2.2" stroke-dasharray="${d}"/>`; });
+  $("#rfchart").innerHTML = g + `</svg><div class="legend">` + lines.map(([s, k, c, d, lab]) => `<span><svg width="22" height="8"><line x1="0" x2="22" y1="4" y2="4" stroke="${c}" stroke-width="2.2" stroke-dasharray="${d}"/></svg> ${lab} <span class="num">${s[6][k].toFixed(3)}</span> at U6</span>`).join("") + `</div>`;
+  const tt = RES.rf_test.filter(x => x.rho === 0.1);
+  $("#rfnote").innerHTML = `Validation, mean of 3 seeds; 10% more stored Syn labels flipped before each of six updates (60% at the end). Every update passed the recall gate, so repair never ran. Held-out test after U6: Syn recall <span class="num">${f4(mean(tt.filter(x => x.arm === "poisoned").map(x => x.Syn_recall)))}</span> vs clean <span class="num">${f4(mean(tt.filter(x => x.arm === "clean").map(x => x.Syn_recall)))}</span>; mean confidence <span class="num">${f4(mean(tt.filter(x => x.arm === "poisoned").map(x => x.Syn_mean_p)))}</span> vs <span class="num">${f4(mean(tt.filter(x => x.arm === "clean").map(x => x.Syn_mean_p)))}</span>.`;
+}
+function confGate() { /* filled when the confidence-gate follow-up is committed */
+  const c = RES.confgate;
+  $("#confgate").innerHTML = `<div class="card" style="margin-top:18px"><h3>Follow-up: a confidence-aware gate <span class="ev post">post hoc, ${c.date}</span></h3><div style="font-size:13.5px">${c.html}</div></div>`;
+}
+const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
+
+/* boot */
+try { initLive(); } catch (e) { console.error(e); setStatus("bad", "live models failed to load"); }
+renderT2(); initT3();
+</script>
+</body>
+</html>
