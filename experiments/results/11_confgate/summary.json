@@ -1,0 +1,4662 @@
+{
+  "conf_drop": 0.02,
+  "utc": "2026-11-19T15:28:55+00:00",
+  "seconds": 1447.4,
+  "runs": [
+    {
+      "name": "cg_ref6_r0.10_s42",
+      "setting": "CG-RF",
+      "seed": 42,
+      "frac": 0.1,
+      "clean": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.10_s42/clean/A6.pt",
+        "final_sha256": "fe7eadef09280512676c0e0b44046da96df9538ee4e458aef425c80f98308422",
+        "updates_accepted": 6,
+        "updates": 6,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.99347061778001,
+            "Syn_val_mean_p": 0.9907909035682678,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9907909035682678,
+                "ref": 0.9930409789085388,
+                "drop": 0.002250075340270996,
+                "floor": 0.9730409789085388,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9955770373344421,
+                "ref": 0.9945657253265381,
+                "drop": -0.0010113120079040527,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9943077180646241,
+            "Syn_val_mean_p": 0.9887531995773315,
+            "Syn_ref_mean_p": 0.9907909035682678,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9887531995773315,
+                "ref": 0.9907909035682678,
+                "drop": 0.0020377039909362793,
+                "floor": 0.9707909035682678,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9960491061210632,
+                "ref": 0.9955770373344421,
+                "drop": -0.00047206878662109375,
+                "floor": 0.9755770373344421,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9933031977230872,
+            "Syn_val_mean_p": 0.9859564900398254,
+            "Syn_ref_mean_p": 0.9887531995773315,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9859564900398254,
+                "ref": 0.9887531995773315,
+                "drop": 0.0027967095375061035,
+                "floor": 0.9687531995773315,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9966623187065125,
+                "ref": 0.9960491061210632,
+                "drop": -0.0006132125854492188,
+                "floor": 0.9760491061210632,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9954796584630838,
+            "Syn_val_mean_p": 0.9935575723648071,
+            "Syn_ref_mean_p": 0.9859564900398254,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9935575723648071,
+                "ref": 0.9859564900398254,
+                "drop": -0.0076010823249816895,
+                "floor": 0.9659564900398254,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9965894222259521,
+                "ref": 0.9966623187065125,
+                "drop": 7.289648056030273e-05,
+                "floor": 0.9766623187065124,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.994215190410614,
+            "Syn_ref_mean_p": 0.9935575723648071,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.994215190410614,
+                "ref": 0.9935575723648071,
+                "drop": -0.0006576180458068848,
+                "floor": 0.9735575723648071,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9963956475257874,
+                "ref": 0.9965894222259521,
+                "drop": 0.00019377470016479492,
+                "floor": 0.9765894222259521,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9946425581784698,
+            "Syn_val_mean_p": 0.9900521039962769,
+            "Syn_ref_mean_p": 0.994215190410614,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9900521039962769,
+                "ref": 0.994215190410614,
+                "drop": 0.004163086414337158,
+                "floor": 0.974215190410614,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9968171715736389,
+                "ref": 0.9963956475257874,
+                "drop": -0.0004215240478515625,
+                "floor": 0.9763956475257873,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.10_s42/poisoned/A6.pt",
+        "final_sha256": "4dfa33e2bad9e7cf846e57fd17c1991f8d87a6feb83f90e7ba2cfac21202f333",
+        "updates_accepted": 0,
+        "updates": 6,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.951 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.950881838798523,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.950881838798523,
+                "ref": 0.9930409789085388,
+                "drop": 0.04215914011001587,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9958229064941406,
+                "ref": 0.9945657253265381,
+                "drop": -0.001257181167602539,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.932 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.93177330493927,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.93177330493927,
+                "ref": 0.9930409789085388,
+                "drop": 0.0612676739692688,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9954131841659546,
+                "ref": 0.9945657253265381,
+                "drop": -0.0008474588394165039,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.863 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.8627870082855225,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8627870082855225,
+                "ref": 0.9930409789085388,
+                "drop": 0.13025397062301636,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.995774507522583,
+                "ref": 0.9945657253265381,
+                "drop": -0.0012087821960449219,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.857 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.8569733500480652,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 800,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8569733500480652,
+                "ref": 0.9930409789085388,
+                "drop": 0.13606762886047363,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.995381772518158,
+                "ref": 0.9945657253265381,
+                "drop": -0.000816047191619873,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.716 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9914615770969362,
+            "Syn_val_mean_p": 0.7158626317977905,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.7158626317977905,
+                "ref": 0.9930409789085388,
+                "drop": 0.2771783471107483,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9955010414123535,
+                "ref": 0.9945657253265381,
+                "drop": -0.0009353160858154297,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.785 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.7853813767433167,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 1200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.7853813767433167,
+                "ref": 0.9930409789085388,
+                "drop": 0.20765960216522217,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9957887530326843,
+                "ref": 0.9945657253265381,
+                "drop": -0.0012230277061462402,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned_repair": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.10_s42/poisoned_repair/A6.pt",
+        "final_sha256": "e7dfa67527e36f65a8fab02aab42aa3d2e5f855b96c81170c2063d97b7cce82a",
+        "updates_accepted": 6,
+        "updates": 6,
+        "r1_ran": 6,
+        "r1_accepted": 6,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.951 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.950881838798523,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.950881838798523,
+                "ref": 0.9930409789085388,
+                "drop": 0.04215914011001587,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9958229064941406,
+                "ref": 0.9945657253265381,
+                "drop": -0.001257181167602539,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 1,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9931357776661645,
+            "Syn_val_mean_p": 0.9897919297218323,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9897919297218323,
+                "ref": 0.9930409789085388,
+                "drop": 0.003249049186706543,
+                "floor": 0.9730409789085388,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9957967400550842,
+                "ref": 0.9945657253265381,
+                "drop": -0.0012310147285461426,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.920 < floor 0.970"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.9197205901145935,
+            "Syn_ref_mean_p": 0.9897919297218323,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9197205901145935,
+                "ref": 0.9897919297218323,
+                "drop": 0.07007133960723877,
+                "floor": 0.9697919297218323,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9961420893669128,
+                "ref": 0.9957967400550842,
+                "drop": -0.0003453493118286133,
+                "floor": 0.9757967400550842,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9931043982505798,
+            "Syn_ref_mean_p": 0.9897919297218323,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9931043982505798,
+                "ref": 0.9897919297218323,
+                "drop": -0.0033124685287475586,
+                "floor": 0.9697919297218323,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.996119499206543,
+                "ref": 0.9957967400550842,
+                "drop": -0.00032275915145874023,
+                "floor": 0.9757967400550842,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.891 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.8907557129859924,
+            "Syn_ref_mean_p": 0.9931043982505798,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8907557129859924,
+                "ref": 0.9931043982505798,
+                "drop": 0.1023486852645874,
+                "floor": 0.9731043982505798,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9964947700500488,
+                "ref": 0.996119499206543,
+                "drop": -0.0003752708435058594,
+                "floor": 0.976119499206543,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9939728779507785,
+            "Syn_val_mean_p": 0.9875636696815491,
+            "Syn_ref_mean_p": 0.9931043982505798,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9875636696815491,
+                "ref": 0.9931043982505798,
+                "drop": 0.005540728569030762,
+                "floor": 0.9731043982505798,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9962046146392822,
+                "ref": 0.996119499206543,
+                "drop": -8.511543273925781e-05,
+                "floor": 0.976119499206543,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.850 < floor 0.968"
+            ],
+            "Syn_val_recall": 0.9931357776661645,
+            "Syn_val_mean_p": 0.849500298500061,
+            "Syn_ref_mean_p": 0.9875636696815491,
+            "n_replay_flipped": 800,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.849500298500061,
+                "ref": 0.9875636696815491,
+                "drop": 0.13806337118148804,
+                "floor": 0.967563669681549,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9938077926635742,
+                "ref": 0.9962046146392822,
+                "drop": 0.002396821975708008,
+                "floor": 0.9762046146392822,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9936952590942383,
+            "Syn_ref_mean_p": 0.9875636696815491,
+            "n_replay_flipped": 800,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9936952590942383,
+                "ref": 0.9875636696815491,
+                "drop": -0.006131589412689209,
+                "floor": 0.967563669681549,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9963839650154114,
+                "ref": 0.9962046146392822,
+                "drop": -0.0001793503761291504,
+                "floor": 0.9762046146392822,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.833 < floor 0.974"
+            ],
+            "Syn_val_recall": 0.9917964172107818,
+            "Syn_val_mean_p": 0.8326236009597778,
+            "Syn_ref_mean_p": 0.9936952590942383,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8326236009597778,
+                "ref": 0.9936952590942383,
+                "drop": 0.16107165813446045,
+                "floor": 0.9736952590942383,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9964398145675659,
+                "ref": 0.9963839650154114,
+                "drop": -5.5849552154541016e-05,
+                "floor": 0.9763839650154114,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9948099782353926,
+            "Syn_val_mean_p": 0.9919291734695435,
+            "Syn_ref_mean_p": 0.9936952590942383,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9919291734695435,
+                "ref": 0.9936952590942383,
+                "drop": 0.0017660856246948242,
+                "floor": 0.9736952590942383,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9963834285736084,
+                "ref": 0.9963839650154114,
+                "drop": 5.364418029785156e-07,
+                "floor": 0.9763839650154114,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.745 < floor 0.972"
+            ],
+            "Syn_val_recall": 0.9928009375523188,
+            "Syn_val_mean_p": 0.7454228401184082,
+            "Syn_ref_mean_p": 0.9919291734695435,
+            "n_replay_flipped": 1200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.7454228401184082,
+                "ref": 0.9919291734695435,
+                "drop": 0.24650633335113525,
+                "floor": 0.9719291734695434,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9966370463371277,
+                "ref": 0.9963834285736084,
+                "drop": -0.0002536177635192871,
+                "floor": 0.9763834285736084,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9939728779507785,
+            "Syn_val_mean_p": 0.9916352033615112,
+            "Syn_ref_mean_p": 0.9919291734695435,
+            "n_replay_flipped": 1200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9916352033615112,
+                "ref": 0.9919291734695435,
+                "drop": 0.00029397010803222656,
+                "floor": 0.9719291734695434,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9963822960853577,
+                "ref": 0.9963834285736084,
+                "drop": 1.1324882507324219e-06,
+                "floor": 0.9763834285736084,
+                "ok": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "cg_ref6_r0.10_s43",
+      "setting": "CG-RF",
+      "seed": 43,
+      "frac": 0.1,
+      "clean": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.10_s43/clean/A6.pt",
+        "final_sha256": "155114e787e94f978d0472671bc87e29b287ca0e22b1b4ab5c629100357d2126",
+        "updates_accepted": 6,
+        "updates": 6,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.9931617975234985,
+            "Syn_ref_mean_p": 0.9924933910369873,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9931617975234985,
+                "ref": 0.9924933910369873,
+                "drop": -0.0006684064865112305,
+                "floor": 0.9724933910369873,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.995398223400116,
+                "ref": 0.9942530393600464,
+                "drop": -0.00114518404006958,
+                "floor": 0.9742530393600464,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9929260015487671,
+            "Syn_ref_mean_p": 0.9931617975234985,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9929260015487671,
+                "ref": 0.9931617975234985,
+                "drop": 0.0002357959747314453,
+                "floor": 0.9731617975234985,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9959690570831299,
+                "ref": 0.995398223400116,
+                "drop": -0.000570833683013916,
+                "floor": 0.975398223400116,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9942189455032349,
+            "Syn_ref_mean_p": 0.9929260015487671,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9942189455032349,
+                "ref": 0.9929260015487671,
+                "drop": -0.0012929439544677734,
+                "floor": 0.9729260015487671,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9958786368370056,
+                "ref": 0.9959690570831299,
+                "drop": 9.042024612426758e-05,
+                "floor": 0.9759690570831299,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9917911887168884,
+            "Syn_ref_mean_p": 0.9942189455032349,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9917911887168884,
+                "ref": 0.9942189455032349,
+                "drop": 0.0024277567863464355,
+                "floor": 0.9742189455032348,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9965117573738098,
+                "ref": 0.9958786368370056,
+                "drop": -0.0006331205368041992,
+                "floor": 0.9758786368370056,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9933274984359741,
+            "Syn_ref_mean_p": 0.9917911887168884,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9933274984359741,
+                "ref": 0.9917911887168884,
+                "drop": -0.0015363097190856934,
+                "floor": 0.9717911887168884,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9966443777084351,
+                "ref": 0.9965117573738098,
+                "drop": -0.00013262033462524414,
+                "floor": 0.9765117573738098,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9959819186338523,
+            "Syn_val_mean_p": 0.9935958385467529,
+            "Syn_ref_mean_p": 0.9933274984359741,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9935958385467529,
+                "ref": 0.9933274984359741,
+                "drop": -0.0002683401107788086,
+                "floor": 0.9733274984359741,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9964737892150879,
+                "ref": 0.9966443777084351,
+                "drop": 0.00017058849334716797,
+                "floor": 0.976644377708435,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.10_s43/poisoned/A6.pt",
+        "final_sha256": "ff748a796f7b158941eb00264550870c027d2822a45840dc15ffa686dde407cb",
+        "updates_accepted": 0,
+        "updates": 6,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.950 < floor 0.972"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9498220682144165,
+            "Syn_ref_mean_p": 0.9924933910369873,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9498220682144165,
+                "ref": 0.9924933910369873,
+                "drop": 0.0426713228225708,
+                "floor": 0.9724933910369873,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9954306483268738,
+                "ref": 0.9942530393600464,
+                "drop": -0.0011776089668273926,
+                "floor": 0.9742530393600464,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.862 < floor 0.972"
+            ],
+            "Syn_val_recall": 0.9948099782353926,
+            "Syn_val_mean_p": 0.8618045449256897,
+            "Syn_ref_mean_p": 0.9924933910369873,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8618045449256897,
+                "ref": 0.9924933910369873,
+                "drop": 0.1306888461112976,
+                "floor": 0.9724933910369873,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9954437017440796,
+                "ref": 0.9942530393600464,
+                "drop": -0.0011906623840332031,
+                "floor": 0.9742530393600464,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.837 < floor 0.972"
+            ],
+            "Syn_val_recall": 0.9943077180646241,
+            "Syn_val_mean_p": 0.8368192315101624,
+            "Syn_ref_mean_p": 0.9924933910369873,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8368192315101624,
+                "ref": 0.9924933910369873,
+                "drop": 0.15567415952682495,
+                "floor": 0.9724933910369873,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9953621625900269,
+                "ref": 0.9942530393600464,
+                "drop": -0.0011091232299804688,
+                "floor": 0.9742530393600464,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.819 < floor 0.972"
+            ],
+            "Syn_val_recall": 0.9939728779507785,
+            "Syn_val_mean_p": 0.8194562792778015,
+            "Syn_ref_mean_p": 0.9924933910369873,
+            "n_replay_flipped": 800,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8194562792778015,
+                "ref": 0.9924933910369873,
+                "drop": 0.1730371117591858,
+                "floor": 0.9724933910369873,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.99478679895401,
+                "ref": 0.9942530393600464,
+                "drop": -0.000533759593963623,
+                "floor": 0.9742530393600464,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.732 < floor 0.972"
+            ],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.7321954369544983,
+            "Syn_ref_mean_p": 0.9924933910369873,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.7321954369544983,
+                "ref": 0.9924933910369873,
+                "drop": 0.260297954082489,
+                "floor": 0.9724933910369873,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.995420515537262,
+                "ref": 0.9942530393600464,
+                "drop": -0.0011674761772155762,
+                "floor": 0.9742530393600464,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.693 < floor 0.972"
+            ],
+            "Syn_val_recall": 0.9929683576092416,
+            "Syn_val_mean_p": 0.6927371025085449,
+            "Syn_ref_mean_p": 0.9924933910369873,
+            "n_replay_flipped": 1200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.6927371025085449,
+                "ref": 0.9924933910369873,
+                "drop": 0.2997562885284424,
+                "floor": 0.9724933910369873,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9954323768615723,
+                "ref": 0.9942530393600464,
+                "drop": -0.001179337501525879,
+                "floor": 0.9742530393600464,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned_repair": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.10_s43/poisoned_repair/A6.pt",
+        "final_sha256": "f5802244cf1daacc8135b05be336f0b1a6bbacc279415481b68756fddfae5973",
+        "updates_accepted": 5,
+        "updates": 6,
+        "r1_ran": 6,
+        "r1_accepted": 5,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.950 < floor 0.972"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9498220682144165,
+            "Syn_ref_mean_p": 0.9924933910369873,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9498220682144165,
+                "ref": 0.9924933910369873,
+                "drop": 0.0426713228225708,
+                "floor": 0.9724933910369873,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9954306483268738,
+                "ref": 0.9942530393600464,
+                "drop": -0.0011776089668273926,
+                "floor": 0.9742530393600464,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 1,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9948099782353926,
+            "Syn_val_mean_p": 0.9915596842765808,
+            "Syn_ref_mean_p": 0.9924933910369873,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9915596842765808,
+                "ref": 0.9924933910369873,
+                "drop": 0.0009337067604064941,
+                "floor": 0.9724933910369873,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9957931637763977,
+                "ref": 0.9942530393600464,
+                "drop": -0.0015401244163513184,
+                "floor": 0.9742530393600464,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.925 < floor 0.972"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9254509806632996,
+            "Syn_ref_mean_p": 0.9915596842765808,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9254509806632996,
+                "ref": 0.9915596842765808,
+                "drop": 0.06610870361328125,
+                "floor": 0.9715596842765808,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9959015846252441,
+                "ref": 0.9957931637763977,
+                "drop": -0.00010842084884643555,
+                "floor": 0.9757931637763977,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9946733117103577,
+            "Syn_ref_mean_p": 0.9915596842765808,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9946733117103577,
+                "ref": 0.9915596842765808,
+                "drop": -0.0031136274337768555,
+                "floor": 0.9715596842765808,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9958807229995728,
+                "ref": 0.9957931637763977,
+                "drop": -8.755922317504883e-05,
+                "floor": 0.9757931637763977,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.867 < floor 0.975"
+            ],
+            "Syn_val_recall": 0.9948099782353926,
+            "Syn_val_mean_p": 0.8674949407577515,
+            "Syn_ref_mean_p": 0.9946733117103577,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8674949407577515,
+                "ref": 0.9946733117103577,
+                "drop": 0.1271783709526062,
+                "floor": 0.9746733117103576,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9960553050041199,
+                "ref": 0.9958807229995728,
+                "drop": -0.00017458200454711914,
+                "floor": 0.9758807229995727,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "R1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.965 < floor 0.975"
+            ],
+            "Syn_val_recall": 0.9727105307215804,
+            "Syn_val_mean_p": 0.96465003490448,
+            "Syn_ref_mean_p": 0.9946733117103577,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.96465003490448,
+                "ref": 0.9946733117103577,
+                "drop": 0.030023276805877686,
+                "floor": 0.9746733117103576,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.996376097202301,
+                "ref": 0.9958807229995728,
+                "drop": -0.0004953742027282715,
+                "floor": 0.9758807229995727,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.860 < floor 0.975"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.8595171570777893,
+            "Syn_ref_mean_p": 0.9946733117103577,
+            "n_replay_flipped": 800,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8595171570777893,
+                "ref": 0.9946733117103577,
+                "drop": 0.13515615463256836,
+                "floor": 0.9746733117103576,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9962742924690247,
+                "ref": 0.9958807229995728,
+                "drop": -0.0003935694694519043,
+                "floor": 0.9758807229995727,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9948201179504395,
+            "Syn_ref_mean_p": 0.9946733117103577,
+            "n_replay_flipped": 800,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9948201179504395,
+                "ref": 0.9946733117103577,
+                "drop": -0.0001468062400817871,
+                "floor": 0.9746733117103576,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9960806965827942,
+                "ref": 0.9958807229995728,
+                "drop": -0.00019997358322143555,
+                "floor": 0.9758807229995727,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.756 < floor 0.975"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.7561520338058472,
+            "Syn_ref_mean_p": 0.9948201179504395,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.7561520338058472,
+                "ref": 0.9948201179504395,
+                "drop": 0.23866808414459229,
+                "floor": 0.9748201179504394,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.996296763420105,
+                "ref": 0.9960806965827942,
+                "drop": -0.00021606683731079102,
+                "floor": 0.9760806965827942,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9951463937759399,
+            "Syn_ref_mean_p": 0.9948201179504395,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9951463937759399,
+                "ref": 0.9948201179504395,
+                "drop": -0.0003262758255004883,
+                "floor": 0.9748201179504394,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.995945930480957,
+                "ref": 0.9960806965827942,
+                "drop": 0.0001347661018371582,
+                "floor": 0.9760806965827942,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.783 < floor 0.975"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.782808780670166,
+            "Syn_ref_mean_p": 0.9951463937759399,
+            "n_replay_flipped": 1200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.782808780670166,
+                "ref": 0.9951463937759399,
+                "drop": 0.21233761310577393,
+                "floor": 0.9751463937759399,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9962266087532043,
+                "ref": 0.995945930480957,
+                "drop": -0.00028067827224731445,
+                "floor": 0.975945930480957,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.9928240180015564,
+            "Syn_ref_mean_p": 0.9951463937759399,
+            "n_replay_flipped": 1200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9928240180015564,
+                "ref": 0.9951463937759399,
+                "drop": 0.002322375774383545,
+                "floor": 0.9751463937759399,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9961485266685486,
+                "ref": 0.995945930480957,
+                "drop": -0.00020259618759155273,
+                "floor": 0.975945930480957,
+                "ok": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "cg_ref6_r0.10_s44",
+      "setting": "CG-RF",
+      "seed": 44,
+      "frac": 0.1,
+      "clean": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.10_s44/clean/A6.pt",
+        "final_sha256": "a334c7e3ebd1cffbdce0f0b19375d78d9349ea057105f279ca7ad0ca43b30a83",
+        "updates_accepted": 6,
+        "updates": 6,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9943077180646241,
+            "Syn_val_mean_p": 0.991810142993927,
+            "Syn_ref_mean_p": 0.9930967092514038,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.991810142993927,
+                "ref": 0.9930967092514038,
+                "drop": 0.0012865662574768066,
+                "floor": 0.9730967092514038,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9958107471466064,
+                "ref": 0.9940714836120605,
+                "drop": -0.0017392635345458984,
+                "floor": 0.9740714836120605,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.9925372004508972,
+            "Syn_ref_mean_p": 0.991810142993927,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9925372004508972,
+                "ref": 0.991810142993927,
+                "drop": -0.0007270574569702148,
+                "floor": 0.971810142993927,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9962310194969177,
+                "ref": 0.9958107471466064,
+                "drop": -0.0004202723503112793,
+                "floor": 0.9758107471466064,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.994475138121547,
+            "Syn_val_mean_p": 0.9912827014923096,
+            "Syn_ref_mean_p": 0.9925372004508972,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9912827014923096,
+                "ref": 0.9925372004508972,
+                "drop": 0.0012544989585876465,
+                "floor": 0.9725372004508972,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9965430498123169,
+                "ref": 0.9962310194969177,
+                "drop": -0.0003120303153991699,
+                "floor": 0.9762310194969177,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9932770133018494,
+            "Syn_ref_mean_p": 0.9912827014923096,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9932770133018494,
+                "ref": 0.9912827014923096,
+                "drop": -0.001994311809539795,
+                "floor": 0.9712827014923096,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9964928030967712,
+                "ref": 0.9965430498123169,
+                "drop": 5.02467155456543e-05,
+                "floor": 0.9765430498123169,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9876109157877113,
+            "Syn_val_mean_p": 0.9858571887016296,
+            "Syn_ref_mean_p": 0.9932770133018494,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9858571887016296,
+                "ref": 0.9932770133018494,
+                "drop": 0.0074198246002197266,
+                "floor": 0.9732770133018493,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9974719285964966,
+                "ref": 0.9964928030967712,
+                "drop": -0.0009791254997253418,
+                "floor": 0.9764928030967712,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9959819186338523,
+            "Syn_val_mean_p": 0.9932446479797363,
+            "Syn_ref_mean_p": 0.9858571887016296,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9932446479797363,
+                "ref": 0.9858571887016296,
+                "drop": -0.0073874592781066895,
+                "floor": 0.9658571887016296,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9970623850822449,
+                "ref": 0.9974719285964966,
+                "drop": 0.000409543514251709,
+                "floor": 0.9774719285964966,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.10_s44/poisoned/A6.pt",
+        "final_sha256": "44cf875164f56a7ae0992f70510e3a987d1f84b7447d0b478ffa9c520ed033bd",
+        "updates_accepted": 0,
+        "updates": 6,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.956 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.9562535285949707,
+            "Syn_ref_mean_p": 0.9930967092514038,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9562535285949707,
+                "ref": 0.9930967092514038,
+                "drop": 0.036843180656433105,
+                "floor": 0.9730967092514038,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9957449436187744,
+                "ref": 0.9940714836120605,
+                "drop": -0.0016734600067138672,
+                "floor": 0.9740714836120605,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.886 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.8859996199607849,
+            "Syn_ref_mean_p": 0.9930967092514038,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8859996199607849,
+                "ref": 0.9930967092514038,
+                "drop": 0.1070970892906189,
+                "floor": 0.9730967092514038,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9957713484764099,
+                "ref": 0.9940714836120605,
+                "drop": -0.0016998648643493652,
+                "floor": 0.9740714836120605,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.859 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.8585399985313416,
+            "Syn_ref_mean_p": 0.9930967092514038,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8585399985313416,
+                "ref": 0.9930967092514038,
+                "drop": 0.13455671072006226,
+                "floor": 0.9730967092514038,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9951225519180298,
+                "ref": 0.9940714836120605,
+                "drop": -0.0010510683059692383,
+                "floor": 0.9740714836120605,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.804 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.8037745356559753,
+            "Syn_ref_mean_p": 0.9930967092514038,
+            "n_replay_flipped": 800,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8037745356559753,
+                "ref": 0.9930967092514038,
+                "drop": 0.18932217359542847,
+                "floor": 0.9730967092514038,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9950708150863647,
+                "ref": 0.9940714836120605,
+                "drop": -0.0009993314743041992,
+                "floor": 0.9740714836120605,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.772 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.7723056077957153,
+            "Syn_ref_mean_p": 0.9930967092514038,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.7723056077957153,
+                "ref": 0.9930967092514038,
+                "drop": 0.22079110145568848,
+                "floor": 0.9730967092514038,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.995425820350647,
+                "ref": 0.9940714836120605,
+                "drop": -0.0013543367385864258,
+                "floor": 0.9740714836120605,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.747 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9943077180646241,
+            "Syn_val_mean_p": 0.7474669814109802,
+            "Syn_ref_mean_p": 0.9930967092514038,
+            "n_replay_flipped": 1200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.7474669814109802,
+                "ref": 0.9930967092514038,
+                "drop": 0.24562972784042358,
+                "floor": 0.9730967092514038,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.993104100227356,
+                "ref": 0.9940714836120605,
+                "drop": 0.0009673833847045898,
+                "floor": 0.9740714836120605,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned_repair": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.10_s44/poisoned_repair/A6.pt",
+        "final_sha256": "c73e144599c33652995428eb1a4c14534e0dae1e77e9d0deb469f8cef313329e",
+        "updates_accepted": 6,
+        "updates": 6,
+        "r1_ran": 6,
+        "r1_accepted": 6,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.956 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.9562535285949707,
+            "Syn_ref_mean_p": 0.9930967092514038,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9562535285949707,
+                "ref": 0.9930967092514038,
+                "drop": 0.036843180656433105,
+                "floor": 0.9730967092514038,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9957449436187744,
+                "ref": 0.9940714836120605,
+                "drop": -0.0016734600067138672,
+                "floor": 0.9740714836120605,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 1,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9948099782353926,
+            "Syn_val_mean_p": 0.9912254214286804,
+            "Syn_ref_mean_p": 0.9930967092514038,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9912254214286804,
+                "ref": 0.9930967092514038,
+                "drop": 0.0018712878227233887,
+                "floor": 0.9730967092514038,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9957894086837769,
+                "ref": 0.9940714836120605,
+                "drop": -0.0017179250717163086,
+                "floor": 0.9740714836120605,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.929 < floor 0.971"
+            ],
+            "Syn_val_recall": 0.9948099782353926,
+            "Syn_val_mean_p": 0.9286986589431763,
+            "Syn_ref_mean_p": 0.9912254214286804,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9286986589431763,
+                "ref": 0.9912254214286804,
+                "drop": 0.06252676248550415,
+                "floor": 0.9712254214286804,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.996122419834137,
+                "ref": 0.9957894086837769,
+                "drop": -0.0003330111503601074,
+                "floor": 0.9757894086837768,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9948099782353926,
+            "Syn_val_mean_p": 0.9902225136756897,
+            "Syn_ref_mean_p": 0.9912254214286804,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9902225136756897,
+                "ref": 0.9912254214286804,
+                "drop": 0.0010029077529907227,
+                "floor": 0.9712254214286804,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9963178634643555,
+                "ref": 0.9957894086837769,
+                "drop": -0.0005284547805786133,
+                "floor": 0.9757894086837768,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.858 < floor 0.970"
+            ],
+            "Syn_val_recall": 0.9931357776661645,
+            "Syn_val_mean_p": 0.8584222197532654,
+            "Syn_ref_mean_p": 0.9902225136756897,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8584222197532654,
+                "ref": 0.9902225136756897,
+                "drop": 0.13180029392242432,
+                "floor": 0.9702225136756897,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9965218901634216,
+                "ref": 0.9963178634643555,
+                "drop": -0.0002040266990661621,
+                "floor": 0.9763178634643555,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9932470917701721,
+            "Syn_ref_mean_p": 0.9902225136756897,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9932470917701721,
+                "ref": 0.9902225136756897,
+                "drop": -0.003024578094482422,
+                "floor": 0.9702225136756897,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9962953329086304,
+                "ref": 0.9963178634643555,
+                "drop": 2.2530555725097656e-05,
+                "floor": 0.9763178634643555,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.872 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.8721251487731934,
+            "Syn_ref_mean_p": 0.9932470917701721,
+            "n_replay_flipped": 800,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8721251487731934,
+                "ref": 0.9932470917701721,
+                "drop": 0.12112194299697876,
+                "floor": 0.9732470917701721,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9964356422424316,
+                "ref": 0.9962953329086304,
+                "drop": -0.00014030933380126953,
+                "floor": 0.9762953329086304,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9943077180646241,
+            "Syn_val_mean_p": 0.9922849535942078,
+            "Syn_ref_mean_p": 0.9932470917701721,
+            "n_replay_flipped": 800,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9922849535942078,
+                "ref": 0.9932470917701721,
+                "drop": 0.0009621381759643555,
+                "floor": 0.9732470917701721,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9963740110397339,
+                "ref": 0.9962953329086304,
+                "drop": -7.867813110351562e-05,
+                "floor": 0.9762953329086304,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.803 < floor 0.972"
+            ],
+            "Syn_val_recall": 0.9929683576092416,
+            "Syn_val_mean_p": 0.803451657295227,
+            "Syn_ref_mean_p": 0.9922849535942078,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.803451657295227,
+                "ref": 0.9922849535942078,
+                "drop": 0.1888332962989807,
+                "floor": 0.9722849535942077,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9969090819358826,
+                "ref": 0.9963740110397339,
+                "drop": -0.0005350708961486816,
+                "floor": 0.9763740110397339,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.994475138121547,
+            "Syn_val_mean_p": 0.9898077845573425,
+            "Syn_ref_mean_p": 0.9922849535942078,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9898077845573425,
+                "ref": 0.9922849535942078,
+                "drop": 0.0024771690368652344,
+                "floor": 0.9722849535942077,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9961596131324768,
+                "ref": 0.9963740110397339,
+                "drop": 0.00021439790725708008,
+                "floor": 0.9763740110397339,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.780 < floor 0.970"
+            ],
+            "Syn_val_recall": 0.9929683576092416,
+            "Syn_val_mean_p": 0.7801623940467834,
+            "Syn_ref_mean_p": 0.9898077845573425,
+            "n_replay_flipped": 1200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.7801623940467834,
+                "ref": 0.9898077845573425,
+                "drop": 0.20964539051055908,
+                "floor": 0.9698077845573425,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9973875284194946,
+                "ref": 0.9961596131324768,
+                "drop": -0.0012279152870178223,
+                "floor": 0.9761596131324768,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.99347061778001,
+            "Syn_val_mean_p": 0.9915639162063599,
+            "Syn_ref_mean_p": 0.9898077845573425,
+            "n_replay_flipped": 1200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9915639162063599,
+                "ref": 0.9898077845573425,
+                "drop": -0.001756131649017334,
+                "floor": 0.9698077845573425,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9962424039840698,
+                "ref": 0.9961596131324768,
+                "drop": -8.279085159301758e-05,
+                "floor": 0.9761596131324768,
+                "ok": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "cg_ref6_r0.05_s42",
+      "setting": "CG-RF",
+      "seed": 42,
+      "frac": 0.05,
+      "clean": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.05_s42/clean/A6.pt",
+        "final_sha256": "fe7eadef09280512676c0e0b44046da96df9538ee4e458aef425c80f98308422",
+        "updates_accepted": 6,
+        "updates": 6,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.99347061778001,
+            "Syn_val_mean_p": 0.9907909035682678,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9907909035682678,
+                "ref": 0.9930409789085388,
+                "drop": 0.002250075340270996,
+                "floor": 0.9730409789085388,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9955770373344421,
+                "ref": 0.9945657253265381,
+                "drop": -0.0010113120079040527,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9943077180646241,
+            "Syn_val_mean_p": 0.9887531995773315,
+            "Syn_ref_mean_p": 0.9907909035682678,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9887531995773315,
+                "ref": 0.9907909035682678,
+                "drop": 0.0020377039909362793,
+                "floor": 0.9707909035682678,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9960491061210632,
+                "ref": 0.9955770373344421,
+                "drop": -0.00047206878662109375,
+                "floor": 0.9755770373344421,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9933031977230872,
+            "Syn_val_mean_p": 0.9859564900398254,
+            "Syn_ref_mean_p": 0.9887531995773315,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9859564900398254,
+                "ref": 0.9887531995773315,
+                "drop": 0.0027967095375061035,
+                "floor": 0.9687531995773315,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9966623187065125,
+                "ref": 0.9960491061210632,
+                "drop": -0.0006132125854492188,
+                "floor": 0.9760491061210632,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9954796584630838,
+            "Syn_val_mean_p": 0.9935575723648071,
+            "Syn_ref_mean_p": 0.9859564900398254,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9935575723648071,
+                "ref": 0.9859564900398254,
+                "drop": -0.0076010823249816895,
+                "floor": 0.9659564900398254,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9965894222259521,
+                "ref": 0.9966623187065125,
+                "drop": 7.289648056030273e-05,
+                "floor": 0.9766623187065124,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.994215190410614,
+            "Syn_ref_mean_p": 0.9935575723648071,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.994215190410614,
+                "ref": 0.9935575723648071,
+                "drop": -0.0006576180458068848,
+                "floor": 0.9735575723648071,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9963956475257874,
+                "ref": 0.9965894222259521,
+                "drop": 0.00019377470016479492,
+                "floor": 0.9765894222259521,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9946425581784698,
+            "Syn_val_mean_p": 0.9900521039962769,
+            "Syn_ref_mean_p": 0.994215190410614,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9900521039962769,
+                "ref": 0.994215190410614,
+                "drop": 0.004163086414337158,
+                "floor": 0.974215190410614,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9968171715736389,
+                "ref": 0.9963956475257874,
+                "drop": -0.0004215240478515625,
+                "floor": 0.9763956475257873,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.05_s42/poisoned/A6.pt",
+        "final_sha256": "4dfa33e2bad9e7cf846e57fd17c1991f8d87a6feb83f90e7ba2cfac21202f333",
+        "updates_accepted": 0,
+        "updates": 6,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.957 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9928009375523188,
+            "Syn_val_mean_p": 0.9570698142051697,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 100,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9570698142051697,
+                "ref": 0.9930409789085388,
+                "drop": 0.03597116470336914,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9958454966545105,
+                "ref": 0.9945657253265381,
+                "drop": -0.0012797713279724121,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.967 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9668655395507812,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9668655395507812,
+                "ref": 0.9930409789085388,
+                "drop": 0.02617543935775757,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9955191612243652,
+                "ref": 0.9945657253265381,
+                "drop": -0.0009534358978271484,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.948 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9479897618293762,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 300,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9479897618293762,
+                "ref": 0.9930409789085388,
+                "drop": 0.0450512170791626,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9960076808929443,
+                "ref": 0.9945657253265381,
+                "drop": -0.00144195556640625,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.913 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.9129009246826172,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9129009246826172,
+                "ref": 0.9930409789085388,
+                "drop": 0.08014005422592163,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9957351684570312,
+                "ref": 0.9945657253265381,
+                "drop": -0.001169443130493164,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.904 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.9039566516876221,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 500,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9039566516876221,
+                "ref": 0.9930409789085388,
+                "drop": 0.08908432722091675,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9958205819129944,
+                "ref": 0.9945657253265381,
+                "drop": -0.0012548565864562988,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.853 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.8527960777282715,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8527960777282715,
+                "ref": 0.9930409789085388,
+                "drop": 0.14024490118026733,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9956547617912292,
+                "ref": 0.9945657253265381,
+                "drop": -0.0010890364646911621,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned_repair": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.05_s42/poisoned_repair/A6.pt",
+        "final_sha256": "54e042e0aa2994217c93f236fec49bac873b6d8049e87fcd4f521ca710909903",
+        "updates_accepted": 6,
+        "updates": 6,
+        "r1_ran": 6,
+        "r1_accepted": 6,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.957 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9928009375523188,
+            "Syn_val_mean_p": 0.9570698142051697,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 100,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9570698142051697,
+                "ref": 0.9930409789085388,
+                "drop": 0.03597116470336914,
+                "floor": 0.9730409789085388,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9958454966545105,
+                "ref": 0.9945657253265381,
+                "drop": -0.0012797713279724121,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 1,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9919638372677047,
+            "Syn_val_mean_p": 0.9878053069114685,
+            "Syn_ref_mean_p": 0.9930409789085388,
+            "n_replay_flipped": 100,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9878053069114685,
+                "ref": 0.9930409789085388,
+                "drop": 0.0052356719970703125,
+                "floor": 0.9730409789085388,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9957002401351929,
+                "ref": 0.9945657253265381,
+                "drop": -0.0011345148086547852,
+                "floor": 0.9745657253265381,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.948 < floor 0.968"
+            ],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.9475087523460388,
+            "Syn_ref_mean_p": 0.9878053069114685,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9475087523460388,
+                "ref": 0.9878053069114685,
+                "drop": 0.04029655456542969,
+                "floor": 0.9678053069114685,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9961084723472595,
+                "ref": 0.9957002401351929,
+                "drop": -0.0004082322120666504,
+                "floor": 0.9757002401351929,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.9911592602729797,
+            "Syn_ref_mean_p": 0.9878053069114685,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9911592602729797,
+                "ref": 0.9878053069114685,
+                "drop": -0.0033539533615112305,
+                "floor": 0.9678053069114685,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9960564374923706,
+                "ref": 0.9957002401351929,
+                "drop": -0.0003561973571777344,
+                "floor": 0.9757002401351929,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.932 < floor 0.971"
+            ],
+            "Syn_val_recall": 0.9948099782353926,
+            "Syn_val_mean_p": 0.9318599700927734,
+            "Syn_ref_mean_p": 0.9911592602729797,
+            "n_replay_flipped": 300,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9318599700927734,
+                "ref": 0.9911592602729797,
+                "drop": 0.0592992901802063,
+                "floor": 0.9711592602729797,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9966877102851868,
+                "ref": 0.9960564374923706,
+                "drop": -0.0006312727928161621,
+                "floor": 0.9760564374923706,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9890994429588318,
+            "Syn_ref_mean_p": 0.9911592602729797,
+            "n_replay_flipped": 300,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9890994429588318,
+                "ref": 0.9911592602729797,
+                "drop": 0.0020598173141479492,
+                "floor": 0.9711592602729797,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.996307373046875,
+                "ref": 0.9960564374923706,
+                "drop": -0.00025093555450439453,
+                "floor": 0.9760564374923706,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.933 < floor 0.969"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9325666427612305,
+            "Syn_ref_mean_p": 0.9890994429588318,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9325666427612305,
+                "ref": 0.9890994429588318,
+                "drop": 0.05653280019760132,
+                "floor": 0.9690994429588318,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.996563196182251,
+                "ref": 0.996307373046875,
+                "drop": -0.00025582313537597656,
+                "floor": 0.976307373046875,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9922358989715576,
+            "Syn_ref_mean_p": 0.9890994429588318,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9922358989715576,
+                "ref": 0.9890994429588318,
+                "drop": -0.00313645601272583,
+                "floor": 0.9690994429588318,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9963939785957336,
+                "ref": 0.996307373046875,
+                "drop": -8.660554885864258e-05,
+                "floor": 0.976307373046875,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.907 < floor 0.972"
+            ],
+            "Syn_val_recall": 0.994475138121547,
+            "Syn_val_mean_p": 0.9068390727043152,
+            "Syn_ref_mean_p": 0.9922358989715576,
+            "n_replay_flipped": 500,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9068390727043152,
+                "ref": 0.9922358989715576,
+                "drop": 0.08539682626724243,
+                "floor": 0.9722358989715576,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9965925216674805,
+                "ref": 0.9963939785957336,
+                "drop": -0.00019854307174682617,
+                "floor": 0.9763939785957336,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9948099782353926,
+            "Syn_val_mean_p": 0.9930518269538879,
+            "Syn_ref_mean_p": 0.9922358989715576,
+            "n_replay_flipped": 500,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9930518269538879,
+                "ref": 0.9922358989715576,
+                "drop": -0.0008159279823303223,
+                "floor": 0.9722358989715576,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9964158535003662,
+                "ref": 0.9963939785957336,
+                "drop": -2.187490463256836e-05,
+                "floor": 0.9763939785957336,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.903 < floor 0.973"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.9033823013305664,
+            "Syn_ref_mean_p": 0.9930518269538879,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9033823013305664,
+                "ref": 0.9930518269538879,
+                "drop": 0.08966952562332153,
+                "floor": 0.9730518269538879,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9965112209320068,
+                "ref": 0.9964158535003662,
+                "drop": -9.5367431640625e-05,
+                "floor": 0.9764158535003662,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.9937256574630737,
+            "Syn_ref_mean_p": 0.9930518269538879,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9937256574630737,
+                "ref": 0.9930518269538879,
+                "drop": -0.000673830509185791,
+                "floor": 0.9730518269538879,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9962701201438904,
+                "ref": 0.9964158535003662,
+                "drop": 0.00014573335647583008,
+                "floor": 0.9764158535003662,
+                "ok": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "cg_ref6_r0.05_s43",
+      "setting": "CG-RF",
+      "seed": 43,
+      "frac": 0.05,
+      "clean": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.05_s43/clean/A6.pt",
+        "final_sha256": "155114e787e94f978d0472671bc87e29b287ca0e22b1b4ab5c629100357d2126",
+        "updates_accepted": 6,
+        "updates": 6,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.9931617975234985,
+            "Syn_ref_mean_p": 0.9924933910369873,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9931617975234985,
+                "ref": 0.9924933910369873,
+                "drop": -0.0006684064865112305,
+                "floor": 0.9724933910369873,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.995398223400116,
+                "ref": 0.9942530393600464,
+                "drop": -0.00114518404006958,
+                "floor": 0.9742530393600464,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9929260015487671,
+            "Syn_ref_mean_p": 0.9931617975234985,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9929260015487671,
+                "ref": 0.9931617975234985,
+                "drop": 0.0002357959747314453,
+                "floor": 0.9731617975234985,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9959690570831299,
+                "ref": 0.995398223400116,
+                "drop": -0.000570833683013916,
+                "floor": 0.975398223400116,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9942189455032349,
+            "Syn_ref_mean_p": 0.9929260015487671,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9942189455032349,
+                "ref": 0.9929260015487671,
+                "drop": -0.0012929439544677734,
+                "floor": 0.9729260015487671,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9958786368370056,
+                "ref": 0.9959690570831299,
+                "drop": 9.042024612426758e-05,
+                "floor": 0.9759690570831299,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9917911887168884,
+            "Syn_ref_mean_p": 0.9942189455032349,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9917911887168884,
+                "ref": 0.9942189455032349,
+                "drop": 0.0024277567863464355,
+                "floor": 0.9742189455032348,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9965117573738098,
+                "ref": 0.9958786368370056,
+                "drop": -0.0006331205368041992,
+                "floor": 0.9758786368370056,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9933274984359741,
+            "Syn_ref_mean_p": 0.9917911887168884,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9933274984359741,
+                "ref": 0.9917911887168884,
+                "drop": -0.0015363097190856934,
+                "floor": 0.9717911887168884,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9966443777084351,
+                "ref": 0.9965117573738098,
+                "drop": -0.00013262033462524414,
+                "floor": 0.9765117573738098,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9959819186338523,
+            "Syn_val_mean_p": 0.9935958385467529,
+            "Syn_ref_mean_p": 0.9933274984359741,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9935958385467529,
+                "ref": 0.9933274984359741,
+                "drop": -0.0002683401107788086,
+                "floor": 0.9733274984359741,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9964737892150879,
+                "ref": 0.9966443777084351,
+                "drop": 0.00017058849334716797,
+                "floor": 0.976644377708435,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.05_s43/poisoned/A6.pt",
+        "final_sha256": "89c2727162654a6d49d737e288e001d590d6ddb76c830666643192a1bc01f5a1",
+        "updates_accepted": 1,
+        "updates": 6,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9766970276832581,
+            "Syn_ref_mean_p": 0.9924933910369873,
+            "n_replay_flipped": 100,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9766970276832581,
+                "ref": 0.9924933910369873,
+                "drop": 0.015796363353729248,
+                "floor": 0.9724933910369873,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9955664277076721,
+                "ref": 0.9942530393600464,
+                "drop": -0.0013133883476257324,
+                "floor": 0.9742530393600464,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.951 < floor 0.957"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9507205486297607,
+            "Syn_ref_mean_p": 0.9766970276832581,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9507205486297607,
+                "ref": 0.9766970276832581,
+                "drop": 0.025976479053497314,
+                "floor": 0.956697027683258,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9959049820899963,
+                "ref": 0.9955664277076721,
+                "drop": -0.00033855438232421875,
+                "floor": 0.9755664277076721,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.937 < floor 0.957"
+            ],
+            "Syn_val_recall": 0.9939728779507785,
+            "Syn_val_mean_p": 0.93662428855896,
+            "Syn_ref_mean_p": 0.9766970276832581,
+            "n_replay_flipped": 300,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.93662428855896,
+                "ref": 0.9766970276832581,
+                "drop": 0.040072739124298096,
+                "floor": 0.956697027683258,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9960704445838928,
+                "ref": 0.9955664277076721,
+                "drop": -0.0005040168762207031,
+                "floor": 0.9755664277076721,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.926 < floor 0.957"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9264966249465942,
+            "Syn_ref_mean_p": 0.9766970276832581,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9264966249465942,
+                "ref": 0.9766970276832581,
+                "drop": 0.05020040273666382,
+                "floor": 0.956697027683258,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9961418509483337,
+                "ref": 0.9955664277076721,
+                "drop": -0.0005754232406616211,
+                "floor": 0.9755664277076721,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.906 < floor 0.957"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.906273365020752,
+            "Syn_ref_mean_p": 0.9766970276832581,
+            "n_replay_flipped": 500,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.906273365020752,
+                "ref": 0.9766970276832581,
+                "drop": 0.0704236626625061,
+                "floor": 0.956697027683258,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9958170652389526,
+                "ref": 0.9955664277076721,
+                "drop": -0.0002506375312805176,
+                "floor": 0.9755664277076721,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.892 < floor 0.957"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.8920277953147888,
+            "Syn_ref_mean_p": 0.9766970276832581,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8920277953147888,
+                "ref": 0.9766970276832581,
+                "drop": 0.08466923236846924,
+                "floor": 0.956697027683258,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9958523511886597,
+                "ref": 0.9955664277076721,
+                "drop": -0.00028592348098754883,
+                "floor": 0.9755664277076721,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned_repair": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.05_s43/poisoned_repair/A6.pt",
+        "final_sha256": "f41d46043fcd4ef85ace0276eb31e24cb1ef184278430d6d9966a4bf122f98dd",
+        "updates_accepted": 6,
+        "updates": 6,
+        "r1_ran": 5,
+        "r1_accepted": 5,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9766970276832581,
+            "Syn_ref_mean_p": 0.9924933910369873,
+            "n_replay_flipped": 100,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9766970276832581,
+                "ref": 0.9924933910369873,
+                "drop": 0.015796363353729248,
+                "floor": 0.9724933910369873,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9955664277076721,
+                "ref": 0.9942530393600464,
+                "drop": -0.0013133883476257324,
+                "floor": 0.9742530393600464,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.951 < floor 0.957"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9507205486297607,
+            "Syn_ref_mean_p": 0.9766970276832581,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9507205486297607,
+                "ref": 0.9766970276832581,
+                "drop": 0.025976479053497314,
+                "floor": 0.956697027683258,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9959049820899963,
+                "ref": 0.9955664277076721,
+                "drop": -0.00033855438232421875,
+                "floor": 0.9755664277076721,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9941455125808716,
+            "Syn_ref_mean_p": 0.9766970276832581,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9941455125808716,
+                "ref": 0.9766970276832581,
+                "drop": -0.017448484897613525,
+                "floor": 0.956697027683258,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9958636164665222,
+                "ref": 0.9955664277076721,
+                "drop": -0.00029718875885009766,
+                "floor": 0.9755664277076721,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.944 < floor 0.974"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.944138765335083,
+            "Syn_ref_mean_p": 0.9941455125808716,
+            "n_replay_flipped": 300,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.944138765335083,
+                "ref": 0.9941455125808716,
+                "drop": 0.050006747245788574,
+                "floor": 0.9741455125808716,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9959700107574463,
+                "ref": 0.9958636164665222,
+                "drop": -0.00010639429092407227,
+                "floor": 0.9758636164665222,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.992633517495396,
+            "Syn_val_mean_p": 0.981156587600708,
+            "Syn_ref_mean_p": 0.9941455125808716,
+            "n_replay_flipped": 300,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.981156587600708,
+                "ref": 0.9941455125808716,
+                "drop": 0.012988924980163574,
+                "floor": 0.9741455125808716,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9966177940368652,
+                "ref": 0.9958636164665222,
+                "drop": -0.0007541775703430176,
+                "floor": 0.9758636164665222,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.920 < floor 0.961"
+            ],
+            "Syn_val_recall": 0.9959819186338523,
+            "Syn_val_mean_p": 0.9200102686882019,
+            "Syn_ref_mean_p": 0.981156587600708,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9200102686882019,
+                "ref": 0.981156587600708,
+                "drop": 0.061146318912506104,
+                "floor": 0.961156587600708,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9963188767433167,
+                "ref": 0.9966177940368652,
+                "drop": 0.000298917293548584,
+                "floor": 0.9766177940368652,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.9948722124099731,
+            "Syn_ref_mean_p": 0.981156587600708,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9948722124099731,
+                "ref": 0.981156587600708,
+                "drop": -0.013715624809265137,
+                "floor": 0.961156587600708,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9961832165718079,
+                "ref": 0.9966177940368652,
+                "drop": 0.00043457746505737305,
+                "floor": 0.9766177940368652,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.924 < floor 0.975"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9240410923957825,
+            "Syn_ref_mean_p": 0.9948722124099731,
+            "n_replay_flipped": 500,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9240410923957825,
+                "ref": 0.9948722124099731,
+                "drop": 0.07083112001419067,
+                "floor": 0.9748722124099731,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9962488412857056,
+                "ref": 0.9961832165718079,
+                "drop": -6.562471389770508e-05,
+                "floor": 0.9761832165718078,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9951251745223999,
+            "Syn_ref_mean_p": 0.9948722124099731,
+            "n_replay_flipped": 500,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9951251745223999,
+                "ref": 0.9948722124099731,
+                "drop": -0.0002529621124267578,
+                "floor": 0.9748722124099731,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9959384202957153,
+                "ref": 0.9961832165718079,
+                "drop": 0.0002447962760925293,
+                "floor": 0.9761832165718078,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.900 < floor 0.975"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.8999620079994202,
+            "Syn_ref_mean_p": 0.9951251745223999,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8999620079994202,
+                "ref": 0.9951251745223999,
+                "drop": 0.09516316652297974,
+                "floor": 0.9751251745223999,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9958842992782593,
+                "ref": 0.9959384202957153,
+                "drop": 5.412101745605469e-05,
+                "floor": 0.9759384202957153,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9942735433578491,
+            "Syn_ref_mean_p": 0.9951251745223999,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9942735433578491,
+                "ref": 0.9951251745223999,
+                "drop": 0.0008516311645507812,
+                "floor": 0.9751251745223999,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.996001660823822,
+                "ref": 0.9959384202957153,
+                "drop": -6.324052810668945e-05,
+                "floor": 0.9759384202957153,
+                "ok": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "cg_ref6_r0.05_s44",
+      "setting": "CG-RF",
+      "seed": 44,
+      "frac": 0.05,
+      "clean": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.05_s44/clean/A6.pt",
+        "final_sha256": "a334c7e3ebd1cffbdce0f0b19375d78d9349ea057105f279ca7ad0ca43b30a83",
+        "updates_accepted": 6,
+        "updates": 6,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9943077180646241,
+            "Syn_val_mean_p": 0.991810142993927,
+            "Syn_ref_mean_p": 0.9930967092514038,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.991810142993927,
+                "ref": 0.9930967092514038,
+                "drop": 0.0012865662574768066,
+                "floor": 0.9730967092514038,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9958107471466064,
+                "ref": 0.9940714836120605,
+                "drop": -0.0017392635345458984,
+                "floor": 0.9740714836120605,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.9925372004508972,
+            "Syn_ref_mean_p": 0.991810142993927,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9925372004508972,
+                "ref": 0.991810142993927,
+                "drop": -0.0007270574569702148,
+                "floor": 0.971810142993927,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9962310194969177,
+                "ref": 0.9958107471466064,
+                "drop": -0.0004202723503112793,
+                "floor": 0.9758107471466064,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.994475138121547,
+            "Syn_val_mean_p": 0.9912827014923096,
+            "Syn_ref_mean_p": 0.9925372004508972,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9912827014923096,
+                "ref": 0.9925372004508972,
+                "drop": 0.0012544989585876465,
+                "floor": 0.9725372004508972,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9965430498123169,
+                "ref": 0.9962310194969177,
+                "drop": -0.0003120303153991699,
+                "floor": 0.9762310194969177,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9932770133018494,
+            "Syn_ref_mean_p": 0.9912827014923096,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9932770133018494,
+                "ref": 0.9912827014923096,
+                "drop": -0.001994311809539795,
+                "floor": 0.9712827014923096,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9964928030967712,
+                "ref": 0.9965430498123169,
+                "drop": 5.02467155456543e-05,
+                "floor": 0.9765430498123169,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9876109157877113,
+            "Syn_val_mean_p": 0.9858571887016296,
+            "Syn_ref_mean_p": 0.9932770133018494,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9858571887016296,
+                "ref": 0.9932770133018494,
+                "drop": 0.0074198246002197266,
+                "floor": 0.9732770133018493,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9974719285964966,
+                "ref": 0.9964928030967712,
+                "drop": -0.0009791254997253418,
+                "floor": 0.9764928030967712,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9959819186338523,
+            "Syn_val_mean_p": 0.9932446479797363,
+            "Syn_ref_mean_p": 0.9858571887016296,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9932446479797363,
+                "ref": 0.9858571887016296,
+                "drop": -0.0073874592781066895,
+                "floor": 0.9658571887016296,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9970623850822449,
+                "ref": 0.9974719285964966,
+                "drop": 0.000409543514251709,
+                "floor": 0.9774719285964966,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.05_s44/poisoned/A6.pt",
+        "final_sha256": "b7c07c0d20b5a8866675d7bbbf6d0d24d4609e60723a2344005fbf7dd5e7b478",
+        "updates_accepted": 2,
+        "updates": 6,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9946425581784698,
+            "Syn_val_mean_p": 0.9737008213996887,
+            "Syn_ref_mean_p": 0.9930967092514038,
+            "n_replay_flipped": 100,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9737008213996887,
+                "ref": 0.9930967092514038,
+                "drop": 0.019395887851715088,
+                "floor": 0.9730967092514038,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9956092834472656,
+                "ref": 0.9940714836120605,
+                "drop": -0.0015377998352050781,
+                "floor": 0.9740714836120605,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.9601178765296936,
+            "Syn_ref_mean_p": 0.9737008213996887,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9601178765296936,
+                "ref": 0.9737008213996887,
+                "drop": 0.013582944869995117,
+                "floor": 0.9537008213996887,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9961095452308655,
+                "ref": 0.9956092834472656,
+                "drop": -0.0005002617835998535,
+                "floor": 0.9756092834472656,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.938 < floor 0.940"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9377607107162476,
+            "Syn_ref_mean_p": 0.9601178765296936,
+            "n_replay_flipped": 300,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9377607107162476,
+                "ref": 0.9601178765296936,
+                "drop": 0.022357165813446045,
+                "floor": 0.9401178765296936,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9964566230773926,
+                "ref": 0.9961095452308655,
+                "drop": -0.0003470778465270996,
+                "floor": 0.9761095452308655,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.938 < floor 0.940"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.9380921721458435,
+            "Syn_ref_mean_p": 0.9601178765296936,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9380921721458435,
+                "ref": 0.9601178765296936,
+                "drop": 0.022025704383850098,
+                "floor": 0.9401178765296936,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9964425563812256,
+                "ref": 0.9961095452308655,
+                "drop": -0.0003330111503601074,
+                "floor": 0.9761095452308655,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.918 < floor 0.940"
+            ],
+            "Syn_val_recall": 0.994475138121547,
+            "Syn_val_mean_p": 0.9175137281417847,
+            "Syn_ref_mean_p": 0.9601178765296936,
+            "n_replay_flipped": 500,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9175137281417847,
+                "ref": 0.9601178765296936,
+                "drop": 0.042604148387908936,
+                "floor": 0.9401178765296936,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.996925950050354,
+                "ref": 0.9961095452308655,
+                "drop": -0.0008164048194885254,
+                "floor": 0.9761095452308655,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.924 < floor 0.940"
+            ],
+            "Syn_val_recall": 0.9939728779507785,
+            "Syn_val_mean_p": 0.924458920955658,
+            "Syn_ref_mean_p": 0.9601178765296936,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.924458920955658,
+                "ref": 0.9601178765296936,
+                "drop": 0.035658955574035645,
+                "floor": 0.9401178765296936,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9968296885490417,
+                "ref": 0.9961095452308655,
+                "drop": -0.0007201433181762695,
+                "floor": 0.9761095452308655,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned_repair": {
+        "final_ckpt": "runs/cii/cg_ref6_r0.05_s44/poisoned_repair/A6.pt",
+        "final_sha256": "f6dc40fc3717cde23e5a2d03c0a4914f688d614873f69a5d53dc87637e6d7a44",
+        "updates_accepted": 6,
+        "updates": 6,
+        "r1_ran": 4,
+        "r1_accepted": 4,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9946425581784698,
+            "Syn_val_mean_p": 0.9737008213996887,
+            "Syn_ref_mean_p": 0.9930967092514038,
+            "n_replay_flipped": 100,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9737008213996887,
+                "ref": 0.9930967092514038,
+                "drop": 0.019395887851715088,
+                "floor": 0.9730967092514038,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9956092834472656,
+                "ref": 0.9940714836120605,
+                "drop": -0.0015377998352050781,
+                "floor": 0.9740714836120605,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.9601178765296936,
+            "Syn_ref_mean_p": 0.9737008213996887,
+            "n_replay_flipped": 200,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9601178765296936,
+                "ref": 0.9737008213996887,
+                "drop": 0.013582944869995117,
+                "floor": 0.9537008213996887,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9961095452308655,
+                "ref": 0.9956092834472656,
+                "drop": -0.0005002617835998535,
+                "floor": 0.9756092834472656,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.938 < floor 0.940"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9377607107162476,
+            "Syn_ref_mean_p": 0.9601178765296936,
+            "n_replay_flipped": 300,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9377607107162476,
+                "ref": 0.9601178765296936,
+                "drop": 0.022357165813446045,
+                "floor": 0.9401178765296936,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9964566230773926,
+                "ref": 0.9961095452308655,
+                "drop": -0.0003470778465270996,
+                "floor": 0.9761095452308655,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 3,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.99347061778001,
+            "Syn_val_mean_p": 0.9906484484672546,
+            "Syn_ref_mean_p": 0.9601178765296936,
+            "n_replay_flipped": 300,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9906484484672546,
+                "ref": 0.9601178765296936,
+                "drop": -0.030530571937561035,
+                "floor": 0.9401178765296936,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9964280724525452,
+                "ref": 0.9961095452308655,
+                "drop": -0.0003185272216796875,
+                "floor": 0.9761095452308655,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.912 < floor 0.971"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.9117651581764221,
+            "Syn_ref_mean_p": 0.9906484484672546,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9117651581764221,
+                "ref": 0.9906484484672546,
+                "drop": 0.07888329029083252,
+                "floor": 0.9706484484672546,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9966292977333069,
+                "ref": 0.9964280724525452,
+                "drop": -0.00020122528076171875,
+                "floor": 0.9764280724525451,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 4,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9908881187438965,
+            "Syn_ref_mean_p": 0.9906484484672546,
+            "n_replay_flipped": 400,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9908881187438965,
+                "ref": 0.9906484484672546,
+                "drop": -0.0002396702766418457,
+                "floor": 0.9706484484672546,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9964432120323181,
+                "ref": 0.9964280724525452,
+                "drop": -1.5139579772949219e-05,
+                "floor": 0.9764280724525451,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.925 < floor 0.971"
+            ],
+            "Syn_val_recall": 0.9938054578938557,
+            "Syn_val_mean_p": 0.9251349568367004,
+            "Syn_ref_mean_p": 0.9908881187438965,
+            "n_replay_flipped": 500,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9251349568367004,
+                "ref": 0.9908881187438965,
+                "drop": 0.06575316190719604,
+                "floor": 0.9708881187438965,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9968221187591553,
+                "ref": 0.9964432120323181,
+                "drop": -0.0003789067268371582,
+                "floor": 0.9764432120323181,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 5,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9924660974384731,
+            "Syn_val_mean_p": 0.9902147650718689,
+            "Syn_ref_mean_p": 0.9908881187438965,
+            "n_replay_flipped": 500,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9902147650718689,
+                "ref": 0.9908881187438965,
+                "drop": 0.0006733536720275879,
+                "floor": 0.9708881187438965,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9962497353553772,
+                "ref": 0.9964432120323181,
+                "drop": 0.00019347667694091797,
+                "floor": 0.9764432120323181,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.890 < floor 0.970"
+            ],
+            "Syn_val_recall": 0.9948099782353926,
+            "Syn_val_mean_p": 0.8899021744728088,
+            "Syn_ref_mean_p": 0.9902147650718689,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8899021744728088,
+                "ref": 0.9902147650718689,
+                "drop": 0.10031259059906006,
+                "floor": 0.9702147650718689,
+                "ok": false
+              },
+              "TFTP": {
+                "cand": 0.9967615604400635,
+                "ref": 0.9962497353553772,
+                "drop": -0.0005118250846862793,
+                "floor": 0.9762497353553772,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 6,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9797421731123389,
+            "Syn_val_mean_p": 0.9770651459693909,
+            "Syn_ref_mean_p": 0.9902147650718689,
+            "n_replay_flipped": 600,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9770651459693909,
+                "ref": 0.9902147650718689,
+                "drop": 0.013149619102478027,
+                "floor": 0.9702147650718689,
+                "ok": true
+              },
+              "TFTP": {
+                "cand": 0.9963217377662659,
+                "ref": 0.9962497353553772,
+                "drop": -7.200241088867188e-05,
+                "floor": 0.9762497353553772,
+                "ok": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "cg_main_f0.5_s42",
+      "setting": "CG-MAIN",
+      "seed": 42,
+      "frac": 0.5,
+      "clean": {
+        "final_ckpt": "runs/cii/cg_main_f0.5_s42/clean/A2.pt",
+        "final_sha256": "58f2511311606b7cc8563e55214d8668c470156ec2a58ef9b77a73c804513644",
+        "updates_accepted": 2,
+        "updates": 2,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9914450645446777,
+            "Syn_ref_mean_p": 0.9950261116027832,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9914450645446777,
+                "ref": 0.9950261116027832,
+                "drop": 0.0035810470581054688,
+                "floor": 0.9750261116027832,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9961493386907752,
+            "Syn_val_mean_p": 0.9952667951583862,
+            "Syn_ref_mean_p": 0.9914450645446777,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9952667951583862,
+                "ref": 0.9914450645446777,
+                "drop": -0.003821730613708496,
+                "floor": 0.9714450645446777,
+                "ok": true
+              },
+              "LDAP": {
+                "cand": 0.984334409236908,
+                "ref": 0.9870335459709167,
+                "drop": 0.002699136734008789,
+                "floor": 0.9670335459709167,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned": {
+        "final_ckpt": "runs/cii/cg_main_f0.5_s42/poisoned/A2.pt",
+        "final_sha256": "d340dad0f4dbc87e810b566b2738b11e990ba841e3324637fca1f4acc79b7c73",
+        "updates_accepted": 0,
+        "updates": 2,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.790 < floor 0.975"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.7895147204399109,
+            "Syn_ref_mean_p": 0.9950261116027832,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.7895147204399109,
+                "ref": 0.9950261116027832,
+                "drop": 0.20551139116287231,
+                "floor": 0.9750261116027832,
+                "ok": false
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.833 < floor 0.975"
+            ],
+            "Syn_val_recall": 0.9933031977230872,
+            "Syn_val_mean_p": 0.8328421711921692,
+            "Syn_ref_mean_p": 0.9950261116027832,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8328421711921692,
+                "ref": 0.9950261116027832,
+                "drop": 0.162183940410614,
+                "floor": 0.9750261116027832,
+                "ok": false
+              }
+            }
+          }
+        ]
+      },
+      "poisoned_repair": {
+        "final_ckpt": "runs/cii/cg_main_f0.5_s42/poisoned_repair/A2.pt",
+        "final_sha256": "a397fa836be15b06d26825c6a69714708a36c2742f179d823e2fd794e2fc8d0d",
+        "updates_accepted": 2,
+        "updates": 2,
+        "r1_ran": 2,
+        "r1_accepted": 2,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.790 < floor 0.975"
+            ],
+            "Syn_val_recall": 0.9951448183492383,
+            "Syn_val_mean_p": 0.7895147204399109,
+            "Syn_ref_mean_p": 0.9950261116027832,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.7895147204399109,
+                "ref": 0.9950261116027832,
+                "drop": 0.20551139116287231,
+                "floor": 0.9750261116027832,
+                "ok": false
+              }
+            }
+          },
+          {
+            "E": 1,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9887770414352417,
+            "Syn_ref_mean_p": 0.9950261116027832,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9887770414352417,
+                "ref": 0.9950261116027832,
+                "drop": 0.006249070167541504,
+                "floor": 0.9750261116027832,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.852 < floor 0.969"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.8517510890960693,
+            "Syn_ref_mean_p": 0.9887770414352417,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8517510890960693,
+                "ref": 0.9887770414352417,
+                "drop": 0.13702595233917236,
+                "floor": 0.9687770414352417,
+                "ok": false
+              },
+              "LDAP": {
+                "cand": 0.9841395020484924,
+                "ref": 0.986717939376831,
+                "drop": 0.002578437328338623,
+                "floor": 0.966717939376831,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.994584858417511,
+            "Syn_ref_mean_p": 0.9887770414352417,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.994584858417511,
+                "ref": 0.9887770414352417,
+                "drop": -0.005807816982269287,
+                "floor": 0.9687770414352417,
+                "ok": true
+              },
+              "LDAP": {
+                "cand": 0.9852443933486938,
+                "ref": 0.986717939376831,
+                "drop": 0.001473546028137207,
+                "floor": 0.966717939376831,
+                "ok": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "cg_main_f0.5_s43",
+      "setting": "CG-MAIN",
+      "seed": 43,
+      "frac": 0.5,
+      "clean": {
+        "final_ckpt": "runs/cii/cg_main_f0.5_s43/clean/A2.pt",
+        "final_sha256": "55f30eeee7e1eb7fb1865bbade6dccfd7c9686a78349ec33c0b2d59e75c3143d",
+        "updates_accepted": 2,
+        "updates": 2,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9949773982923155,
+            "Syn_val_mean_p": 0.9885269999504089,
+            "Syn_ref_mean_p": 0.9958920478820801,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9885269999504089,
+                "ref": 0.9958920478820801,
+                "drop": 0.007365047931671143,
+                "floor": 0.9758920478820801,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9961493386907752,
+            "Syn_val_mean_p": 0.99521404504776,
+            "Syn_ref_mean_p": 0.9885269999504089,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.99521404504776,
+                "ref": 0.9885269999504089,
+                "drop": -0.006687045097351074,
+                "floor": 0.9685269999504089,
+                "ok": true
+              },
+              "LDAP": {
+                "cand": 0.9844465851783752,
+                "ref": 0.9890038967132568,
+                "drop": 0.004557311534881592,
+                "floor": 0.9690038967132568,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned": {
+        "final_ckpt": "runs/cii/cg_main_f0.5_s43/poisoned/A2.pt",
+        "final_sha256": "d82105c70ffe90b09c9ae0f1ca6268fbb76aa0f9ab13fdd7c3f6a2b683ac0103",
+        "updates_accepted": 0,
+        "updates": 2,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.766 < floor 0.976"
+            ],
+            "Syn_val_recall": 0.9941402980077013,
+            "Syn_val_mean_p": 0.7662688493728638,
+            "Syn_ref_mean_p": 0.9958920478820801,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.7662688493728638,
+                "ref": 0.9958920478820801,
+                "drop": 0.2296231985092163,
+                "floor": 0.9758920478820801,
+                "ok": false
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.834 < floor 0.976"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.8340798616409302,
+            "Syn_ref_mean_p": 0.9958920478820801,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8340798616409302,
+                "ref": 0.9958920478820801,
+                "drop": 0.1618121862411499,
+                "floor": 0.9758920478820801,
+                "ok": false
+              }
+            }
+          }
+        ]
+      },
+      "poisoned_repair": {
+        "final_ckpt": "runs/cii/cg_main_f0.5_s43/poisoned_repair/A2.pt",
+        "final_sha256": "041855bdc64f1ce8d5cfcbf967190e28ed784787c81f98160771a9498a3e85cc",
+        "updates_accepted": 1,
+        "updates": 2,
+        "r1_ran": 2,
+        "r1_accepted": 1,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.766 < floor 0.976"
+            ],
+            "Syn_val_recall": 0.9941402980077013,
+            "Syn_val_mean_p": 0.7662688493728638,
+            "Syn_ref_mean_p": 0.9958920478820801,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.7662688493728638,
+                "ref": 0.9958920478820801,
+                "drop": 0.2296231985092163,
+                "floor": 0.9758920478820801,
+                "ok": false
+              }
+            }
+          },
+          {
+            "E": 1,
+            "attempt": "R1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.968 < floor 0.976"
+            ],
+            "Syn_val_recall": 0.9691947095262012,
+            "Syn_val_mean_p": 0.9680198431015015,
+            "Syn_ref_mean_p": 0.9958920478820801,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9680198431015015,
+                "ref": 0.9958920478820801,
+                "drop": 0.027872204780578613,
+                "floor": 0.9758920478820801,
+                "ok": false
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.834 < floor 0.976"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.8340798616409302,
+            "Syn_ref_mean_p": 0.9958920478820801,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8340798616409302,
+                "ref": 0.9958920478820801,
+                "drop": 0.1618121862411499,
+                "floor": 0.9758920478820801,
+                "ok": false
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.9940237402915955,
+            "Syn_ref_mean_p": 0.9958920478820801,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9940237402915955,
+                "ref": 0.9958920478820801,
+                "drop": 0.0018683075904846191,
+                "floor": 0.9758920478820801,
+                "ok": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "cg_main_f0.5_s44",
+      "setting": "CG-MAIN",
+      "seed": 44,
+      "frac": 0.5,
+      "clean": {
+        "final_ckpt": "runs/cii/cg_main_f0.5_s44/clean/A2.pt",
+        "final_sha256": "a0a794554579bf9a548f0fc4f994e5306cc33fea8c5cdea917e17af0cd42aca0",
+        "updates_accepted": 2,
+        "updates": 2,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9961493386907752,
+            "Syn_val_mean_p": 0.9922605156898499,
+            "Syn_ref_mean_p": 0.9959738254547119,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9922605156898499,
+                "ref": 0.9959738254547119,
+                "drop": 0.0037133097648620605,
+                "floor": 0.9759738254547119,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9961493386907752,
+            "Syn_val_mean_p": 0.9953277707099915,
+            "Syn_ref_mean_p": 0.9922605156898499,
+            "n_replay_flipped": 0,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9953277707099915,
+                "ref": 0.9922605156898499,
+                "drop": -0.0030672550201416016,
+                "floor": 0.9722605156898498,
+                "ok": true
+              },
+              "LDAP": {
+                "cand": 0.9838887453079224,
+                "ref": 0.9886155724525452,
+                "drop": 0.004726827144622803,
+                "floor": 0.9686155724525451,
+                "ok": true
+              }
+            }
+          }
+        ]
+      },
+      "poisoned": {
+        "final_ckpt": "runs/cii/cg_main_f0.5_s44/poisoned/A2.pt",
+        "final_sha256": "98bca5bcd4f3af23a68db49d451039c60619e49aa82ae89a0e336d490cabd721",
+        "updates_accepted": 0,
+        "updates": 2,
+        "r1_ran": 0,
+        "r1_accepted": 0,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.844 < floor 0.976"
+            ],
+            "Syn_val_recall": 0.9958144985769295,
+            "Syn_val_mean_p": 0.8437622785568237,
+            "Syn_ref_mean_p": 0.9959738254547119,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8437622785568237,
+                "ref": 0.9959738254547119,
+                "drop": 0.15221154689788818,
+                "floor": 0.9759738254547119,
+                "ok": false
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.820 < floor 0.976"
+            ],
+            "Syn_val_recall": 0.995312238406161,
+            "Syn_val_mean_p": 0.8199109435081482,
+            "Syn_ref_mean_p": 0.9959738254547119,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8199109435081482,
+                "ref": 0.9959738254547119,
+                "drop": 0.17606288194656372,
+                "floor": 0.9759738254547119,
+                "ok": false
+              }
+            }
+          }
+        ]
+      },
+      "poisoned_repair": {
+        "final_ckpt": "runs/cii/cg_main_f0.5_s44/poisoned_repair/A2.pt",
+        "final_sha256": "004074d54b464ce119b11e0260668dfbc9de128fe9395a8cfb1753ea7cddb368",
+        "updates_accepted": 2,
+        "updates": 2,
+        "r1_ran": 2,
+        "r1_accepted": 2,
+        "attempts": [
+          {
+            "E": 1,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.844 < floor 0.976"
+            ],
+            "Syn_val_recall": 0.9958144985769295,
+            "Syn_val_mean_p": 0.8437622785568237,
+            "Syn_ref_mean_p": 0.9959738254547119,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.8437622785568237,
+                "ref": 0.9959738254547119,
+                "drop": 0.15221154689788818,
+                "floor": 0.9759738254547119,
+                "ok": false
+              }
+            }
+          },
+          {
+            "E": 1,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9954796584630838,
+            "Syn_val_mean_p": 0.994084358215332,
+            "Syn_ref_mean_p": 0.9959738254547119,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.994084358215332,
+                "ref": 0.9959738254547119,
+                "drop": 0.0018894672393798828,
+                "floor": 0.9759738254547119,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "C1",
+            "accepted": false,
+            "reasons": [
+              "old Syn mean p 0.789 < floor 0.974"
+            ],
+            "Syn_val_recall": 0.9922986773815503,
+            "Syn_val_mean_p": 0.7889686822891235,
+            "Syn_ref_mean_p": 0.994084358215332,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.7889686822891235,
+                "ref": 0.994084358215332,
+                "drop": 0.2051156759262085,
+                "floor": 0.974084358215332,
+                "ok": false
+              },
+              "LDAP": {
+                "cand": 0.9862983226776123,
+                "ref": 0.9885868430137634,
+                "drop": 0.002288520336151123,
+                "floor": 0.9685868430137634,
+                "ok": true
+              }
+            }
+          },
+          {
+            "E": 2,
+            "attempt": "R1",
+            "accepted": true,
+            "reasons": [],
+            "Syn_val_recall": 0.9943077180646241,
+            "Syn_val_mean_p": 0.9938246011734009,
+            "Syn_ref_mean_p": 0.994084358215332,
+            "n_replay_flipped": 1000,
+            "conf_check": {
+              "Syn": {
+                "cand": 0.9938246011734009,
+                "ref": 0.994084358215332,
+                "drop": 0.00025975704193115234,
+                "floor": 0.974084358215332,
+                "ok": true
+              },
+              "LDAP": {
+                "cand": 0.9871260523796082,
+                "ref": 0.9885868430137634,
+                "drop": 0.0014607906341552734,
+                "floor": 0.9685868430137634,
+                "ok": true
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

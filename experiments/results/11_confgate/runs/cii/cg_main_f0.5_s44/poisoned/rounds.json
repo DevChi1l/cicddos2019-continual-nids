@@ -1,0 +1,220 @@
+[
+  {
+    "arm": "poisoned",
+    "experience": 1,
+    "gate_reasons": [
+      "old Syn mean p 0.844 < floor 0.976"
+    ],
+    "new_classes": [
+      "LDAP"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn"
+    ],
+    "losses": [
+      0.2681609723489488,
+      0.10231689089121061,
+      0.09534986842151016,
+      0.09028656200548951,
+      0.08717817199751637
+    ],
+    "seconds": 9.191654682159424,
+    "teacher_weights": null,
+    "n_current": 32944,
+    "n_replay": 4000,
+    "n_replay_flipped": 1000,
+    "conf_check": {
+      "Syn": {
+        "cand": 0.8437622785568237,
+        "ref": 0.9959738254547119,
+        "drop": 0.15221154689788818,
+        "floor": 0.9759738254547119,
+        "ok": false
+      }
+    },
+    "val": {
+      "n_rows": 17776,
+      "rows_sha256": "df54b8b2134ada1fb644b870c2d61b042b0fefdb78992cbf2b1a2ce5dfdcd6b1",
+      "accuracy": 0.9939806480648065,
+      "macro_recall": 0.9933071592944033,
+      "recall": {
+        "BENIGN": 0.9936888608393815,
+        "Syn": 0.9958144985769295,
+        "LDAP": 0.990418118466899
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "LDAP": 2296
+      },
+      "mean_conf": {
+        "BENIGN": 0.9791850447654724,
+        "Syn": 0.8437622785568237,
+        "LDAP": 0.9891287088394165
+      },
+      "benign_far": 0.006311139160618492,
+      "n_benign": 9507,
+      "new_class_far": 0.003682170542635659,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9447,
+          "LDAP": 54,
+          "Syn": 6
+        },
+        "LDAP": {
+          "BENIGN": 17,
+          "LDAP": 2274,
+          "Syn": 5
+        },
+        "Syn": {
+          "BENIGN": 22,
+          "LDAP": 3,
+          "Syn": 5948
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 15480,
+      "rows_sha256": "99411cbc29009dddf8678c4142fbe2b15f6e3c6b1383015dda4b149a99d65d49",
+      "accuracy": 0.9984496124031008,
+      "macro_recall": 0.9980220765190491,
+      "recall": {
+        "BENIGN": 0.9998948143473231,
+        "Syn": 0.9961493386907752
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973
+      },
+      "mean_conf": {
+        "BENIGN": 0.9982278943061829,
+        "Syn": 0.9959738254547119
+      },
+      "benign_far": 0.00010518565267697486,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9506,
+          "Syn": 1
+        },
+        "Syn": {
+          "BENIGN": 23,
+          "Syn": 5950
+        }
+      }
+    },
+    "attempt": "C1",
+    "accepted": false
+  },
+  {
+    "arm": "poisoned",
+    "experience": 2,
+    "gate_reasons": [
+      "old Syn mean p 0.820 < floor 0.976"
+    ],
+    "new_classes": [
+      "UDP"
+    ],
+    "old_classes": [
+      "BENIGN",
+      "Syn"
+    ],
+    "losses": [
+      0.3032773518817876,
+      0.07929178911042245,
+      0.07219121398322766,
+      0.07077425036493862,
+      0.07010615128828572
+    ],
+    "seconds": 9.181771993637085,
+    "teacher_weights": null,
+    "n_current": 32944,
+    "n_replay": 4000,
+    "n_replay_flipped": 1000,
+    "conf_check": {
+      "Syn": {
+        "cand": 0.8199109435081482,
+        "ref": 0.9959738254547119,
+        "drop": 0.17606288194656372,
+        "floor": 0.9759738254547119,
+        "ok": false
+      }
+    },
+    "val": {
+      "n_rows": 20967,
+      "rows_sha256": "a13671256f199a276ba342480fa68d5f730f60701b08f30302de3756a5039a82",
+      "accuracy": 0.9983784041589164,
+      "macro_recall": 0.9980986026643804,
+      "recall": {
+        "BENIGN": 0.9998948143473231,
+        "Syn": 0.995312238406161,
+        "UDP": 0.9990887552396573
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973,
+        "UDP": 5487
+      },
+      "mean_conf": {
+        "BENIGN": 0.9974961876869202,
+        "Syn": 0.8199109435081482,
+        "UDP": 0.9975286722183228
+      },
+      "benign_far": 0.00010518565267697486,
+      "n_benign": 9507,
+      "new_class_far": 0.00012919896640826872,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9506,
+          "Syn": 0,
+          "UDP": 1
+        },
+        "Syn": {
+          "BENIGN": 27,
+          "Syn": 5945,
+          "UDP": 1
+        },
+        "UDP": {
+          "BENIGN": 5,
+          "Syn": 0,
+          "UDP": 5482
+        }
+      }
+    },
+    "ref_val": {
+      "n_rows": 15480,
+      "rows_sha256": "99411cbc29009dddf8678c4142fbe2b15f6e3c6b1383015dda4b149a99d65d49",
+      "accuracy": 0.9984496124031008,
+      "macro_recall": 0.9980220765190491,
+      "recall": {
+        "BENIGN": 0.9998948143473231,
+        "Syn": 0.9961493386907752
+      },
+      "support": {
+        "BENIGN": 9507,
+        "Syn": 5973
+      },
+      "mean_conf": {
+        "BENIGN": 0.9982278943061829,
+        "Syn": 0.9959738254547119
+      },
+      "benign_far": 0.00010518565267697486,
+      "n_benign": 9507,
+      "new_class_far": 0.0,
+      "confusion": {
+        "BENIGN": {
+          "BENIGN": 9506,
+          "Syn": 1
+        },
+        "Syn": {
+          "BENIGN": 23,
+          "Syn": 5950
+        }
+      }
+    },
+    "attempt": "C1",
+    "accepted": false
+  }
+]
