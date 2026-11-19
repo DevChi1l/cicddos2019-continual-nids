@@ -1,0 +1,58 @@
+{
+  "proceed": true,
+  "rule": "proceed only if every clean update is accepted in seeds 42-44",
+  "per_seed": {
+    "42": [
+      {
+        "E": 1,
+        "accepted": true,
+        "reasons": []
+      },
+      {
+        "E": 2,
+        "accepted": true,
+        "reasons": []
+      },
+      {
+        "E": 3,
+        "accepted": true,
+        "reasons": []
+      }
+    ],
+    "43": [
+      {
+        "E": 1,
+        "accepted": true,
+        "reasons": []
+      },
+      {
+        "E": 2,
+        "accepted": true,
+        "reasons": []
+      },
+      {
+        "E": 3,
+        "accepted": true,
+        "reasons": []
+      }
+    ],
+    "44": [
+      {
+        "E": 1,
+        "accepted": true,
+        "reasons": []
+      },
+      {
+        "E": 2,
+        "accepted": true,
+        "reasons": []
+      },
+      {
+        "E": 3,
+        "accepted": true,
+        "reasons": []
+      }
+    ]
+  },
+  "utc": "2026-11-19T16:02:32+00:00"
+}
