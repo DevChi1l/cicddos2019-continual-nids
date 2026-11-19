@@ -2,7 +2,7 @@
 import glob, shutil, subprocess, sys
 from pathlib import Path
 
-DECISIONS_COMMIT = "__FILL_ME__"
+DECISIONS_COMMIT = "309ac649d356d22aabd1034ac0c84f9ecea9a5c9"
 REPO = "https://github.com/DevChi1l/cicddos2019-continual-nids"
 CODE = Path("/kaggle/working/code")
 subprocess.run(["git", "clone", REPO, str(CODE)], check=True)
