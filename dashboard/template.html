@@ -1049,7 +1049,7 @@ function chartG() {
   const sd = fu("seeds");
   if (!sd || !sd.chart) return chartCard("g", "g · More seeds (45-49)", "Appears here once the SEEDS results are committed.", `<div class="empty">No SEEDS results in this build yet.</div>`, [["pre", "registered + post hoc"]]);
   const groups = sd.chart.map(g => ({label: g.label, bars: g.bars.map(b => ({v: b.n ? b.k / b.n : 0, color: COL[b.arm], label: `${b.k}/${b.n}`, title: `${g.label}, ${ARM_WORD[b.arm]}: ${b.k} of ${b.n} runs (seeds ${sd.pooled.seeds})`}))}));
-  return chartCard("g", `g · Pooled seeds ${sd.pooled.seeds}: all classes learned`, sd.takeaway, barChart({groups, aria: "Runs whose deployed model learned all classes, pooled seeds", ticks: [0, 0.5, 1], tickFmt: v => `${Math.round(v * 100)}%`, bw: 22}) + legendHTML(ARMLEG),
+  return chartCard("g", `g · Pooled seeds ${sd.pooled.seeds}: all classes learned`, sd.takeaway, barChart({groups, aria: "Runs whose deployed model learned all classes, pooled seeds", ticks: [0, 0.5, 1], tickFmt: v => `${Math.round(v * 100)}%`, bw: 34, lfs: 9.5}) + legendHTML(ARMLEG),
     [["pre", "4-class soft: registered"], ["post", "relabel, 5-class: post hoc"], ["test", "test"]], sd.more || "");
 }
 function initResults() { $("#charts").innerHTML = [chartA(), chartB(), chartC(), chartD(), chartE(), chartF(), chartG()].join(""); }

@@ -86,7 +86,7 @@ def results():
         rft.append({"rho": float(rho), "seed": int(seed), "arm": j["arm"], "Syn_recall": last["recall"]["Syn"],
                     "Syn_mean_p": last["mean_conf"]["Syn"], "benign_far": last["benign_far"]})
     d["rf_test"] = rft
-    d["followups"] = [x for x in (confgate(), five()) if x]
+    d["followups"] = [x for x in (confgate(), five(), seeds(d)) if x]
     d["funnel"] = funnel()
     d["canon"] = canon_labels()
     return d
@@ -130,6 +130,86 @@ def sample_csv(assets):
     for i in pick:
         w.writerow([rows["rid"][i]] + [repr(float(v)) for v in rows["num"][i]] + [int(rows["cat"][i][0]), rows["label"][i]])
     return buf.getvalue()
+
+
+SCHED4, SCHED5 = ("BENIGN", "Syn", "LDAP", "UDP"), ("BENIGN", "Syn", "LDAP", "UDP", "TFTP")
+
+
+def seeds(d):
+    """SEEDS follow-up: seeds 45-49 (13_seeds/summary.json, test.json), pooled with the committed seeds 42-44
+    (04_sweep/deployed_models.csv, 06_fu2/test/test_recall.csv, 12_five/test.json) for the Results chart and KPIs."""
+    base = R / "13_seeds"
+    sp, tp = base / "summary.json", base / "test.json"
+    if not sp.exists():
+        return None
+    summ = json.loads(sp.read_text())
+    test = {r["name"]: r for r in json.loads(tp.read_text())["runs"]} if tp.exists() else {}
+    title, tag = "Follow-up: five more seeds (45-49)", "4-class soft: registered; relabel and 5-class: post hoc"
+    groups = [("4 classes, f 0.75-0.95, soft repair", 4, (0.75, 0.9, 0.95), "poisoned_repair"),
+              ("4 classes, f 1.0, relabel repair", 4, (1.0,), "poisoned_relabel"),
+              ("5 classes, f 0.9, soft repair", 5, (0.9,), "poisoned_repair"),
+              ("5 classes, f 1.0, relabel repair", 5, (1.0,), "poisoned_relabel")]
+    arms = (("poisoned", "Gate only"), ("poisoned_repair", "Gate + repair"), ("clean", "Clean"))
+
+    def new_runs(k, fracs):
+        return [e for e in summ["runs"] if e["classes"] == k and any(abs(e["frac"] - f) < 1e-9 for f in fracs)]
+
+    def learned(rec, cls):
+        return all((rec.get(c) or 0) > 0 for c in cls)
+
+    def old_learned(k, fracs, arm):  # seeds 42-44, committed test results
+        if k == 4 and fracs == (1.0,) and arm == "poisoned_repair":
+            return [learned({c: r[c] for c in SCHED4}, SCHED4) for r in d["fu2_test"] if r["arm"] == "poisoned_relabel"]
+        if k == 4:
+            return [learned({c: r[f"test_recall_{c}"] for c in SCHED4}, SCHED4) for r in d["sweep_deployed"]
+                    if r["arm"] == arm and any(abs(r["poison_frac"] - f) < 1e-9 for f in fracs)]
+        five_t = json.loads((R / "12_five/test.json").read_text())["runs"]
+        return [learned(r[arm]["recall"], SCHED5) for r in five_t if any(abs(r["frac"] - f) < 1e-9 for f in fracs)]
+
+    rows, chart, pooled = [], [], {"seeds": "42-49"}
+    for label, k, fracs, rep_arm in groups:
+        cls = SCHED4 if k == 4 else SCHED5
+        runs = new_runs(k, fracs)
+        bars = []
+        for arm, nm in arms:
+            acc = sum(e[arm]["updates_accepted"] for e in runs)
+            tot = sum(e[arm]["updates"] for e in runs)
+            r1 = f'{sum(e[arm]["r1_accepted"] for e in runs)}/{sum(e[arm]["r1_ran"] for e in runs)}'
+            t = [test[e["name"]][arm] for e in runs if e["name"] in test]
+            cells = ["", "", "", "", ""]
+            if t:
+                new_k = sum(learned(x["recall"], cls) for x in t)
+                old = old_learned(k, fracs, arm)
+                pk, pn = new_k + sum(old), len(t) + len(old)
+                cells = [f"{new_k}/{len(t)}", f"{pk}/{pn}", f"{sum(x['accuracy'] for x in t) / len(t):.4f}",
+                         f"{sum(x['macro_recall'] for x in t) / len(t):.4f}", f"{max(x['benign_far'] for x in t):.4f}"]
+                bars.append({"arm": rep_arm if arm == "poisoned_repair" else arm, "k": pk, "n": pn})
+                if k == 4 and arm in ("poisoned", "poisoned_repair"):
+                    key = "soft" if rep_arm == "poisoned_repair" else "relabel"
+                    pooled.setdefault(key, {})["repair" if arm == "poisoned_repair" else "gate"] = [pk, pn]
+            name = nm if arm != "poisoned_repair" else ("Gate + soft repair" if rep_arm == "poisoned_repair" else "Gate + relabel repair")
+            rows.append(f"<tr><td>{label if arm == 'poisoned' else ''}</td><td>{name}</td><td class='num'>{acc}/{tot}</td>"
+                        f"<td class='num'>{r1}</td>" + "".join(f"<td class='num'>{c}</td>" for c in cells) + "</tr>")
+        if bars:
+            chart.append({"label": label.replace(", soft repair", "").replace(", relabel repair", "").replace("classes", "cl."), "bars": bars})
+    html = ("<table class='t'><tr><th>Setting</th><th>Arm</th><th>Updates accepted</th><th>R1 passed/ran</th>"
+            "<th>All classes learned, seeds 45-49</th><th>Pooled 42-49</th><th>Accuracy</th><th>Macro recall</th>"
+            "<th>Max benign FAR</th></tr>" + "".join(rows) + "</table><div class='note'>Accuracy, macro recall and benign FAR: "
+            "held-out test, seeds 45-49 (mean; FAR = maximum). Pooled counts add the committed seeds 42-44 (sweep, FU2, FIVE) "
+            "and are descriptive. Pre-registration: experiments/prereg_seeds.md. "
+            + ("Test scored once after the decisions were committed." if test else "Validation decisions only; test not yet scored.")
+            + "</div>")
+    out = {"id": "seeds", "title": title, "tag": tag, "html": html}
+    if test and "soft" in pooled and "relabel" in pooled:
+        s_, r_ = pooled["soft"], pooled["relabel"]
+        out.update({"pooled": pooled, "chart": chart,
+                    "takeaway": (f"Over seeds 42-49, soft repair learns all four classes in {s_['repair'][0]}/{s_['repair'][1]} runs at "
+                                 f"f 0.75-0.95 (gate only {s_['gate'][0]}/{s_['gate'][1]}); relabel repair in {r_['repair'][0]}/"
+                                 f"{r_['repair'][1]} at f 1.0 (gate only {r_['gate'][0]}/{r_['gate'][1]})."),
+                    "more": "Bars: runs whose deployed model has held-out test recall above 0 on every class of its schedule, "
+                            "pooled over seeds 42-44 (committed earlier) and 45-49 (SEEDS). Descriptive; the registered "
+                            "predictions S1-S4 concern seeds 45-49 only."})
+    return out
 
 
 def five():
