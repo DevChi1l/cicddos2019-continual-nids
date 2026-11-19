@@ -11,7 +11,9 @@ Every number shown in the page comes from these files; the page itself only re-c
 from __future__ import annotations
 
 import argparse
+import ast
 import csv
+import io
 import json
 import re
 import sys
@@ -85,7 +87,49 @@ def results():
                     "Syn_mean_p": last["mean_conf"]["Syn"], "benign_far": last["benign_far"]})
     d["rf_test"] = rft
     d["followups"] = [x for x in (confgate(), five()) if x]
+    d["funnel"] = funnel()
+    d["canon"] = canon_labels()
     return d
+
+
+def funnel():
+    """Data funnel for the Evidence tab, from the committed Stage 1 / 1b manifests."""
+    st = json.loads((R / "01_data/split_manifest.json").read_text())["stats"]
+    exp = json.loads((R / "01_data/cii/experience_manifest.json").read_text())["counts_per_experience"]
+    files = ROOT / "notebooks/manifest.json"
+    return {"raw_rows": sum(st["raw_rows_by_label"].values()), "raw_labels": len(st["raw_rows_by_label"]),
+            "raw_files": len(json.loads(files.read_text())["files"]) if files.exists() else None,
+            "distinct": sum(st["distinct_rows_by_label"].values()), "conflicts": st["n_conflict_vectors"],
+            "kept": sum(st["kept_by_label"].values()),
+            "cap": max(v for k, v in st["sampled_before_conflict_drop"].items() if k != "BENIGN"),
+            "train_4class": sum(sum(v.values()) for v in exp.values())}
+
+
+def canon_labels():
+    """Label spellings -> canonical names, read from common.py's _CANON table (no import, so no pandas needed)."""
+    tree = ast.parse((ROOT / "common.py").read_text())
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and any(getattr(t, "id", "") == "_CANON" for t in node.targets):
+            return ast.literal_eval(node.value)
+    raise SystemExit("common.py: _CANON not found")
+
+
+SAMPLE_PER_CLASS = 50
+
+
+def sample_csv(assets):
+    """200 held-out test rows (the first 50 per class of the bundled sample), raw values, with a Label column.
+    Embedded in the page ("Load sample") and written to dashboard/sample_flows.csv."""
+    rows, feats = assets["rows"], assets["scaler"]["features_numeric"]
+    pick = []
+    for c in ("BENIGN", "Syn", "LDAP", "UDP"):
+        pick += [i for i, l in enumerate(rows["label"]) if l == c][:SAMPLE_PER_CLASS]
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator="\n")
+    w.writerow(["row_id"] + feats + ["Protocol", "Label"])
+    for i in pick:
+        w.writerow([rows["rid"][i]] + [repr(float(v)) for v in rows["num"][i]] + [int(rows["cat"][i][0]), rows["label"][i]])
+    return buf.getvalue()
 
 
 def five():
@@ -180,19 +224,25 @@ def main():
     ap.add_argument("--out", default=str(HERE / "index.html"))
     ap.add_argument("--check", action="store_true")
     a = ap.parse_args()
-    data = {"results": results(), "assets": None}
+    data = {"results": results(), "assets": None, "sample_csv": None}
     if a.assets:
         data["assets"] = json.loads(Path(a.assets).read_text())
+        data["sample_csv"] = sample_csv(data["assets"])
     blob = json.dumps(data, separators=(",", ":")).replace("</", "<\\/")
     page = (HERE / "template.html").read_text()
     page = page.replace("/*__ENGINE__*/", (HERE / "engine.js").read_text())
     page = page.replace("__DATA__", blob)
     out = Path(a.out)
+    sample = HERE / "sample_flows.csv"
     if a.check:
         same = out.exists() and out.read_text() == page
-        print("dashboard/index.html is up to date" if same else "dashboard/index.html differs from a fresh build")
+        if data["sample_csv"] is not None:
+            same = same and sample.exists() and sample.read_text() == data["sample_csv"]
+        print("dashboard/index.html is up to date" if same else "dashboard/index.html (or sample_flows.csv) differs from a fresh build")
         sys.exit(0 if same else 1)
     out.write_text(page)
+    if data["sample_csv"] is not None:
+        sample.write_text(data["sample_csv"])
     print(f"wrote {out} ({out.stat().st_size / 1e6:.1f} MB) | live models: {'yes' if a.assets else 'no'}")
 
 

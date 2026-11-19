@@ -7,7 +7,9 @@
 <style>
 :root{
   --ink:#1c1d1f; --ink2:#4b4f55; --ink3:#5f646b; --line:#e3e5e8; --panel:#f5f6f7; --paper:#fff;
-  --maroon:#6e2617; --teal:#2b7488; --red:#b5372a; --amber:#8a5a0e; --green:#2a7a4c; --slate:#4c5867;
+  --maroon:#6e2617; --teal:#2b7488; --red:#b5372a; --amber:#a86d12; --amber-ink:#8a5a0e; --green:#2a7a4c; --slate:#4c5867;
+  --t-slate:rgba(76,88,103,.07); --t-red:rgba(181,55,42,.07); --t-amber:rgba(168,109,18,.08); --t-green:rgba(42,122,76,.07);
+  --t-teal:rgba(43,116,136,.07); --t-maroon:rgba(110,38,23,.06);
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
   --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
@@ -15,179 +17,210 @@
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 var(--sans)}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
-header{padding:22px 36px 0;border-bottom:1px solid var(--line)}
+:focus-visible{outline:2px solid var(--maroon);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* header + pill navigation */
+header{padding:16px 36px 12px;border-bottom:1px solid var(--line)}
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:20px}
 .kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon);font-weight:600}
-h1{font-family:var(--serif);font-weight:600;font-size:30px;line-height:1.15;margin:6px 0 4px;letter-spacing:-.01em}
-.sub{color:var(--ink2);max-width:860px;margin:0 0 14px}
-.toprow{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}
+.brand{font-family:var(--serif);font-weight:600;font-size:21px;line-height:1.2;margin:2px 0 0}
+.side{display:flex;align-items:center;gap:8px;position:relative;flex:none}
 .chip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;border:1px solid var(--line);border-radius:999px;padding:4px 11px;color:var(--ink2);background:var(--paper);white-space:nowrap}
 .chip .dot{width:8px;height:8px;border-radius:50%;background:var(--ink3)}
-.chip.ok .dot{background:var(--green)} .chip.warn .dot{background:var(--amber)} .chip.bad .dot{background:var(--red)}
-nav{display:flex;gap:4px;margin-top:8px}
-nav button{font:inherit;font-size:14.5px;border:0;background:none;padding:10px 14px 11px;color:var(--ink2);cursor:pointer;border-bottom:2px solid transparent}
-nav button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--maroon);font-weight:600}
-nav button:hover{color:var(--ink)}
-main{padding:22px 36px 60px;max-width:1360px}
+.chip.ok{color:#246b43;border-color:#b9d8c5;background:var(--t-green)} .chip.ok .dot{background:var(--green)}
+.chip.warn .dot{background:var(--amber)} .chip.bad{color:#9c2f24} .chip.bad .dot{background:var(--red)}
+nav{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+nav button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--paper);padding:6px 14px;border-radius:999px;color:var(--ink2);cursor:pointer}
+nav button .k{font-family:var(--mono);font-size:11.5px;color:var(--ink3);margin-right:6px}
+nav button:hover{border-color:#c9ccd1;color:var(--ink)}
+nav button[aria-selected=true]{background:var(--maroon);border-color:var(--maroon);color:#fff;font-weight:600}
+nav button[aria-selected=true] .k{color:#f1ddd8}
+.btn{font:inherit;font-size:13.5px;border:1px solid var(--line);background:var(--paper);border-radius:7px;padding:6px 11px;cursor:pointer;color:var(--ink);text-decoration:none;display:inline-block}
+.btn:hover{border-color:#c9ccd1}
+.btn.on,.btn[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.primary{background:var(--maroon);border-color:var(--maroon);color:#fff;font-weight:600;padding:9px 16px}
+.btn.ghost{background:none}
+.btn.ghost[aria-pressed=true]{background:var(--ink);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.kbd{font-family:var(--mono);font-size:11px;border:1px solid #c9ccd1;border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--paper);color:var(--ink)}
+#help{position:absolute;right:0;top:100%;margin-top:8px;z-index:20;width:320px;box-shadow:0 8px 28px rgba(28,29,31,.12);font-size:13px}
+#help table{border-collapse:collapse;width:100%} #help td{padding:4px 0;vertical-align:top} #help td:first-child{white-space:nowrap;padding-right:12px}
+/* screens */
+main{padding:22px 36px 56px;max-width:1400px}
 section.tab{display:none} section.tab.on{display:block}
-h2{font-family:var(--serif);font-weight:600;font-size:21px;margin:0 0 4px}
-h3{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px;font-weight:600}
-.lede{color:var(--ink2);margin:0 0 18px;max-width:900px}
-.ev{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:4px;padding:2px 7px;margin-left:6px;vertical-align:2px}
-.ev.test{background:#e4f0f3;color:var(--teal)} .ev.val{background:#e8edf4;color:#2f4f78}
-.ev.pre{background:#e3f1e8;color:var(--green)} .ev.post{background:#f6ecd9;color:var(--amber)}
-.ev.diag{background:#eceef0;color:var(--slate)} .ev.neg{background:#f7e3e0;color:var(--red)}
-.grid1{display:grid;grid-template-columns:340px 1fr;gap:28px;align-items:start}
+h2{font-family:var(--serif);font-weight:600;font-size:26px;line-height:1.2;margin:0 0 4px}
+h3{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px;font-weight:600}
+.lede{color:var(--ink2);margin:0 0 18px;max-width:820px}
+.hd{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.ev{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:4px;padding:2px 7px;vertical-align:2px;white-space:nowrap}
+.ev.test{background:#e4f0f3;color:#245f70} .ev.val{background:#e8edf4;color:#2f4f78}
+.ev.pre{background:#e3f1e8;color:#246b43} .ev.post{background:#f6ecd9;color:var(--amber-ink)}
+.ev.diag{background:#eceef0;color:var(--slate)} .ev.neg{background:#f7e3e0;color:#9c2f24}
 .card{background:var(--panel);border-radius:10px;padding:16px 18px}
 .card.white{background:var(--paper);border:1px solid var(--line)}
+.tint-clean{background:var(--t-slate)} .tint-poisoned{background:var(--t-red)} .tint-poisoned_repair{background:var(--t-amber)}
+.tint-poisoned_relabel{background:var(--t-green)} .tint-teal{background:var(--t-teal)} .tint-maroon{background:var(--t-maroon)}
+.note{font-size:12.5px;color:var(--ink3);margin-top:8px;max-width:820px}
+details.more{margin-top:10px}
+details.more>summary,details.fold>summary{cursor:pointer;font-size:13px;color:#245f70;list-style:none;display:inline-flex;gap:6px;align-items:center}
+details.more>summary::-webkit-details-marker,details.fold>summary::-webkit-details-marker{display:none}
+details.more[open]>summary{margin-bottom:6px}
+details.fold{margin-top:16px;border:1px solid var(--line);border-radius:10px;padding:12px 16px;background:var(--paper)}
+details.fold>summary{font-size:14px;font-weight:600;color:var(--ink)}
+details.fold>summary::before{content:"\25B8";color:var(--ink3);transition:transform .15s}
+details.fold[open]>summary::before{transform:rotate(90deg)}
+details.fold[open]>summary{margin-bottom:12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.seg button{font:inherit;font-size:13.5px;border:0;background:var(--paper);padding:6px 12px;cursor:pointer;border-right:1px solid var(--line);color:var(--ink)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--ink);color:#fff}
+.seg button:disabled{color:#6f747b;background:#f3f4f5;cursor:not-allowed;text-decoration:line-through}
+.seg button:focus-visible{outline-offset:-3px}
+.lab{font-size:11.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:4px}
+.fade{animation:fade .15s ease-out} @keyframes fade{from{opacity:0}to{opacity:1}}
+/* overview */
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:6px 0 22px}
+.kpi{border-radius:12px;padding:18px 20px;border:1px solid var(--line)}
+.kpi .v{font-family:var(--serif);font-size:42px;font-weight:600;line-height:1.05;letter-spacing:-.01em}
+.kpi .l{color:var(--ink2);margin:6px 0 8px;font-size:14px}
+.method{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:0 0 22px;border:1px solid var(--line);border-radius:12px}
+.mstep{padding:16px 18px;position:relative;border-right:1px solid var(--line)}
+.mstep:last-child{border-right:0}
+.mstep svg{display:block;margin-bottom:8px}
+.mstep b{display:block;font-size:14.5px;margin-bottom:2px}
+.mstep span{font-size:13px;color:var(--ink2)}
+.mstep .arr{position:absolute;right:-9px;top:28px;width:18px;height:18px;background:var(--paper);border:1px solid var(--line);border-radius:50%;z-index:1;font-size:12px;line-height:15px;text-align:center;color:var(--ink3)}
+/* live detector */
+.subnav{margin:0 0 16px}
+.grid1{display:grid;grid-template-columns:330px 1fr;gap:26px;align-items:start}
 .btnrow{display:flex;flex-wrap:wrap;gap:6px}
-.btn{font:inherit;font-size:13.5px;border:1px solid var(--line);background:var(--paper);border-radius:7px;padding:6px 11px;cursor:pointer;color:var(--ink)}
-.btn:hover{border-color:#c9ccd1}
-.btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.btn.ghost{background:none}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.flowid{margin:12px 0 2px;font-size:13.5px;color:var(--ink2)}
-.flowid b{color:var(--ink)}
-.sl{margin:12px 0 0}
+.flowid{margin:12px 0 2px;font-size:13.5px;color:var(--ink2)} .flowid b{color:var(--ink)}
+.sl{margin:10px 0 0}
 .sl label{display:flex;justify-content:space-between;font-size:13px;color:var(--ink2);gap:8px}
 .sl label span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sl input[type=range]{width:100%;accent-color:var(--maroon)}
 .sl .edited{color:var(--maroon);font-weight:600}
 select{font:inherit;font-size:13.5px;padding:5px 8px;border:1px solid var(--line);border-radius:7px;background:var(--paper)}
-.models{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.mcard{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--paper);position:relative}
+.cmpbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 10px;flex-wrap:wrap}
+.story{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:8px;padding:9px 14px;margin:0 0 12px;font-size:14.5px;background:var(--paper);min-height:44px}
+.models{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mcard{border:1px solid var(--line);border-radius:10px;padding:13px 16px}
 .mcard .who{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14.5px}
-.mcard .sw{width:10px;height:10px;border-radius:2px}
-.mcard .desc{font-size:12.5px;color:var(--ink3);margin:2px 0 10px;min-height:34px}
+.sw{width:10px;height:10px;border-radius:2px;display:inline-block;flex:none}
+.mcard .desc{font-size:12.5px;color:var(--ink3);margin:1px 0 8px}
 .verdict{font-family:var(--serif);font-size:26px;font-weight:600;line-height:1.1;display:flex;align-items:baseline;gap:10px}
 .verdict small{font-family:var(--sans);font-size:12.5px;font-weight:600;padding:2px 8px;border-radius:999px}
-.verdict small.y{background:#e3f1e8;color:var(--green)} .verdict small.n{background:#f7e3e0;color:var(--red)}
-.bars{margin-top:10px}
-.bar{display:grid;grid-template-columns:62px 1fr 78px;align-items:center;gap:8px;font-size:12.5px;margin:4px 0}
+.verdict small.y{background:#e3f1e8;color:#246b43} .verdict small.n{background:#f7e3e0;color:#9c2f24}
+.bars{margin-top:8px}
+.bar{display:grid;grid-template-columns:58px 1fr 70px;align-items:center;gap:8px;font-size:12.5px;margin:3px 0}
 .bar .track{height:9px;background:#eceef0;border-radius:5px;overflow:hidden}
 .bar .fill{height:100%;border-radius:5px;transition:width .25s ease}
 .bar.na .track{background:repeating-linear-gradient(135deg,#eceef0 0 5px,#f7f8f9 5px 10px)}
 .bar.na .v{color:var(--ink3);font-style:italic;font-family:var(--sans)}
 .bar .v{text-align:right}
-.why{margin-top:18px}
+.models.duo .mcard{padding:20px 22px} .models.duo .who{font-size:17px} .models.duo .verdict{font-size:40px}
+.models.duo .verdict small{font-size:14px} .models.duo .bar{grid-template-columns:66px 1fr 80px;font-size:14px;margin:6px 0}
+.models.duo .bar .track{height:13px;border-radius:7px}
 .inf{display:grid;grid-template-columns:200px 1fr 60px;gap:10px;align-items:center;font-size:12.5px;margin:5px 0}
 .inf .track{height:8px;background:#eceef0;border-radius:4px;position:relative}
 .inf .fill{position:absolute;top:0;bottom:0;border-radius:4px;background:var(--maroon)}
-.note{font-size:12.5px;color:var(--ink3);margin-top:8px;max-width:820px}
-.callout{border-left:0;background:#f4efe9;border-radius:8px;padding:10px 14px;font-size:13.5px;color:#4a3328;margin:0 0 16px}
-.callout b{color:var(--maroon)}
-.batch{margin-top:28px}
+.all77{max-height:300px;overflow:auto;margin-top:8px;border:1px solid var(--line);border-radius:8px}
+.all77 table{border-collapse:collapse;width:100%;font-size:12px} .all77 td{padding:3px 8px;border-bottom:1px solid #f0f1f2}
+.all77 input{width:110px;font:12px var(--mono);border:1px solid var(--line);border-radius:4px;padding:2px 4px;text-align:right}
 .prog{height:6px;background:#eceef0;border-radius:3px;overflow:hidden;margin:8px 0 4px;max-width:560px}
 .prog div{height:100%;background:var(--teal);width:0;transition:width .2s}
-.cms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:12px}
+.cms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
 table.cm{border-collapse:collapse;font-size:12px;width:100%}
-table.cm th,table.cm td{padding:4px 5px;text-align:right}
-table.cm th{color:var(--ink3);font-weight:600}
-table.cm td.d{font-weight:700}
-table.cm caption{text-align:left;font-weight:600;font-size:13.5px;padding-bottom:6px}
+table.cm th,table.cm td{padding:4px 5px;text-align:right} table.cm th{color:var(--ink3);font-weight:600}
+table.cm td.d{font-weight:700} table.cm caption{text-align:left;font-weight:600;font-size:13.5px;padding-bottom:6px}
 table.t{border-collapse:collapse;font-size:13px;width:100%}
 table.t th,table.t td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right}
 table.t th:first-child,table.t td:first-child{text-align:left}
-table.t th{color:var(--ink3);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
-.grid2{display:grid;grid-template-columns:420px 1fr;gap:28px;align-items:start}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
-.seg button{font:inherit;font-size:13.5px;border:0;background:var(--paper);padding:6px 12px;cursor:pointer;border-right:1px solid var(--line)}
-.seg button:last-child{border-right:0}
-.seg button.on{background:var(--ink);color:#fff}
-.seg button:disabled{color:#c3c6cb;cursor:not-allowed}
-.ctl{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
-.ctl .lab{font-size:12px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:4px}
+table.t th{color:var(--ink3);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+.tl2 table.t td:nth-child(2),.tl2 table.t th:nth-child(2){text-align:left}
+.nl{color:#9c2f24;font-family:var(--sans);font-size:11.5px;font-weight:600;margin-left:4px}
+.ok{color:#246b43;font-weight:700} .no{color:#9c2f24;font-weight:700}
+/* own data */
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed #b9bfc6;border-radius:12px;padding:26px;text-align:center;cursor:pointer;background:var(--t-teal);transition:border-color .15s,background .15s}
+.drop.over{border-color:var(--teal);background:rgba(43,116,136,.13)}
+.drop b{font-size:16px}
+.ownrow{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;align-items:start}
+.rep{font-size:13.5px} .rep li{margin:3px 0} .rep ul{margin:6px 0 0;padding-left:18px}
+.stack{display:flex;height:22px;border-radius:5px;overflow:hidden;background:#eceef0}
+.stack div{height:100%;color:#fff;font-size:11.5px;font-family:var(--mono);display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap}
+.srow{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center;margin:6px 0;font-size:13px}
+.accs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:8px 0 12px}
+.acc{border-radius:10px;padding:10px 12px;border:1px solid var(--line)} .acc .v{font-family:var(--serif);font-size:26px;font-weight:600}
+.acc .l{font-size:12.5px;color:var(--ink2)}
+.owntab{max-height:460px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+.owntab table{border-collapse:collapse;font-size:12.5px;width:100%}
+.owntab th{position:sticky;top:0;background:var(--paper);text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink3);padding:6px 8px;border-bottom:1px solid var(--line)}
+.owntab td{padding:4px 8px;border-bottom:1px solid #f0f1f2;white-space:nowrap}
+.owntab tr.dis td{background:#fbf3e4}
+.flag{font-size:11px;font-weight:700;color:var(--amber-ink);letter-spacing:.03em}
+/* attack lab */
+.ctlrow{display:flex;flex-wrap:wrap;gap:16px 22px;align-items:flex-end;margin:0 0 16px}
+.grid2{display:grid;grid-template-columns:400px 1fr;gap:24px;align-items:start}
 canvas#buf{width:100%;height:auto;display:block;border-radius:6px}
-.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--ink2);margin-top:8px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink2);margin-top:8px}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
-.tl{display:flex;flex-direction:column;gap:12px}
-.step{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--paper)}
-.step .hd{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.step .hd b{font-size:14.5px}
-.step .hd>span{font-size:12.5px;color:var(--ink3)}
-.att{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.tl{display:flex;flex-direction:column;gap:10px}
+.step{border:1px solid var(--line);border-radius:10px;padding:11px 14px;background:var(--paper)}
+.step .hd2{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.step .hd2 b{font-size:14.5px} .step .hd2>span{font-size:12.5px;color:var(--ink3)}
+.att{margin-top:8px;border-top:1px dashed var(--line);padding-top:7px}
 .att .an{display:flex;justify-content:space-between;font-size:13px;font-weight:600}
 .pill{font-size:11.5px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px}
-.pill.acc{background:#e3f1e8;color:var(--green)} .pill.rej{background:#f7e3e0;color:var(--red)} .pill.kept{background:#eceef0;color:var(--slate)}
-.chk{display:grid;grid-template-columns:1fr 150px 52px;gap:8px;font-size:12.5px;align-items:center;margin:3px 0}
+.pill.acc{background:#e3f1e8;color:#246b43} .pill.rej{background:#f7e3e0;color:#9c2f24} .pill.kept{background:#eceef0;color:var(--slate)}
+.chk{display:grid;grid-template-columns:1fr 140px 52px;gap:8px;font-size:12.5px;align-items:center;margin:3px 0}
 .chk .gauge{height:7px;background:#eceef0;border-radius:4px;position:relative}
 .chk .gauge .f{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
 .chk .gauge .th{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
-.ok{color:var(--green);font-weight:700} .no{color:var(--red);font-weight:700}
 .heat{border-collapse:separate;border-spacing:4px;font-size:13px}
 .heat td,.heat th{text-align:center;padding:7px 10px;border-radius:6px}
 .heat th{color:var(--ink3);font-weight:600;font-size:12px}
-.heat td{cursor:pointer;font-family:var(--mono)}
-.heat td.sel{outline:2px solid var(--ink)}
-.ladder{display:flex;flex-direction:column;gap:8px}
-.rung{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:stretch}
-.rung .n{border-radius:8px;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px}
-.rung .b{background:var(--panel);border-radius:8px;padding:9px 13px;font-size:13.5px}
-.rung .b b{display:block;font-size:12px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:2px}
-.funnel .row{display:grid;grid-template-columns:1fr;margin:7px 0}
-.funnel .bx{height:24px;border-radius:5px;display:flex;align-items:center;padding:0 9px;color:#fff;font-size:12.5px;font-family:var(--mono);white-space:nowrap}
-.funnel .lb{font-size:12.5px;color:var(--ink2);margin-top:2px}
-.cols3{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:start}
-pre{font-family:var(--mono);font-size:12px;background:var(--paper);border-radius:8px;padding:12px 14px;margin:8px 0;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere}
-#followups table.t td:nth-child(2),#followups table.t th:nth-child(2){text-align:left}
-details summary{cursor:pointer;font-size:13px;color:var(--teal);margin-top:12px}
-.all77{max-height:300px;overflow:auto;margin-top:8px;border:1px solid var(--line);border-radius:8px}
-.all77 table{border-collapse:collapse;width:100%;font-size:12px}
-.all77 td{padding:3px 8px;border-bottom:1px solid #f0f1f2}
-.all77 input{width:110px;font:12px var(--mono);border:1px solid var(--line);border-radius:4px;padding:2px 4px;text-align:right}
-.empty{padding:28px;border:1px dashed #cfd3d8;border-radius:10px;color:var(--ink2);max-width:760px}
-footer{padding:18px 36px 40px;color:var(--ink3);font-size:12.5px;border-top:1px solid var(--line)}
-svg text{font-family:var(--sans)}
-@media (max-width:1100px){.grid1,.grid2,.cols3{grid-template-columns:1fr}.cms{grid-template-columns:repeat(2,1fr)}}
-/* ---- presentation polish ---- */
-:focus-visible{outline:2px solid var(--maroon);outline-offset:2px}
-.seg button:focus-visible,nav button:focus-visible{outline-offset:-3px}
-.toprow>div:first-child{min-width:0;flex:1}
-.stats{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 6px}
-.stat{display:inline-flex;align-items:baseline;gap:7px;border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12.5px;color:var(--ink2);background:var(--paper)}
-.stat b{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--maroon);white-space:nowrap}
-.stat .ev{margin-left:2px;vertical-align:1px}
-.side{display:flex;flex-direction:column;align-items:flex-end;gap:8px;position:relative;flex:none}
-.hint{display:flex;gap:6px;align-items:center}
-.hint .btn{font-size:12.5px;padding:3px 9px;color:var(--ink2)}
-.hint .btn[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
-.kbd{font-family:var(--mono);font-size:11px;border:1px solid #c9ccd1;border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--paper);color:var(--ink)}
-#help{position:absolute;right:0;top:100%;margin-top:6px;z-index:20;width:310px;box-shadow:0 8px 28px rgba(28,29,31,.12);font-size:13px}
-#help table{border-collapse:collapse;width:100%}
-#help td{padding:4px 0;vertical-align:top}
-#help td:first-child{white-space:nowrap;padding-right:12px}
-.story{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:8px;padding:9px 14px;margin:0 0 12px;font-size:14.5px;background:var(--paper);min-height:44px}
-.cmpbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 10px;flex-wrap:wrap}
-.cmpbar .lab{font-size:12px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
-.models.duo .mcard{padding:20px 22px}
-.models.duo .who{font-size:17px}
-.models.duo .verdict{font-size:40px}
-.models.duo .verdict small{font-size:14px}
-.models.duo .bar{grid-template-columns:70px 1fr 86px;font-size:14px;margin:6px 0}
-.models.duo .bar .track{height:13px;border-radius:7px}
-.fade{animation:fade .15s ease-out}
-@keyframes fade{from{opacity:0}to{opacity:1}}
-.playrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.playrow .note{margin:0}
+.heat td{cursor:pointer;font-family:var(--mono)} .heat td.sel{outline:2px solid var(--ink)}
 .heat td.na{color:var(--ink3);cursor:default;font-family:var(--sans);font-size:12px}
-.nl{color:var(--red);font-family:var(--sans);font-size:11.5px;font-weight:600;margin-left:4px}
-.fucards{display:grid;grid-template-columns:1fr;gap:22px;margin-top:22px}
-.takeaway{font-family:var(--serif);font-size:18px;font-weight:600;line-height:1.35;color:var(--ink);margin:2px 0 12px;max-width:980px}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* results */
+.charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+.ib{display:inline-flex;width:15px;height:15px;border:1.5px solid currentColor;border-radius:50%;font:700 10px/1 var(--serif);align-items:center;justify-content:center;font-style:italic}
+.chart{border:1px solid var(--line);border-radius:12px;padding:14px 16px 12px;background:var(--paper);min-width:0}
+.chart .ttl{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.chart .ttl b{font-size:14.5px}
+.chart .take{font-family:var(--serif);font-size:16.5px;font-weight:600;line-height:1.35;margin:4px 0 6px}
+.chart svg text{font-family:var(--sans)}
+.empty{padding:22px;border:1px dashed #b9bfc6;border-radius:10px;color:var(--ink2)}
+/* evidence */
+.cols3{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:start}
+.ladder{display:flex;flex-direction:column;gap:7px}
+.rung{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:stretch}
+.rung .n{border-radius:8px;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:16px}
+.rung .b{border-radius:8px;padding:8px 12px;font-size:13.5px}
+.rung .b b{display:block;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1px}
+.funnel .row{margin:6px 0}
+.funnel .bx{height:22px;border-radius:5px;display:flex;align-items:center;padding:0 9px;color:#fff;font-size:12.5px;font-family:var(--mono);white-space:nowrap}
+.funnel .lb{font-size:12.5px;color:var(--ink2);margin-top:2px}
+pre{font-family:var(--mono);font-size:12px;background:var(--paper);border-radius:8px;padding:10px 12px;margin:8px 0;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere}
+footer{padding:14px 36px 30px;color:var(--ink3);font-size:12.5px;border-top:1px solid var(--line)}
+@media (max-width:1180px){.charts{grid-template-columns:1fr}}
+@media (max-width:1100px){.grid1,.grid2,.cols3,.ownrow{grid-template-columns:1fr}.cms,.accs{grid-template-columns:repeat(2,1fr)}.method{grid-template-columns:repeat(2,1fr)}}
 body.presenter header,body.presenter main{zoom:1.2}
 body.presenter footer{display:none}
 body.presenter .cms{grid-template-columns:repeat(2,minmax(0,1fr))}
+body.presenter .charts{grid-template-columns:1fr}
 @media (prefers-reduced-motion:reduce){.fade{animation:none}.bar .fill,.prog div{transition:none}}
 @media print{
   @page{margin:12mm}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   html,body{font-size:12px}
   body.presenter header,body.presenter main{zoom:1}
-  nav,.hint,#help,.playrow,.cmpbar .seg,details,#t1 .btnrow,#reset{display:none!important}
-  header{padding:0 0 8px}
+  nav,.side .btn,#help,.playrow,.cmpbar .seg,.subnav,.drop,#ownbtns,#reset,#t-live .btnrow,.ownact,#startdemo{display:none!important}
   main{padding:8px 0 0;max-width:none}
   section.tab{display:block!important;break-before:page}
-  section#t1{break-before:auto}
-  .card,.mcard,.step,.rung,table,.story{break-inside:avoid}
+  section#t-ov{break-before:auto}
+  #livebatch{display:block!important}
+  .card,.mcard,.step,.rung,table,.story,.chart,.kpi{break-inside:avoid}
+  .charts{grid-template-columns:1fr}
   footer{display:block!important;padding:10px 0 0}
 }
 </style>
@@ -197,21 +230,18 @@ body.presenter .cms{grid-template-columns:repeat(2,minmax(0,1fr))}
   <div class="toprow">
     <div>
       <div class="kicker">VIT-AP Capstone · Poison-resilient continual intrusion detection</div>
-      <h1>What happens when a learning detector's memory is poisoned</h1>
-      <p class="sub">A detector that keeps learning new attacks rehearses a small replay buffer of old flows. Here an attacker has flipped the stored Syn labels to BENIGN. This page runs the real deployed models in your browser and replays the committed experiment records.</p>
+      <div class="brand">Continual NIDS under replay poisoning</div>
     </div>
     <div class="side">
       <div id="status" class="chip" role="status" aria-live="polite"><span class="dot" aria-hidden="true"></span><span>loading</span></div>
-      <div class="hint">
-        <button class="btn ghost" id="presbtn" aria-pressed="false" title="Larger fonts, no footer (key P)">Presenter mode (<span class="kbd">P</span>)</button>
-        <button class="btn ghost" id="helpbtn" aria-expanded="false" aria-controls="help" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">?</button>
-      </div>
+      <button class="btn ghost" id="presbtn" aria-pressed="false" title="Larger fonts, no footer (key P)">Presenter mode (<span class="kbd">P</span>)</button>
+      <button class="btn ghost" id="helpbtn" aria-expanded="false" aria-controls="help" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">?</button>
       <div id="help" class="card white" role="dialog" aria-label="Keyboard shortcuts" hidden>
         <h3>Keyboard shortcuts</h3>
         <table>
-          <tr><td><span class="kbd">1</span> <span class="kbd">2</span> <span class="kbd">3</span></td><td>switch tabs</td></tr>
-          <tr><td><span class="kbd">←</span> <span class="kbd">→</span></td><td>previous / next flow of the chosen class (tab 1)</td></tr>
-          <tr><td><span class="kbd">R</span></td><td>random flow (tab 1)</td></tr>
+          <tr><td><span class="kbd">1</span>–<span class="kbd">6</span></td><td>switch screens</td></tr>
+          <tr><td><span class="kbd">←</span> <span class="kbd">→</span></td><td>previous / next flow (Live detector)</td></tr>
+          <tr><td><span class="kbd">R</span></td><td>random flow (Live detector)</td></tr>
           <tr><td><span class="kbd">P</span></td><td>presenter mode: larger fonts, no footer</td></tr>
           <tr><td><span class="kbd">?</span></td><td>show or hide this list</td></tr>
           <tr><td><span class="kbd">Esc</span></td><td>close this list, leave a slider</td></tr>
@@ -219,80 +249,86 @@ body.presenter .cms{grid-template-columns:repeat(2,minmax(0,1fr))}
       </div>
     </div>
   </div>
-  <div class="stats" id="stats" role="list" aria-label="Headline results"></div>
-  <nav role="tablist" aria-label="Dashboard sections">
-    <button role="tab" id="tab-t1" aria-controls="t1" aria-selected="true" data-tab="t1">1 · Detect a flow</button>
-    <button role="tab" id="tab-t2" aria-controls="t2" aria-selected="false" data-tab="t2">2 · Poison the buffer</button>
-    <button role="tab" id="tab-t3" aria-controls="t3" aria-selected="false" data-tab="t3">3 · What we claim</button>
-  </nav>
+  <nav role="tablist" aria-label="Dashboard screens" id="nav"></nav>
 </header>
 
 <main>
-<!-- ============================================================ TAB 1 -->
-<section class="tab on" id="t1" role="tabpanel" aria-labelledby="tab-t1">
-  <h2>One flow in, four verdicts out <span class="ev test">held-out test flows</span></h2>
-  <p class="lede">All four models saw the same stream (BENIGN + Syn, then + LDAP, then + UDP), with <b>every</b> stored Syn label flipped to BENIGN (f = 1.0, seed 42). They differ only in how an update was accepted.</p>
-  <div id="t1body"></div>
-</section>
-
-<!-- ============================================================ TAB 2 -->
-<section class="tab" id="t2" role="tabpanel" aria-labelledby="tab-t2">
-  <h2>Poison the buffer, watch the gate <span class="ev val">gate decisions: validation</span><span class="ev test">final result: held-out test</span></h2>
-  <p class="lede">Choose how much of the stored Syn memory the attacker flips and which defence is running. Every number below is read from the committed run records of the pre-registered sweep and of FU2; nothing here is simulated.</p>
-  <div class="grid2">
-    <div>
-      <div class="ctl">
-        <div><div class="lab" id="labF">Stored Syn labels flipped to BENIGN</div><div class="seg" id="segF" role="group" aria-labelledby="labF"></div></div>
-        <div><div class="lab" id="labS">Seed</div><div class="seg" id="segS" role="group" aria-labelledby="labS"></div></div>
-        <div><div class="lab" id="labA">Defence</div><div class="seg" id="segA" role="group" aria-labelledby="labA"></div></div>
-        <div class="playrow"><button class="btn" id="play" aria-pressed="false">&#9656; Play 75% &#8594; 100%</button><span class="note" id="playnote" aria-live="polite">steps through the flip fractions with the chosen defence, 1.5 s each</span></div>
-      </div>
-      <div class="card white">
-        <h3>The replay buffer: 2,000 stored Syn flows</h3>
-        <canvas id="buf" width="800" height="640" role="img" aria-label="Replay buffer: one cell per stored Syn flow; red cells are labels flipped to BENIGN"></canvas>
-        <div class="legend" id="bufleg"></div>
-        <div class="note" id="bufnote"></div>
-      </div>
-      <div class="card" style="margin-top:16px">
-        <h3>All settings: seeds whose deployed model learned all 4 classes</h3>
-        <table class="heat" id="heat"></table>
-        <div class="note">Click a cell (or focus it and press Enter) to load it. Relabel repair exists only at f = 1.0 (FU2, post hoc); n/a = not run.</div>
-      </div>
-    </div>
-    <div class="tl" id="timeline"></div>
+<!-- 1 OVERVIEW -->
+<section class="tab on" id="t-ov" role="tabpanel" aria-labelledby="tab-ov">
+  <h2>Poisoned memory, caught and repaired</h2>
+  <p class="lede">A detector that keeps learning rehearses stored flows. An attacker flips the stored Syn labels to BENIGN; a gate and a teacher fight back.</p>
+  <div class="kpis" id="kpis" role="list" aria-label="Headline results"></div>
+  <div class="method" id="method" aria-label="Method in four steps"></div>
+  <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+    <button class="btn primary" id="startdemo">Start the demo &#8594;</button>
+    <details class="more" style="margin:0"><summary><span class="ib" aria-hidden="true">i</span> more</summary><div class="note" id="ovmore"></div></details>
   </div>
 </section>
 
-<!-- ============================================================ TAB 3 -->
-<section class="tab" id="t3" role="tabpanel" aria-labelledby="tab-t3">
-  <h2>What this project claims, and what it does not</h2>
-  <p class="lede">Each claim carries the kind of evidence behind it. Pre-registered means the hypothesis and thresholds were committed to git before the run.</p>
-  <div class="cols3">
-    <div>
-      <div class="ladder" id="ladder"></div>
-      <div class="card" style="margin-top:22px">
-        <h3>The blind spot: recall holds, confidence falls <span class="ev post">post hoc (RF)</span></h3>
-        <div id="rfchart"></div>
-        <div class="note" id="rfnote"></div>
-      </div>
+<!-- 2 LIVE DETECTOR -->
+<section class="tab" id="t-live" role="tabpanel" aria-labelledby="tab-live">
+  <div class="hd"><h2>One flow in, four verdicts out</h2><span class="ev test">held-out test flows</span></div>
+  <p class="lede">Same stream, every stored Syn label flipped (f = 1.0, seed 42). Only the update rule differs.</p>
+  <div class="subnav"><div class="seg" id="segLive" role="group" aria-label="Live detector view"></div></div>
+  <div id="livebody"></div>
+</section>
+
+<!-- 3 TRY YOUR OWN DATA -->
+<section class="tab" id="t-own" role="tabpanel" aria-labelledby="tab-own">
+  <div class="hd"><h2>Check the models on your own flows</h2></div>
+  <p class="lede">Drop a CSV with CICDDoS2019 columns; an optional Label column adds metrics.</p>
+  <div id="ownbody"></div>
+</section>
+
+<!-- 4 ATTACK LAB -->
+<section class="tab" id="t-lab" role="tabpanel" aria-labelledby="tab-lab">
+  <div class="hd"><h2>Poison the buffer, watch the gate</h2><span class="ev val">gate: validation</span><span class="ev test">result: test</span></div>
+  <p class="lede">Pick how much stored Syn memory is flipped and which defence runs. Every number is from the committed runs.</p>
+  <div class="ctlrow">
+    <div><div class="lab" id="labF">Syn labels flipped</div><div class="seg" id="segF" role="group" aria-labelledby="labF"></div></div>
+    <div><div class="lab" id="labS">Seed</div><div class="seg" id="segS" role="group" aria-labelledby="labS"></div></div>
+    <div><div class="lab" id="labA">Defence</div><div class="seg" id="segA" role="group" aria-labelledby="labA"></div></div>
+    <div class="playrow" style="display:flex;gap:10px;align-items:center"><button class="btn" id="play" aria-pressed="false">&#9656; Play 75% &#8594; 100%</button><span class="note" id="playnote" aria-live="polite" style="margin:0"></span></div>
+  </div>
+  <div class="grid2">
+    <div class="card white">
+      <h3>Replay buffer: 2,000 stored Syn flows</h3>
+      <canvas id="buf" width="800" height="640" role="img" aria-label="Replay buffer: one cell per stored Syn flow; red cells are labels flipped to BENIGN"></canvas>
+      <div class="legend" id="bufleg"></div>
+      <details class="more"><summary><span class="ib" aria-hidden="true">i</span> more</summary><div class="note" id="bufnote"></div></details>
     </div>
+    <div class="tl" id="timeline"></div>
+  </div>
+  <details class="fold"><summary>All settings: seeds whose deployed model learned all 4 classes</summary>
+    <table class="heat" id="heat"></table>
+    <div class="note">Click a cell (or focus it and press Enter) to load it. Relabel repair exists only at f = 1.0 (FU2, post hoc); n/a = not run.</div>
+  </details>
+</section>
+
+<!-- 5 RESULTS -->
+<section class="tab" id="t-res" role="tabpanel" aria-labelledby="tab-res">
+  <div class="hd"><h2>The results, one chart each</h2></div>
+  <p class="lede">Every bar and dot is read from the committed result files. Hover a mark for its value.</p>
+  <div class="charts" id="charts"></div>
+</section>
+
+<!-- 6 EVIDENCE -->
+<section class="tab" id="t-ev" role="tabpanel" aria-labelledby="tab-ev">
+  <div class="hd"><h2>What we claim, and what we do not</h2></div>
+  <p class="lede">Each claim carries its evidence type. Pre-registered: hypothesis and thresholds committed before the run.</p>
+  <div class="cols3">
+    <div><div class="ladder" id="ladder"></div></div>
     <div>
-      <div class="card">
-        <h3>From raw data to training rows <span class="ev diag">data audit</span></h3>
-        <div class="funnel" id="funnel"></div>
-      </div>
-      <div class="card" style="margin-top:18px">
-        <h3>Integrity of this page</h3>
-        <div id="integrity" style="font-size:13px"></div>
-        <pre>python make_report_tables.py --check
-python dashboard/build_dashboard.py --assets dashboard/dashboard_assets.json --check</pre>
-      </div>
+      <div class="card"><h3>From raw data to training rows <span class="ev diag">data audit</span></h3><div class="funnel" id="funnel"></div></div>
+      <div class="card" style="margin-top:14px"><h3>Integrity of this page</h3><div id="integrity" style="font-size:13px"></div>
+        <details class="more"><summary><span class="ib" aria-hidden="true">i</span> how to re-check</summary><pre>python make_report_tables.py --check
+python dashboard/build_dashboard.py --assets dashboard/dashboard_assets.json --check</pre></details></div>
     </div>
   </div>
   <div id="followups"></div>
 </section>
 </main>
-<footer>Code, pre-registrations and every result file: github.com/DevChi1l/cicddos2019-continual-nids · Scope: four classes, one attacked class (Syn), CII schedule, 3 seeds; no significance claim. Splits are random at flow level.</footer>
+<footer>Code, pre-registrations and every result file: github.com/DevChi1l/cicddos2019-continual-nids · Scope: one attacked class (Syn), CII schedule; no significance claim. Splits are random at flow level.</footer>
 
 <script id="data" type="application/json">__DATA__</script>
 <script>
@@ -304,300 +340,61 @@ const DATA = JSON.parse(document.getElementById("data").textContent);
 const RES = DATA.results, A = DATA.assets;
 const $ = (s, r = document) => r.querySelector(s);
 const el = (tag, attrs = {}, html) => { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (html !== undefined) e.innerHTML = html; return e; };
-const f3 = v => v == null ? "–" : v.toFixed(3), f4 = v => v == null ? "–" : v.toFixed(4);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const f2 = v => v == null ? "–" : v.toFixed(2), f3 = v => v == null ? "–" : v.toFixed(3), f4 = v => v == null ? "–" : v.toFixed(4);
 const pct = v => (100 * v).toFixed(v > 0.999 || v < 0.001 ? 2 : 1) + "%";
+const mean = a => a.length ? a.reduce((s, v) => s + v, 0) / a.length : null;
+const near = (a, b) => Math.abs(a - b) < 1e-9;
 const CLASSES = ["BENIGN", "Syn", "LDAP", "UDP"];
+const COL = {clean: "#4c5867", poisoned: "#b5372a", poisoned_repair: "#a86d12", poisoned_relabel: "#2a7a4c", teal: "#2b7488", maroon: "#6e2617"};
+const INK = {clean: "#4c5867", poisoned: "#b5372a", poisoned_repair: "#8a5a0e", poisoned_relabel: "#2a7a4c", teal: "#245f70", maroon: "#6e2617"};
+const CLSCOL = {BENIGN: "#2b7488", Syn: "#6e2617", LDAP: "#8a5a0e", UDP: "#4c5867", TFTP: "#2a7a4c"};
 const ARMS = [
-  {k: "clean", name: "Clean reference", color: "var(--slate)", desc: "No poison. What the stream should produce."},
-  {k: "poisoned", name: "Gate only", color: "var(--red)", desc: "Gate rejected both poisoned updates; the E0 model kept serving."},
-  {k: "poisoned_repair", name: "Soft repair", color: "var(--amber)", desc: "Registered repair: down-weights doubted rows. Fails at 100% flips.", tag: "pre"},
-  {k: "poisoned_relabel", name: "Relabel repair", color: "var(--green)", desc: "Frozen teacher relabels the flipped rows (FU2).", tag: "post"},
+  {k: "clean", name: "Clean reference", desc: "No attack. What the stream should produce."},
+  {k: "poisoned", name: "Gate only", desc: "Rejects poisoned updates; the E0 model keeps serving."},
+  {k: "poisoned_repair", name: "Soft repair", desc: "Down-weights doubted rows. Fails at 100% flips.", tag: "pre"},
+  {k: "poisoned_relabel", name: "Relabel repair", desc: "A frozen teacher relabels the flipped rows (FU2).", tag: "post"},
 ];
+const ARM_WORD = {clean: "the clean reference", poisoned: "gate only", poisoned_repair: "soft repair", poisoned_relabel: "relabel repair"};
+const TABS = [["ov", "Overview"], ["live", "Live detector"], ["own", "Try your own data"], ["lab", "Attack lab"], ["res", "Results"], ["ev", "Evidence"]];
+function setStatus(cls, text) { const s = $("#status"); s.className = "chip " + cls; s.lastElementChild.textContent = text; }
+function tag(kind, text) { return `<span class="ev ${kind}">${text}</span>`; }
+function segBtns(box, items, cur, onPick) {
+  box.innerHTML = "";
+  items.forEach(([v, lab, dis]) => { const on = cur === v, b = el("button", {"aria-pressed": on}, lab); b.classList.toggle("on", on);
+    if (dis) { b.disabled = true; b.title = dis; } b.onclick = () => onPick(v); box.appendChild(b); });
+}
 
-/* ---------------- tabs, presenter mode, shortcuts ---------------- */
+/* ---------------- navigation, presenter mode, shortcuts ---------------- */
+TABS.forEach(([id, name], i) => { const b = el("button", {role: "tab", id: "tab-" + id, "aria-controls": "t-" + id, "aria-selected": i === 0, "data-tab": id}, `<span class="k">${i + 1}</span>${name}`); b.onclick = () => showTab(id); $("#nav").appendChild(b); });
 function showTab(id) {
-  document.querySelectorAll("nav button").forEach(x => x.setAttribute("aria-selected", x.dataset.tab === id));
-  document.querySelectorAll("section.tab").forEach(s => s.classList.toggle("on", s.id === id));
-  if (id !== "t2") stopPlay();
+  document.querySelectorAll("#nav button").forEach(x => x.setAttribute("aria-selected", x.dataset.tab === id));
+  document.querySelectorAll("section.tab").forEach(s => s.classList.toggle("on", s.id === "t-" + id));
+  if (id !== "lab") stopPlay();
 }
-document.querySelectorAll("nav button").forEach(b => b.onclick = () => showTab(b.dataset.tab));
-function togglePresenter(on) {
-  on = on === undefined ? !document.body.classList.contains("presenter") : on;
-  document.body.classList.toggle("presenter", on); $("#presbtn").setAttribute("aria-pressed", on);
-}
-function toggleHelp(on) {
-  const h = $("#help"); on = on === undefined ? h.hidden : on;
-  h.hidden = !on; $("#helpbtn").setAttribute("aria-expanded", on);
-}
+function curTab() { return document.querySelector("section.tab.on").id.slice(2); }
+function togglePresenter(on) { on = on === undefined ? !document.body.classList.contains("presenter") : on; document.body.classList.toggle("presenter", on); $("#presbtn").setAttribute("aria-pressed", on); }
+function toggleHelp(on) { const h = $("#help"); on = on === undefined ? h.hidden : on; h.hidden = !on; $("#helpbtn").setAttribute("aria-expanded", on); }
 document.addEventListener("click", e => { if (!$("#help").hidden && !e.target.closest("#help,#helpbtn")) toggleHelp(false); });
 document.addEventListener("keydown", e => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   const t = e.target, typing = t.closest && t.closest("input,select,textarea,[contenteditable=true]");
   if (e.key === "Escape") { if (!$("#help").hidden) toggleHelp(false); else if (typing) t.blur(); return; }
-  if (typing) return; // sliders and number boxes keep their own arrow keys
-  const tab = document.querySelector("section.tab.on").id;
-  switch (e.key) {
-    case "1": case "2": case "3": showTab("t" + e.key); break;
-    case "p": case "P": togglePresenter(); break;
-    case "?": toggleHelp(); break;
-    case "ArrowLeft": case "ArrowRight": if (tab !== "t1" || !ROWS) return; step(e.key === "ArrowLeft" ? -1 : 1); break;
-    case "r": case "R": if (tab !== "t1" || !ROWS) return; select(Math.floor(Math.random() * ROWS.label.length)); break;
-    default: return;
-  }
+  if (typing) return;
+  if (/^[1-6]$/.test(e.key)) showTab(TABS[+e.key - 1][0]);
+  else if (e.key === "p" || e.key === "P") togglePresenter();
+  else if (e.key === "?") toggleHelp();
+  else if ((e.key === "ArrowLeft" || e.key === "ArrowRight") && curTab() === "live" && ROWS) step(e.key === "ArrowLeft" ? -1 : 1);
+  else if ((e.key === "r" || e.key === "R") && curTab() === "live" && ROWS) select(Math.floor(Math.random() * ROWS.label.length));
+  else return;
   e.preventDefault();
 });
-function setStatus(cls, text) { const s = $("#status"); s.className = "chip " + cls; s.lastElementChild.textContent = text; }
+const opened = [];
+addEventListener("beforeprint", () => document.querySelectorAll("details:not([open])").forEach(d => { d.open = true; opened.push(d); }));
+addEventListener("afterprint", () => { opened.splice(0).forEach(d => d.open = false); });
 
-/* =============================================================== TAB 1: live detector */
-let MODELS = {}, ROWS = null, cur = null, curRaw = null, curProto = null, benignMed = null, sliders = [];
-function initLive() {
-  const body = $("#t1body");
-  if (!A) {
-    body.innerHTML = `<div class="empty"><b>Model weights are not bundled in this build.</b><br>Run <code>python make_dashboard_assets.py</code> on the Kaggle outputs, then <code>python dashboard/build_dashboard.py --assets dashboard/dashboard_assets.json</code>. Tabs 2 and 3 work without them.</div>`;
-    setStatus("warn", "results only (no model weights)");
-    return;
-  }
-  const hp = A.meta.hp;
-  for (const a of ARMS) MODELS[a.k] = NIDS.Model(A.models[a.k], hp);
-  ROWS = A.rows;
-  // typical BENIGN input (median of scaled values over the sampled BENIGN rows), for the sensitivity check
-  const F = A.scaler.features_numeric.length, cols = Array.from({length: F}, () => []);
-  ROWS.label.forEach((l, i) => { if (l === "BENIGN") { const x = NIDS.scaleRow(ROWS.num[i], A.scaler); for (let j = 0; j < F; j++) cols[j].push(x[j]); } });
-  benignMed = cols.map(c => { c.sort((a, b) => a - b); return c.length ? c[c.length >> 1] : 0; });
-
-  body.innerHTML = `
-  <div class="callout"><b>Try this:</b> pick an <b>LDAP</b> or <b>UDP</b> flow. The gate-only model never learned those attacks, so it calls them BENIGN with full confidence. The relabel-repaired model catches them.</div>
-  <div class="grid1">
-    <div class="card">
-      <h3>1 · Choose a held-out flow</h3>
-      <div class="btnrow" id="clsbtn"></div>
-      <div class="btnrow" style="margin-top:8px"><button class="btn ghost" id="prev" aria-label="previous flow (left arrow)">‹ previous</button><button class="btn ghost" id="next" aria-label="next flow (right arrow)">next ›</button><button class="btn ghost" id="rnd" aria-label="random flow (R)">random</button></div>
-      <div class="flowid" id="flowid"></div>
-      <h3 style="margin-top:18px">2 · Edit the flow</h3>
-      <div class="sl"><label for="proto"><span>protocol</span></label><select id="proto" aria-label="protocol"><option value="6">TCP (6)</option><option value="17">UDP (17)</option><option value="0">HOPOPT (0)</option></select></div>
-      <div id="sliders"></div>
-      <div class="btnrow" style="margin-top:12px"><button class="btn" id="reset">reset to the recorded flow</button></div>
-      <details><summary>show all 77 input features</summary><div class="all77"><table id="all77"></table></div></details>
-      <div class="note">Sliders show the six features that move the relabel-repaired model's verdict most for this flow. Values are raw CICFlowMeter units; the page applies the frozen scaler itself.</div>
-    </div>
-    <div>
-      <div class="cmpbar"><span class="lab" id="labCmp">Compare</span><div class="seg" id="segCmp" role="group" aria-labelledby="labCmp"></div></div>
-      <div class="story" id="story" aria-live="polite"></div>
-      <div class="models" id="mcards"></div>
-      <div class="card white why"><h3 id="whyh">Why this verdict</h3><div id="why"></div>
-        <div class="note">Sensitivity check: each bar is how far the model's probability for its chosen class falls when that one feature is replaced by a typical BENIGN value. It shows what the model relies on, not why the traffic is malicious.</div></div>
-    </div>
-  </div>
-  <div class="batch">
-    <h2>On ${ROWS.label.length.toLocaleString()} sampled held-out flows</h2>
-    <p class="lede" id="batchlede">Each model runs on every sampled flow in a background thread; the result is compared with PyTorch's own output for the same flow.</p>
-    <div class="prog"><div id="progbar"></div></div><div class="note num" id="progtxt"></div>
-    <div class="cms" id="cms"></div>
-    <div class="card white" style="margin-top:18px"><h3>Full held-out test set, computed in PyTorch <span class="ev test">46,527 rows</span></h3><div id="fulltab"></div></div>
-  </div>`;
-
-  const cb = $("#clsbtn");
-  cb.setAttribute("role", "group"); cb.setAttribute("aria-label", "true class of the flow");
-  CLASSES.forEach(k => { const b = el("button", {class: "btn", "aria-pressed": "false"}, k); b.onclick = () => pickClass(k); cb.appendChild(b); });
-  cmpSeg(); buildCards();
-  $("#prev").onclick = () => step(-1); $("#next").onclick = () => step(1);
-  $("#rnd").onclick = () => select(Math.floor(Math.random() * ROWS.label.length));
-  $("#reset").onclick = () => select(cur);
-  $("#proto").onchange = e => { curProto = +e.target.value; predictAll(); };
-  pickClass("LDAP");
-  fullTable();
-  runBatch();
-}
-let curClass = "LDAP";
-function pickClass(k) {
-  curClass = k;
-  markClass();
-  const idx = ROWS.label.map((l, i) => l === k ? i : -1).filter(i => i >= 0);
-  select(idx[0]);
-}
-function step(d) {
-  const idx = ROWS.label.map((l, i) => l === curClass ? i : -1).filter(i => i >= 0);
-  let p = idx.indexOf(cur); p = (p + d + idx.length) % idx.length; select(idx[p]);
-}
-function select(i) {
-  cur = i; curRaw = ROWS.num[i].slice(); curProto = ROWS.cat[i][0];
-  if (ROWS.label[i] !== curClass) { curClass = ROWS.label[i]; markClass(); }
-  $("#proto").value = String(curProto);
-  const idx = ROWS.label.map((l, j) => l === curClass ? j : -1).filter(j => j >= 0);
-  $("#flowid").innerHTML = `Flow <b class="num">#${ROWS.rid[i]}</b> · true class <b>${ROWS.label[i]}</b> · ${idx.indexOf(i) + 1} of ${idx.length}`;
-  buildAll77();
-  predictAll(true);
-}
-function markClass() { document.querySelectorAll("#clsbtn .btn").forEach(b => { const on = b.textContent === curClass; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); }); }
-function buildAll77() {
-  const t = $("#all77"); t.innerHTML = "";
-  A.scaler.features_numeric.forEach((n, j) => {
-    const tr = el("tr"); tr.appendChild(el("td", {}, n));
-    const td = el("td", {style: "text-align:right"}); const inp = el("input", {type: "number", step: "any", "aria-label": n}); inp.value = curRaw[j];
-    inp.onchange = () => { const v = parseFloat(inp.value); if (isFinite(v)) { curRaw[j] = v; syncSliders(); predictAll(); } };
-    td.appendChild(inp); tr.appendChild(td); t.appendChild(tr);
-  });
-}
-function probs(arm, raw, proto) { return MODELS[arm].forward(NIDS.scaleRow(raw, A.scaler), NIDS.protoCode(proto, A.scaler)); }
-function argmax(p) { let k = 0; for (let i = 1; i < p.length; i++) if (p[i] > p[k]) k = i; return k; }
-/* compare mode: all four models, or the two that tell the story side by side (big cards for a projector) */
-let CMP = "all";
-const DUO = ["poisoned", "poisoned_relabel"];
-function cmpSeg() {
-  const box = $("#segCmp"); box.innerHTML = "";
-  [["all", "All four models"], ["duo", "Gate only vs Relabel"]].forEach(([v, lab]) => {
-    const b = el("button", {"aria-pressed": CMP === v}, lab); b.classList.toggle("on", CMP === v);
-    b.onclick = () => { CMP = v; cmpSeg(); buildCards(); predictAll(); }; box.appendChild(b); });
-}
-let CARDS = [];
-function buildCards() {
-  const box = $("#mcards"); box.innerHTML = ""; box.classList.toggle("duo", CMP === "duo");
-  CARDS = ARMS.filter(a => CMP === "all" || DUO.includes(a.k)).map(a => {
-    const m = MODELS[a.k], c = el("div", {class: "mcard", role: "group", "aria-label": a.name});
-    c.innerHTML = `<div class="who"><span class="sw" style="background:${a.color}" aria-hidden="true"></span>${a.name}${a.tag ? `<span class="ev ${a.tag}">${a.tag === "pre" ? "registered" : "post hoc"}</span>` : ""}</div>
-      <div class="desc">${a.desc}</div>
-      <div class="verdict" aria-live="polite"><span class="vt"></span><small></small></div>
-      <div class="bars">${CLASSES.map(cl => m.classes.includes(cl)
-        ? `<div class="bar"><span>${cl}</span><div class="track" role="meter" aria-label="${a.name}: probability ${cl}" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0"><div class="fill" style="width:0%;background:${a.color}"></div></div><span class="v num"></span></div>`
-        : `<div class="bar na"><span>${cl}</span><div class="track"></div><span class="v">not learned</span></div>`).join("")}</div>`;
-    box.appendChild(c);
-    return {a, m, c, vt: c.querySelector(".vt"), tag: c.querySelector(".verdict small"), verdict: c.querySelector(".verdict"),
-            bars: CLASSES.map(cl => { const j = m.classes.indexOf(cl); if (j < 0) return null;
-              const b = c.querySelectorAll(".bars .bar")[CLASSES.indexOf(cl)]; return {j, track: b.querySelector(".track"), fill: b.querySelector(".fill"), v: b.querySelector(".v")}; })};
-  });
-  void box.offsetWidth; // so the first widths animate from 0
-}
-const ARM_WORD = {clean: "the clean reference", poisoned: "gate only", poisoned_repair: "soft repair", poisoned_relabel: "relabel repair"};
-const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
-const andList = xs => xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " and " + xs[xs.length - 1];
-/* one sentence built from the four predictions of the current flow (never fixed text) */
-function storyText(pred, truth, edited) {
-  const what = `this ${edited ? "edited " : ""}${truth === "BENIGN" ? "benign" : truth} flow${edited ? ` (recorded as ${truth})` : ""}`;
-  const right = pred.filter(x => x.v === truth), wrong = pred.filter(x => x.v !== truth);
-  if (!wrong.length) return `All four models call ${what} ${truth}.`;
-  const groups = {}; wrong.forEach(x => (groups[x.v] = groups[x.v] || []).push(ARM_WORD[x.k]));
-  const parts = Object.entries(groups).map(([v, ns], i) => `${andList(ns)} ${ns.length > 1 ? "call" : "calls"} ${i ? "it" : what} ${v}`);
-  let t = cap(parts.join("; "));
-  if (!right.length) return t + `; no model gets it right.`;
-  const rn = right.map(x => ARM_WORD[x.k]), catches = truth !== "BENIGN";
-  return t + `; ${andList(rn)} ${catches ? (rn.length > 1 ? "catch" : "catches") : (rn.length > 1 ? "get" : "gets")} it${catches ? "" : " right"}.`;
-}
-function predictAll(newFlow) {
-  const truth = ROWS.label[cur];
-  const pred = ARMS.map(a => { const p = probs(a.k, curRaw, curProto), k = argmax(p); return {k: a.k, p, v: MODELS[a.k].classes[k]}; });
-  const edited = curProto !== ROWS.cat[cur][0] || curRaw.some((v, j) => Math.abs(v - ROWS.num[cur][j]) > 1e-9);
-  $("#story").textContent = storyText(pred, truth, edited);
-  for (const c of CARDS) {
-    const {p, v} = pred.find(x => x.k === c.a.k), ok = v === truth;
-    if (c.vt.textContent !== v) { c.vt.textContent = v; c.verdict.classList.remove("fade"); void c.verdict.offsetWidth; c.verdict.classList.add("fade"); }
-    c.tag.className = ok ? "y" : "n"; c.tag.textContent = ok ? "✓ correct" : "✗ wrong";
-    c.bars.forEach(b => { if (!b) return; const q = p[b.j]; b.fill.style.width = (100 * q).toFixed(2) + "%"; b.v.textContent = pct(q); b.track.setAttribute("aria-valuenow", q.toFixed(4)); });
-  }
-  // sensitivity for the relabel-repaired model
-  const arm = "poisoned_relabel", m = MODELS[arm], x0 = NIDS.scaleRow(curRaw, A.scaler), code = NIDS.protoCode(curProto, A.scaler);
-  const p0 = m.forward(x0, code), k0 = argmax(p0), names = A.scaler.features_numeric;
-  const inf = names.map((n, j) => { const x = Float64Array.from(x0); x[j] = benignMed[j]; return {j, n, d: p0[k0] - m.forward(x, code)[k0]}; });
-  inf.sort((a, b) => b.d - a.d);
-  $("#whyh").innerHTML = `Why the relabel-repaired model says <span style="color:var(--maroon)">${m.classes[k0]}</span>`;
-  const top = inf.slice(0, 8), mx = Math.max(1e-6, top[0].d);
-  $("#why").innerHTML = top.map(t => `<div class="inf"><span>${t.n}</span><div class="track"><div class="fill" style="width:${Math.max(0, 100 * t.d / mx)}%"></div></div><span class="num" style="text-align:right">${t.d >= 0 ? "−" : "+"}${Math.abs(100 * t.d).toFixed(1)} pt</span></div>`).join("")
-    + (top[0].d < 0.01 ? `<div class="note">No single feature changes this verdict by more than 1 point: the decision rests on many features together.</div>` : "");
-  if (newFlow) makeSliders(inf.slice(0, 6).map(t => t.j));
-}
-function makeSliders(js) {
-  const box = $("#sliders"); box.innerHTML = ""; sliders = [];
-  js.forEach(j => {
-    const n = A.scaler.features_numeric[j], v0 = ROWS.num[cur][j];
-    // slider runs on the signed-log axis, the axis the model sees, over the range of the sampled rows
-    let lo = Infinity, hi = -Infinity;
-    ROWS.num.forEach(r => { const s = slog(r[j]); if (s < lo) lo = s; if (s > hi) hi = s; });
-    if (hi - lo < 1e-9) { lo -= 1; hi += 1; }
-    const w = el("div", {class: "sl"});
-    w.innerHTML = `<label><span title="${n}">${n}</span><span class="num" id="sv${j}">${fmt(v0)}</span></label><input type="range" min="${lo}" max="${hi}" step="${(hi - lo) / 400}" value="${slog(curRaw[j])}" aria-label="${n} (log scale)" aria-valuetext="${fmt(curRaw[j])}">`;
-    const r = w.querySelector("input");
-    r.oninput = () => { curRaw[j] = unslog(+r.value); const s = $("#sv" + j); s.textContent = fmt(curRaw[j]); r.setAttribute("aria-valuetext", fmt(curRaw[j])); s.classList.toggle("edited", Math.abs(curRaw[j] - v0) > 1e-9); predictAll(); const inp = $("#all77").rows[j].querySelector("input"); inp.value = curRaw[j]; };
-    box.appendChild(w); sliders.push({j, r});
-  });
-}
-function syncSliders() { sliders.forEach(s => { s.r.value = slog(curRaw[s.j]); s.r.setAttribute("aria-valuetext", fmt(curRaw[s.j])); $("#sv" + s.j).textContent = fmt(curRaw[s.j]); }); }
-const slog = v => Math.sign(v) * Math.log1p(Math.abs(v)), unslog = s => { const v = Math.sign(s) * Math.expm1(Math.abs(s)); return Math.abs(v) >= 100 ? Math.round(v) : +v.toPrecision(4); };
-const fmt = v => Math.abs(v) >= 1e6 ? v.toExponential(2) : Math.abs(v) >= 100 ? Math.round(v).toLocaleString() : (+v.toPrecision(4)).toString();
-
-function fullTable() {
-  const ft = A.full_test, chk = A.meta.full_test_checks || {};
-  let h = `<table class="t"><tr><th>Model</th>${CLASSES.map(c => `<th>${c} recall</th>`).join("")}<th>Macro recall</th><th>Benign FAR</th><th>Matches committed result</th></tr>`;
-  for (const a of ARMS) { const f = ft[a.k]; if (!f) continue;
-    h += `<tr><td><span class="sw" style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${a.color};margin-right:7px"></span>${a.name}</td>${CLASSES.map(c => `<td class="num">${f.classes.includes(c) ? f4(f.recall[c]) : `<span style="color:var(--red)">${f4(f.recall[c] || 0)}</span><span class="nl">not learned</span>`}</td>`).join("")}<td class="num">${f4(f.macro_recall)}</td><td class="num">${f4(f.benign_far)}</td><td>${chk[a.k] && chk[a.k].matches ? '<span class="ok">✓ identical</span>' : '<span class="no">not verified</span>'}</td></tr>`; }
-  $("#fulltab").innerHTML = h + `</table><div class="note">Benign FAR is over ${ft.clean ? ft.clean.n_benign.toLocaleString() : "–"} benign rows. A benign FAR of 0 for the gate-only model is not safety: it calls every LDAP and UDP flow benign.</div>`;
-}
-
-/* background batch run + PyTorch parity */
-function runBatch() {
-  const arms = ARMS.map(a => a.k), n = ROWS.label.length, total = n * arms.length;
-  const conf = {}; arms.forEach(a => conf[a] = {});
-  let done = 0, maxd = 0, agree = 0;
-  const onRes = (arm, r, p) => {
-    const ref = A.ref[arm][r]; let am = 0, ar = 0;
-    for (let k = 0; k < p.length; k++) { const d = Math.abs(p[k] - ref[k]); if (d > maxd) maxd = d; if (p[k] > p[am]) am = k; if (ref[k] > ref[ar]) ar = k; }
-    agree += am === ar; done++;
-    const t = ROWS.label[r], pr = A.models[arm].classes[am];
-    conf[arm][t] = conf[arm][t] || {}; conf[arm][t][pr] = (conf[arm][t][pr] || 0) + 1;
-    if (done % 40 === 0 || done === total) progress();
-  };
-  const progress = () => {
-    $("#progbar").style.width = (100 * done / total) + "%";
-    $("#progtxt").textContent = `${done.toLocaleString()} / ${total.toLocaleString()} predictions · same class as PyTorch: ${agree.toLocaleString()} · largest probability difference: ${maxd.toExponential(1)}`;
-    drawCMs(conf);
-    const ok = agree === done && maxd < 1e-4;
-    if (done === total) setStatus(ok && !A.meta.dev ? "ok" : (A.meta.dev ? "warn" : "bad"),
-      A.meta.dev ? "DEV build: stand-in weights" : ok ? `real models · matches PyTorch on ${total.toLocaleString()} predictions` : "mismatch with PyTorch: see tab 1");
-    else setStatus("warn", `verifying against PyTorch… ${Math.round(100 * done / total)}%`);
-  };
-  // run in a Web Worker so the page stays responsive; fall back to the main thread in small chunks
-  try {
-    const src = document.scripts[1].textContent + `
-      let M = {}, S, R;
-      onmessage = e => { const d = e.data; S = d.scaler; R = d.rows;
-        for (const k in d.models) M[k] = NIDS.Model(d.models[k], d.hp);
-        for (let r = 0; r < R.num.length; r++) { const x = NIDS.scaleRow(R.num[r], S), c = NIDS.protoCode(R.cat[r][0], S);
-          for (const k of d.arms) postMessage([k, r, Array.from(M[k].forward(x, c))]); } };`;
-    const w = new Worker(URL.createObjectURL(new Blob([src], {type: "text/javascript"})));
-    w.onmessage = e => onRes(e.data[0], e.data[1], e.data[2]);
-    w.onerror = () => { w.terminate(); mainThread(); };
-    w.postMessage({scaler: A.scaler, rows: {num: ROWS.num, cat: ROWS.cat}, models: A.models, hp: A.meta.hp, arms});
-  } catch (err) { mainThread(); }
-  function mainThread() {
-    let r = 0; const tick = () => { const end = Math.min(n, r + 10);
-      for (; r < end; r++) { const x = NIDS.scaleRow(ROWS.num[r], A.scaler), c = NIDS.protoCode(ROWS.cat[r][0], A.scaler); for (const k of arms) onRes(k, r, MODELS[k].forward(x, c)); }
-      if (r < n) setTimeout(tick, 0); }; tick();
-  }
-  progress();
-}
-function drawCMs(conf) {
-  const box = $("#cms"); box.innerHTML = "";
-  for (const a of ARMS) {
-    const cls = A.models[a.k].classes, c = conf[a.k];
-    let h = `<table class="cm"><caption><span class="sw" style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${a.color};margin-right:6px"></span>${a.name}</caption><tr><th>true ↓ / pred →</th>${cls.map(k => `<th>${k}</th>`).join("")}<th>recall</th></tr>`;
-    for (const t of CLASSES) { const row = c[t] || {}, tot = Object.values(row).reduce((s, v) => s + v, 0);
-      h += `<tr><th style="text-align:left">${t}</th>${cls.map(k => { const v = row[k] || 0, sh = tot ? v / tot : 0;
-        return `<td class="num ${k === t ? "d" : ""}" style="background:${k === t ? `rgba(42,122,76,${0.12 + 0.5 * sh})` : v ? `rgba(181,55,42,${0.08 + 0.55 * sh})` : "transparent"}">${v || ""}</td>`; }).join("")}<td class="num">${tot ? pct((row[t] || 0) / tot) : ""}</td></tr>`; }
-    box.appendChild(el("div", {class: "card white", style: "padding:12px"}, h + "</table>"));
-  }
-}
-
-/* =============================================================== TAB 2: poison the buffer */
-const T2 = {f: 1.0, s: 42, a: "poisoned_relabel"};
+/* =============================================================== shared result helpers (sweep, FU2, follow-ups) */
 const FRACS = [0.75, 0.9, 0.95, 1.0], SEEDS = [42, 43, 44];
-const DEF = [{k: "poisoned", n: "Gate only"}, {k: "poisoned_repair", n: "Soft repair"}, {k: "poisoned_relabel", n: "Relabel repair"}, {k: "clean", n: "No attack"}];
-function seg(id, items, get, set, dis) {
-  const box = $(id); box.innerHTML = "";
-  items.forEach(it => { const on = get() === it.v, b = el("button", {"aria-pressed": on}, it.label); b.classList.toggle("on", on); if (dis && dis(it.v)) { b.disabled = true; b.title = "not run at this flip fraction"; }
-    b.onclick = () => { stopPlay(); set(it.v); renderT2(); }; box.appendChild(b); });
-}
-function attempts(f, s, a) {
-  if (a === "poisoned_relabel") return RES.fu2_rounds.filter(r => r.seed === s).map(r => ({...r, repair_method: r.attempt === "R1" ? "relabel" : null}));
-  return RES.sweep_decisions.filter(r => r.poison_frac === f && r.seed === s && r.arm === a);
-}
 function deployed(f, s, a) {
   if (a === "poisoned_relabel") { const r = RES.fu2_test.find(x => x.seed === s && x.arm === "poisoned_relabel");
     return r && {recall: {BENIGN: r.BENIGN, Syn: r.Syn, LDAP: r.LDAP, UDP: r.UDP}, far: r.benign_far, macro: r.macro_recall}; }
@@ -605,35 +402,461 @@ function deployed(f, s, a) {
   return r && {recall: {BENIGN: r.test_recall_BENIGN, Syn: r.test_recall_Syn, LDAP: r.test_recall_LDAP, UDP: r.test_recall_UDP}, far: r.test_benign_far, macro: r.test_macro_recall};
 }
 function learnedAll(f, s, a) { const d = deployed(f, s, a); return d ? CLASSES.every(c => d.recall[c] > 0) : null; }
+const LO = FRACS.filter(f => f <= 0.95);
+function cnt(a, fr = LO) { return fr.reduce((s, f) => s + SEEDS.filter(x => learnedAll(f, x, a)).length, 0); }
+function fu(id) { return (RES.followups || []).find(c => c.id === id); }
+function cgRepair() {
+  const cg = fu("confgate"), w = cg && (cg.stats || []).find(x => x.setting === "CG-RF" && near(x.frac, 0.1) && x.arm === "poisoned_repair");
+  const no = RES.rf_test.filter(x => near(x.rho, 0.1) && x.arm === "poisoned_repair").map(x => x.Syn_mean_p);
+  return w && w.Syn_mean_conf != null && no.length ? {with: w.Syn_mean_conf, without: mean(no)} : null;
+}
+/* the original claims, seeds 42-44 (pooled counts with later seeds come from the SEEDS follow-up when committed) */
+function base4() {
+  const n = LO.length * SEEDS.length;
+  return {soft: cnt("poisoned_repair"), gate: cnt("poisoned"), n, relabel: SEEDS.filter(s => learnedAll(1.0, s, "poisoned_relabel")).length,
+          gate1: SEEDS.filter(s => learnedAll(1.0, s, "poisoned")).length, n1: SEEDS.length,
+          fail1: SEEDS.filter(s => learnedAll(1.0, s, "poisoned")).length + SEEDS.filter(s => learnedAll(1.0, s, "poisoned_repair")).length};
+}
+function seedsPooled() { const s = fu("seeds"); return s && s.pooled ? s.pooled : null; }
+
+/* =============================================================== 1 OVERVIEW */
+function kpiData() {
+  const b = base4(), P = seedsPooled(), out = [];
+  if (P && P.soft) out.push({v: `${P.soft.repair[0]}/${P.soft.repair[1]} vs ${P.soft.gate[0]}/${P.soft.gate[1]}`, l: `soft repair vs gate only learn all 4 classes, f 0.75–0.95 · seeds ${P.seeds}`, k: "poisoned_repair", tags: [["pre", "registered"], ["test", "test"]]});
+  else out.push({v: `${b.soft}/${b.n} vs ${b.gate}/${b.n}`, l: "soft repair vs gate only learn all 4 classes, f 0.75–0.95", k: "poisoned_repair", tags: [["pre", "registered"], ["test", "test"]]});
+  if (P && P.relabel) out.push({v: `${P.relabel.repair[0]}/${P.relabel.repair[1]} vs ${P.relabel.gate[0]}/${P.relabel.gate[1]}`, l: `relabel repair vs gate only learn all 4 classes at 100% flipped · seeds ${P.seeds}`, k: "poisoned_relabel", tags: [["post", "post hoc"], ["test", "test"]]});
+  else out.push({v: `${b.relabel}/${b.n1} vs ${b.gate1}/${b.n1}`, l: "relabel repair vs gate only learn all 4 classes at 100% flipped", k: "poisoned_relabel", tags: [["post", "post hoc"], ["test", "test"]]});
+  const r = cgRepair();
+  if (r) out.push({v: `${f2(r.without)} → ${f2(r.with)}`, l: "Syn confidence after repair, without → with the confidence gate", k: "teal", tags: [["post", "post hoc"], ["test", "test"]]});
+  return out;
+}
+function initOverview() {
+  $("#kpis").innerHTML = kpiData().map(d => `<div class="kpi tint-${d.k}" role="listitem"><div class="v num" style="color:${INK[d.k]};font-family:var(--serif)">${d.v}</div><div class="l">${d.l}</div>${d.tags.map(t => tag(t[0], t[1])).join(" ")}</div>`).join("");
+  const ic = {
+    learn: `<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect x="5" y="20" width="24" height="6" rx="2" fill="${COL.teal}"/><rect x="8" y="13" width="18" height="6" rx="2" fill="${COL.teal}" opacity=".7"/><rect x="11" y="6" width="12" height="6" rx="2" fill="${COL.teal}" opacity=".45"/></svg>`,
+    poison: `<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">${[0, 1, 2, 3].map(r => [0, 1, 2, 3].map(c => `<rect x="${5 + c * 6.5}" y="${5 + r * 6.5}" width="5" height="5" rx="1" fill="${(r * 4 + c) % 3 === 1 ? COL.poisoned : COL.teal}"/>`).join("")).join("")}</svg>`,
+    gate: `<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><path d="M17 4l11 4v8c0 7-5 12-11 14C11 28 6 23 6 16V8z" fill="none" stroke="${COL.maroon}" stroke-width="2.2"/><path d="M12 17l4 4 7-8" fill="none" stroke="${COL.maroon}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    repair: `<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><path d="M25 12a9 9 0 1 0 1 9" fill="none" stroke="${COL.poisoned_relabel}" stroke-width="2.4" stroke-linecap="round"/><path d="M26 5v8h-8" fill="none" stroke="${COL.poisoned_relabel}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`};
+  const M = [["learn", "Learn", "E0 learns BENIGN + Syn; new attacks arrive later."], ["poison", "Poisoned memory", "The attacker flips stored Syn labels to BENIGN."],
+             ["gate", "Gate checks", "An update that loses an old class is rejected."], ["repair", "Teacher repairs", "A frozen teacher fixes doubted rows; one retry."]];
+  $("#method").innerHTML = M.map((m, i) => `<div class="mstep">${ic[m[0]]}<b>${i + 1} · ${m[1]}</b><span>${m[2]}</span>${i < 3 ? `<span class="arr" aria-hidden="true">&#8250;</span>` : ""}</div>`).join("");
+  $("#ovmore").innerHTML = `Screen 2 runs the real models in your browser; screen 3 checks them on your own CSV; screen 4 replays every gate decision; screen 5 charts the results; screen 6 lists what is and is not claimed. A class counts as learned when the deployed model's held-out test recall for it is above 0.`;
+  $("#startdemo").onclick = () => { showTab("live"); $("#tab-live").focus(); };
+}
+
+/* =============================================================== 2 LIVE DETECTOR */
+let MODELS = {}, ROWS = null, cur = null, curRaw = null, curProto = null, benignMed = null, benignProto = 6, sliders = [], LIVEVIEW = "single";
+function initLive() {
+  const body = $("#livebody");
+  if (!A) {
+    body.innerHTML = `<div class="empty"><b>Model weights are not bundled in this build.</b> Run <code>python dashboard/build_dashboard.py --assets dashboard/dashboard_assets.json</code>. The other screens work without them.</div>`;
+    $("#ownbody").innerHTML = body.innerHTML; setStatus("warn", "results only (no model weights)"); return;
+  }
+  const hp = A.meta.hp;
+  for (const a of ARMS) MODELS[a.k] = NIDS.Model(A.models[a.k], hp);
+  ROWS = A.rows;
+  const F = A.scaler.features_numeric.length, cols = Array.from({length: F}, () => []), pc = {};
+  ROWS.label.forEach((l, i) => { if (l === "BENIGN") { const x = NIDS.scaleRow(ROWS.num[i], A.scaler); for (let j = 0; j < F; j++) cols[j].push(x[j]); pc[ROWS.cat[i][0]] = (pc[ROWS.cat[i][0]] || 0) + 1; } });
+  benignMed = cols.map(c => { c.sort((a, b) => a - b); return c.length ? c[c.length >> 1] : 0; });
+  benignProto = +Object.entries(pc).sort((a, b) => b[1] - a[1])[0][0];
+  body.innerHTML = `
+  <div id="livesingle">
+  <div class="grid1">
+    <div class="card">
+      <h3>Choose a held-out flow</h3>
+      <div class="btnrow" id="clsbtn" role="group" aria-label="true class of the flow"></div>
+      <div class="btnrow" style="margin-top:8px"><button class="btn ghost" id="prev" aria-label="previous flow (left arrow)">‹ previous</button><button class="btn ghost" id="next" aria-label="next flow (right arrow)">next ›</button><button class="btn ghost" id="rnd" aria-label="random flow (R)">random</button></div>
+      <div class="flowid" id="flowid"></div>
+      <h3 style="margin-top:16px">Edit the flow</h3>
+      <div class="sl"><label for="proto"><span>protocol</span></label><select id="proto"><option value="6">TCP (6)</option><option value="17">UDP (17)</option><option value="0">HOPOPT (0)</option></select></div>
+      <div id="sliders"></div>
+      <div class="btnrow" style="margin-top:12px"><button class="btn" id="reset">reset to the recorded flow</button></div>
+      <details class="more"><summary><span class="ib" aria-hidden="true">i</span> all 77 input features</summary><div class="all77"><table id="all77"></table></div>
+        <div class="note">Sliders: the six features that move the relabel model's verdict most for this flow (raw CICFlowMeter units; the page applies the frozen scaler).</div></details>
+    </div>
+    <div>
+      <div class="cmpbar"><span class="lab" id="labCmp">Compare</span><div class="seg" id="segCmp" role="group" aria-labelledby="labCmp"></div></div>
+      <div class="story" id="story" aria-live="polite"></div>
+      <div class="models" id="mcards"></div>
+      <details class="fold" id="whyfold"><summary id="whyh">Why this verdict</summary><div id="why"></div>
+        <div class="note">Each bar: how far the relabel model's probability for its chosen class falls when that one feature is replaced by a typical BENIGN value. It shows what the model relies on, not why the traffic is malicious.</div></details>
+    </div>
+  </div></div>
+  <div id="livebatch" hidden>
+    <h3>On ${ROWS.label.length.toLocaleString()} sampled held-out flows, checked against PyTorch</h3>
+    <div class="prog"><div id="progbar"></div></div><div class="note num" id="progtxt"></div>
+    <div class="cms" id="cms"></div>
+    <div class="card white tl2" style="margin-top:16px"><h3>Full held-out test set, computed in PyTorch ${tag("test", A.full_test.clean ? A.full_test.clean.n_rows.toLocaleString() + " rows" : "test")}</h3><div id="fulltab"></div></div>
+  </div>`;
+  const cb = $("#clsbtn");
+  CLASSES.forEach(k => { const b = el("button", {class: "btn", "aria-pressed": "false"}, k); b.onclick = () => pickClass(k); cb.appendChild(b); });
+  $("#prev").onclick = () => step(-1); $("#next").onclick = () => step(1);
+  $("#rnd").onclick = () => select(Math.floor(Math.random() * ROWS.label.length));
+  $("#reset").onclick = () => select(cur);
+  $("#proto").onchange = e => { curProto = +e.target.value; predictAll(); };
+  liveSeg(); cmpSeg(); buildCards(); pickClass("LDAP"); fullTable(); runBatch();
+}
+function liveSeg() {
+  segBtns($("#segLive"), [["single", "Single flow"], ["batch", "Batch check"]], LIVEVIEW, v => { LIVEVIEW = v; liveSeg(); });
+  if (!$("#livesingle")) return;
+  $("#livesingle").hidden = LIVEVIEW !== "single"; $("#livebatch").hidden = LIVEVIEW !== "batch";
+}
+let curClass = "LDAP";
+function markClass() { document.querySelectorAll("#clsbtn .btn").forEach(b => { const on = b.textContent === curClass; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); }); }
+function pickClass(k) { curClass = k; markClass(); select(ROWS.label.findIndex(l => l === k)); }
+function step(d) { const idx = ROWS.label.map((l, i) => l === curClass ? i : -1).filter(i => i >= 0); let p = idx.indexOf(cur); p = (p + d + idx.length) % idx.length; select(idx[p]); }
+function select(i) {
+  cur = i; curRaw = ROWS.num[i].slice(); curProto = ROWS.cat[i][0];
+  if (ROWS.label[i] !== curClass) { curClass = ROWS.label[i]; markClass(); }
+  $("#proto").value = String(curProto);
+  const idx = ROWS.label.map((l, j) => l === curClass ? j : -1).filter(j => j >= 0);
+  $("#flowid").innerHTML = `Flow <b class="num">#${ROWS.rid[i]}</b> · true class <b>${ROWS.label[i]}</b> · ${idx.indexOf(i) + 1} of ${idx.length}`;
+  buildAll77(); predictAll(true);
+}
+function buildAll77() {
+  const t = $("#all77"); t.innerHTML = "";
+  A.scaler.features_numeric.forEach((n, j) => {
+    const tr = el("tr"); tr.appendChild(el("td", {}, n));
+    const td = el("td", {style: "text-align:right"}), inp = el("input", {type: "number", step: "any", "aria-label": n}); inp.value = curRaw[j];
+    inp.onchange = () => { const v = parseFloat(inp.value); if (isFinite(v)) { curRaw[j] = v; syncSliders(); predictAll(); } };
+    td.appendChild(inp); tr.appendChild(td); t.appendChild(tr);
+  });
+}
+function probs(arm, raw, proto) { return MODELS[arm].forward(NIDS.scaleRow(raw, A.scaler), NIDS.protoCode(proto, A.scaler)); }
+function argmax(p) { let k = 0; for (let i = 1; i < p.length; i++) if (p[i] > p[k]) k = i; return k; }
+let CMP = "all", CARDS = [];
+const DUO = ["poisoned", "poisoned_relabel"];
+function cmpSeg() { segBtns($("#segCmp"), [["all", "All four models"], ["duo", "Gate only vs Relabel"]], CMP, v => { CMP = v; cmpSeg(); buildCards(); predictAll(); }); }
+function buildCards() {
+  const box = $("#mcards"); box.innerHTML = ""; box.classList.toggle("duo", CMP === "duo");
+  CARDS = ARMS.filter(a => CMP === "all" || DUO.includes(a.k)).map(a => {
+    const m = MODELS[a.k], c = el("div", {class: "mcard tint-" + a.k, role: "group", "aria-label": a.name});
+    c.innerHTML = `<div class="who"><span class="sw" style="background:${COL[a.k]}" aria-hidden="true"></span>${a.name}${a.tag ? ` ${tag(a.tag, a.tag === "pre" ? "registered" : "post hoc")}` : ""}</div>
+      <div class="desc">${a.desc}</div>
+      <div class="verdict" aria-live="polite"><span class="vt"></span><small></small></div>
+      <div class="bars">${CLASSES.map(cl => m.classes.includes(cl)
+        ? `<div class="bar"><span>${cl}</span><div class="track" role="meter" aria-label="${a.name}: probability ${cl}" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0"><div class="fill" style="width:0%;background:${COL[a.k]}"></div></div><span class="v num"></span></div>`
+        : `<div class="bar na"><span>${cl}</span><div class="track"></div><span class="v">not learned</span></div>`).join("")}</div>`;
+    box.appendChild(c);
+    const bars = c.querySelectorAll(".bars .bar");
+    return {a, c, vt: c.querySelector(".vt"), tg: c.querySelector(".verdict small"), verdict: c.querySelector(".verdict"),
+            bars: CLASSES.map((cl, i) => { const j = m.classes.indexOf(cl); return j < 0 ? null : {j, track: bars[i].querySelector(".track"), fill: bars[i].querySelector(".fill"), v: bars[i].querySelector(".v")}; })};
+  });
+  void box.offsetWidth;
+}
+const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+const andList = xs => xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " and " + xs[xs.length - 1];
+function storyText(pred, truth, edited) {
+  const what = `this ${edited ? "edited " : ""}${truth === "BENIGN" ? "benign" : truth} flow${edited ? ` (recorded as ${truth})` : ""}`;
+  const right = pred.filter(x => x.v === truth), wrong = pred.filter(x => x.v !== truth);
+  if (!wrong.length) return `All four models call ${what} ${truth}.`;
+  const groups = {}; wrong.forEach(x => (groups[x.v] = groups[x.v] || []).push(ARM_WORD[x.k]));
+  const t = cap(Object.entries(groups).map(([v, ns], i) => `${andList(ns)} ${ns.length > 1 ? "call" : "calls"} ${i ? "it" : what} ${v}`).join("; "));
+  if (!right.length) return t + "; no model gets it right.";
+  const rn = right.map(x => ARM_WORD[x.k]), catches = truth !== "BENIGN";
+  return t + `; ${andList(rn)} ${catches ? (rn.length > 1 ? "catch" : "catches") : (rn.length > 1 ? "get" : "gets")} it${catches ? "" : " right"}.`;
+}
+function predictAll(newFlow) {
+  const truth = ROWS.label[cur];
+  const pred = ARMS.map(a => { const p = probs(a.k, curRaw, curProto); return {k: a.k, p, v: MODELS[a.k].classes[argmax(p)]}; });
+  const edited = curProto !== ROWS.cat[cur][0] || curRaw.some((v, j) => Math.abs(v - ROWS.num[cur][j]) > 1e-9);
+  $("#story").textContent = storyText(pred, truth, edited);
+  for (const c of CARDS) {
+    const {p, v} = pred.find(x => x.k === c.a.k), ok = v === truth;
+    if (c.vt.textContent !== v) { c.vt.textContent = v; c.verdict.classList.remove("fade"); void c.verdict.offsetWidth; c.verdict.classList.add("fade"); }
+    c.tg.className = ok ? "y" : "n"; c.tg.textContent = ok ? "✓ correct" : "✗ wrong";
+    c.bars.forEach(b => { if (!b) return; const q = p[b.j]; b.fill.style.width = (100 * q).toFixed(2) + "%"; b.v.textContent = pct(q); b.track.setAttribute("aria-valuenow", q.toFixed(4)); });
+  }
+  const m = MODELS.poisoned_relabel, x0 = NIDS.scaleRow(curRaw, A.scaler), code = NIDS.protoCode(curProto, A.scaler);
+  const p0 = m.forward(x0, code), k0 = argmax(p0), names = A.scaler.features_numeric;
+  const inf = names.map((n, j) => { const x = Float64Array.from(x0); x[j] = benignMed[j]; return {j, n, d: p0[k0] - m.forward(x, code)[k0]}; });
+  inf.sort((a, b) => b.d - a.d);
+  $("#whyh").innerHTML = `Why relabel repair says <span style="color:var(--maroon)">${m.classes[k0]}</span> <span style="font-weight:400;color:var(--ink3)">(sensitivity)</span>`;
+  const top = inf.slice(0, 8), mx = Math.max(1e-6, top[0].d);
+  $("#why").innerHTML = top.map(t => `<div class="inf"><span>${t.n}</span><div class="track"><div class="fill" style="width:${Math.max(0, 100 * t.d / mx)}%"></div></div><span class="num" style="text-align:right">${t.d >= 0 ? "−" : "+"}${Math.abs(100 * t.d).toFixed(1)} pt</span></div>`).join("")
+    + (top[0].d < 0.01 ? `<div class="note">No single feature moves this verdict by more than 1 point.</div>` : "");
+  if (newFlow) makeSliders(inf.slice(0, 6).map(t => t.j));
+}
+function makeSliders(js) {
+  const box = $("#sliders"); box.innerHTML = ""; sliders = [];
+  js.forEach(j => {
+    const n = A.scaler.features_numeric[j], v0 = ROWS.num[cur][j];
+    let lo = Infinity, hi = -Infinity;
+    ROWS.num.forEach(r => { const s = slog(r[j]); if (s < lo) lo = s; if (s > hi) hi = s; });
+    if (hi - lo < 1e-9) { lo -= 1; hi += 1; }
+    const w = el("div", {class: "sl"});
+    w.innerHTML = `<label><span title="${n}">${n}</span><span class="num" id="sv${j}">${fmt(v0)}</span></label><input type="range" min="${lo}" max="${hi}" step="${(hi - lo) / 400}" value="${slog(curRaw[j])}" aria-label="${n} (log scale)" aria-valuetext="${fmt(curRaw[j])}">`;
+    const r = w.querySelector("input");
+    r.oninput = () => { curRaw[j] = unslog(+r.value); const s = $("#sv" + j); s.textContent = fmt(curRaw[j]); r.setAttribute("aria-valuetext", fmt(curRaw[j])); s.classList.toggle("edited", Math.abs(curRaw[j] - v0) > 1e-9); predictAll(); $("#all77").rows[j].querySelector("input").value = curRaw[j]; };
+    box.appendChild(w); sliders.push({j, r});
+  });
+}
+function syncSliders() { sliders.forEach(s => { s.r.value = slog(curRaw[s.j]); s.r.setAttribute("aria-valuetext", fmt(curRaw[s.j])); $("#sv" + s.j).textContent = fmt(curRaw[s.j]); }); }
+const slog = v => Math.sign(v) * Math.log1p(Math.abs(v)), unslog = s => { const v = Math.sign(s) * Math.expm1(Math.abs(s)); return Math.abs(v) >= 100 ? Math.round(v) : +v.toPrecision(4); };
+const fmt = v => Math.abs(v) >= 1e6 ? v.toExponential(2) : Math.abs(v) >= 100 ? Math.round(v).toLocaleString() : (+v.toPrecision(4)).toString();
+function fullTable() {
+  const ft = A.full_test, chk = A.meta.full_test_checks || {};
+  let h = `<table class="t"><tr><th>Model</th>${CLASSES.map(c => `<th>${c} recall</th>`).join("")}<th>Accuracy</th><th>Macro recall</th><th>Benign FAR</th><th>Matches committed</th></tr>`;
+  for (const a of ARMS) { const f = ft[a.k]; if (!f) continue;
+    h += `<tr><td><span class="sw" style="background:${COL[a.k]};margin-right:7px"></span>${a.name}</td>${CLASSES.map(c => `<td class="num">${f.classes.includes(c) ? f4(f.recall[c]) : `${f4(f.recall[c] || 0)}<span class="nl">not learned</span>`}</td>`).join("")}<td class="num">${f4(f.accuracy)}</td><td class="num">${f4(f.macro_recall)}</td><td class="num">${f4(f.benign_far)}</td><td>${chk[a.k] && chk[a.k].matches ? '<span class="ok">✓ identical</span>' : '<span class="no">✗ not verified</span>'}</td></tr>`; }
+  $("#fulltab").innerHTML = h + `</table><div class="note">Benign FAR over ${ft.clean ? ft.clean.n_benign.toLocaleString() : "–"} benign rows. A FAR of 0 for gate only is not safety: it never predicts LDAP or UDP.</div>`;
+}
+
+/* ---- one Web Worker for every batch job (sampled flows, your own CSV); main-thread fallback ---- */
+let WK = null, WKfail = false; const JOBS = {}; let jobSeq = 0;
+function worker() {
+  if (WK || WKfail) return WK;
+  try {
+    const src = document.scripts[1].textContent + `
+      let M = {};
+      onmessage = e => { const d = e.data;
+        if (d.type === "init") { for (const k in d.models) M[k] = NIDS.Model(d.models[k], d.hp); return; }
+        const F = d.F, n = d.codes.length;
+        for (let r = 0; r < n; r++) { const x = d.xs.subarray(r * F, (r + 1) * F), ps = {};
+          for (const k of d.arms) ps[k] = Array.from(M[k].forward(x, d.codes[r]));
+          postMessage({id: d.id, r, ps}); }
+        postMessage({id: d.id, done: true}); };`;
+    WK = new Worker(URL.createObjectURL(new Blob([src], {type: "text/javascript"})));
+    WK.onmessage = e => { const j = JOBS[e.data.id]; if (!j) return; if (e.data.done) { delete JOBS[e.data.id]; j.done(); } else j.row(e.data.r, e.data.ps); };
+    WK.onerror = () => { WKfail = true; WK.terminate(); WK = null; const js = Object.values(JOBS); for (const k in JOBS) delete JOBS[k]; js.forEach(j => j.restart()); };
+    WK.postMessage({type: "init", models: A.models, hp: A.meta.hp});
+  } catch (err) { WKfail = true; WK = null; }
+  return WK;
+}
+function runJob(xs, codes, arms, row, done) {
+  const F = A.scaler.features_numeric.length, id = ++jobSeq;
+  const mainThread = () => { let r = 0; const tick = () => { const end = Math.min(codes.length, r + 10);
+    for (; r < end; r++) { const x = xs.subarray(r * F, (r + 1) * F), ps = {}; for (const k of arms) ps[k] = MODELS[k].forward(x, codes[r]); row(r, ps); }
+    if (r < codes.length) setTimeout(tick, 0); else done(); }; tick(); };
+  const w = worker();
+  if (!w) return mainThread();
+  JOBS[id] = {row, done, restart: mainThread};
+  w.postMessage({id, xs: xs.slice(), codes: codes.slice(), arms, F});
+}
+const BATCH = {pred: {}, done: false};
+function runBatch() {
+  const arms = ARMS.map(a => a.k), n = ROWS.label.length, total = n * arms.length, F = A.scaler.features_numeric.length;
+  const xs = new Float64Array(n * F), codes = new Int32Array(n);
+  for (let r = 0; r < n; r++) { xs.set(NIDS.scaleRow(ROWS.num[r], A.scaler), r * F); codes[r] = NIDS.protoCode(ROWS.cat[r][0], A.scaler); }
+  const conf = {}; arms.forEach(a => { conf[a] = {}; BATCH.pred[a] = new Array(n); });
+  let done = 0, maxd = 0, agree = 0;
+  const progress = () => {
+    $("#progbar").style.width = (100 * done / total) + "%";
+    $("#progtxt").textContent = `${done.toLocaleString()} / ${total.toLocaleString()} predictions · same class as PyTorch: ${agree.toLocaleString()} · largest probability difference: ${maxd.toExponential(1)}`;
+    drawCMs(conf);
+    const ok = agree === done && maxd < 1e-4;
+    if (done === total) { BATCH.done = true; setStatus(ok && !A.meta.dev ? "ok" : (A.meta.dev ? "warn" : "bad"), A.meta.dev ? "DEV build: stand-in weights" : ok ? `real models · matches PyTorch on ${total.toLocaleString()} predictions` : "mismatch with PyTorch: see Live detector"); }
+    else setStatus("warn", `verifying against PyTorch… ${Math.round(100 * done / total)}%`);
+  };
+  runJob(xs, codes, arms, (r, ps) => {
+    for (const arm of arms) { const p = ps[arm], ref = A.ref[arm][r]; let am = 0, ar = 0;
+      for (let k = 0; k < p.length; k++) { const d = Math.abs(p[k] - ref[k]); if (d > maxd) maxd = d; if (p[k] > p[am]) am = k; if (ref[k] > ref[ar]) ar = k; }
+      agree += am === ar; done++;
+      const t = ROWS.label[r], pr = A.models[arm].classes[am]; BATCH.pred[arm][r] = pr;
+      conf[arm][t] = conf[arm][t] || {}; conf[arm][t][pr] = (conf[arm][t][pr] || 0) + 1; }
+    if (done % 160 === 0) progress();
+  }, progress);
+  progress();
+}
+function drawCMs(conf) {
+  const box = $("#cms"); box.innerHTML = "";
+  for (const a of ARMS) {
+    const cls = A.models[a.k].classes, c = conf[a.k];
+    let h = `<table class="cm"><caption><span class="sw" style="background:${COL[a.k]};margin-right:6px"></span>${a.name}</caption><tr><th>true ↓ / pred →</th>${cls.map(k => `<th>${k}</th>`).join("")}<th>recall</th></tr>`;
+    for (const t of CLASSES) { const row = c[t] || {}, tot = Object.values(row).reduce((s, v) => s + v, 0);
+      h += `<tr><th style="text-align:left">${t}</th>${cls.map(k => { const v = row[k] || 0, sh = tot ? v / tot : 0;
+        return `<td class="num ${k === t ? "d" : ""}" style="background:${k === t ? `rgba(42,122,76,${0.12 + 0.5 * sh})` : v ? `rgba(181,55,42,${0.08 + 0.55 * sh})` : "transparent"}">${v || ""}</td>`; }).join("")}<td class="num">${tot ? pct((row[t] || 0) / tot) : ""}</td></tr>`; }
+    box.appendChild(el("div", {class: "card white", style: "padding:12px"}, h + "</table>"));
+  }
+}
+
+/* =============================================================== 3 TRY YOUR OWN DATA */
+const MAX_ROWS = 20000, MAX_BYTES = 64 * 1024 * 1024, SHOW = 200;
+const normCol = c => String(c).replace(/\s+/g, " ").trim().toLowerCase();  // = common.norm_col
+const canon = x => { const s = String(x).trim(); let k = s.toLowerCase(); if (k.startsWith("drdos_")) k = k.slice(6); return RES.canon[k] || s; }; // = common.canon_label
+let OWN = null, OWNARM = "poisoned_relabel";
+function initOwn() {
+  if (!A) return;
+  $("#ownbody").innerHTML = `
+  <div class="ownrow">
+    <div>
+      <label class="drop" id="drop" for="file"><b>Drop a CSV of flows here</b><span>or click to choose a file</span>
+        <span class="note" style="margin:0">Runs entirely in your browser; nothing is uploaded.</span></label>
+      <input type="file" id="file" accept=".csv,text/csv" class="sr" aria-label="Choose a CSV file of flows">
+      <div class="btnrow" id="ownbtns" style="margin-top:10px">${DATA.sample_csv ? `<button class="btn" id="loadsample">Load sample (200 held-out flows)</button><a class="btn ghost" id="dlsample" download="sample_flows.csv">Download the sample CSV</a>` : ""}</div>
+      <details class="more"><summary><span class="ib" aria-hidden="true">i</span> which columns?</summary><div class="note">The 77 model features (CICFlowMeter names; case, extra spaces and raw headers such as " Flow Duration" are accepted), <b>Protocol</b>, and optionally <b>Label</b> ("DrDoS_LDAP" is read as LDAP) and <b>row_id</b>. Other columns are ignored. At most the first ${MAX_ROWS.toLocaleString()} rows are read.</div></details>
+    </div>
+    <div class="card white rep" id="ownrep" aria-live="polite"><h3>Validation report</h3><div class="note" style="margin:0">No file yet. Try “Load sample”.</div></div>
+  </div>
+  <div class="prog" id="ownprog" hidden><div id="ownbar"></div></div><div class="note num" id="owntxt"></div>
+  <div id="ownout"></div>`;
+  const drop = $("#drop"), inp = $("#file");
+  inp.onchange = () => inp.files[0] && readFile(inp.files[0]);
+  ["dragenter", "dragover"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) readFile(f); });
+  drop.tabIndex = 0; drop.setAttribute("role", "button"); drop.setAttribute("aria-label", "Choose or drop a CSV file of flows");
+  drop.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); inp.click(); } };
+  if (DATA.sample_csv) {
+    $("#loadsample").onclick = () => runOwn(DATA.sample_csv, "sample_flows.csv (embedded)");
+    $("#dlsample").href = URL.createObjectURL(new Blob([DATA.sample_csv], {type: "text/csv"}));
+  }
+}
+function readFile(f) {
+  const r = new FileReader();
+  r.onload = () => runOwn(r.result, f.name + (f.size > MAX_BYTES ? ` (first ${MAX_BYTES / 1048576} MB)` : ""));
+  r.onerror = () => { $("#ownrep").innerHTML = `<h3>Validation report</h3><div class="no">✗ Could not read the file.</div>`; };
+  r.readAsText(f.size > MAX_BYTES ? f.slice(0, MAX_BYTES) : f);
+}
+function parseCSV(text, maxRows) {  // RFC 4180: quotes, escaped quotes, CRLF; delimiter , ; or tab from the header line
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+  const nl = text.indexOf("\n"), first = nl < 0 ? text : text.slice(0, nl);
+  const dl = first.includes(",") ? "," : first.includes(";") ? ";" : first.includes("\t") ? "\t" : ",";
+  const rows = []; let row = [], f = "", q = false, truncated = false;
+  for (let i = 0; i < text.length; i++) { const c = text[i];
+    if (q) { if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; continue; }
+    if (c === '"') q = true; else if (c === dl) { row.push(f); f = ""; }
+    else if (c === "\n" || c === "\r") { if (c === "\r" && text[i + 1] === "\n") i++; row.push(f); f = ""; if (row.length > 1 || row[0] !== "") rows.push(row); row = [];
+      if (rows.length > maxRows) { truncated = true; break; } }
+    else f += c; }
+  if (!truncated && (f !== "" || row.length)) { row.push(f); if (row.length > 1 || row[0] !== "") rows.push(row); }
+  return {rows, truncated};
+}
+function runOwn(text, name) {
+  const feats = A.scaler.features_numeric, F = feats.length;
+  const {rows, truncated} = parseCSV(text, MAX_ROWS);
+  if (!rows.length) { $("#ownrep").innerHTML = `<h3>Validation report</h3><div class="no">✗ The file is empty.</div>`; return; }
+  const seen = {}, head = rows[0].map(h => { const n = normCol(h), k = seen[n] || 0; seen[n] = k + 1; return k ? `${n}.${k}` : n; }); // pandas renames repeats ".1"
+  const fi = feats.map(n => head.indexOf(n)), pi = head.indexOf("protocol"), li = head.indexOf("label");
+  const ri = ["row_id", "row id", "rid"].map(n => head.indexOf(n)).find(i => i >= 0) ?? -1;
+  const found = fi.filter(i => i >= 0).length, missing = feats.filter((n, j) => fi[j] < 0);
+  const used = new Set([...fi, pi, li, ri].filter(i => i >= 0)), ignored = head.filter((h, i) => !used.has(i) && h);
+  const body = rows.slice(1, MAX_ROWS + 1), xs = new Float64Array(body.length * F), codes = new Int32Array(body.length);
+  const keep = [], labels = [], rids = []; let dropped = 0, dropEx = null;
+  const raw = new Float64Array(F);
+  body.forEach((r, n) => {
+    let bad = null;
+    for (let j = 0; j < F; j++) { if (fi[j] < 0) continue; const s = (r[fi[j]] ?? "").trim(), v = s === "" ? NaN : Number(s);
+      if (!Number.isFinite(v)) { bad = `${feats[j]} = "${s.slice(0, 20)}"`; break; } raw[j] = v; }
+    let proto = benignProto;
+    if (!bad && pi >= 0) { const s = (r[pi] ?? "").trim(), v = Number(s); if (s === "" || !Number.isFinite(v)) bad = `protocol = "${s.slice(0, 20)}"`; else proto = v; }
+    if (bad) { dropped++; dropEx = dropEx || `line ${n + 2}: ${bad}`; return; }
+    const x = NIDS.scaleRow(raw, A.scaler);
+    for (let j = 0; j < F; j++) if (fi[j] < 0) x[j] = benignMed[j];  // missing feature: BENIGN median in the scaled space
+    xs.set(x, keep.length * F); codes[keep.length] = NIDS.protoCode(proto, A.scaler);
+    keep.push(n + 2); labels.push(li >= 0 ? canon(r[li] ?? "") : null); rids.push(ri >= 0 ? (r[ri] ?? "").trim() : null);
+  });
+  const N = keep.length;
+  const rep = [`<li><b class="num">${body.length.toLocaleString()}</b> rows read from <b>${esc(name)}</b>${truncated ? ` (stopped at ${MAX_ROWS.toLocaleString()})` : ""}</li>`,
+    `<li>Features found: <b class="num">${found} / ${F}</b>${missing.length ? ` · missing ${missing.length}: <span class="num">${esc(missing.slice(0, 6).join(", "))}${missing.length > 6 ? ", …" : ""}</span>. <b>Filled with the BENIGN median</b> (in the scaled space).` : " ✓"}</li>`,
+    `<li>Protocol: ${pi >= 0 ? "found ✓" : `<b>missing</b>; set to ${benignProto} (the most common BENIGN protocol)`}</li>`,
+    `<li>Label column: ${li >= 0 ? "found ✓ (metrics below)" : "none (predictions only)"}</li>`,
+    `<li>Rows dropped (non-numeric or infinite): <b class="num">${dropped.toLocaleString()}</b>${dropEx ? ` · e.g. <span class="num">${esc(dropEx)}</span>` : ""}</li>`,
+    ignored.length ? `<li>Ignored columns: <span class="num">${ignored.length}</span></li>` : ""];
+  const fatal = found === 0 ? `<div class="no" style="margin-top:6px">✗ No model feature found: check the header row.</div>` : N === 0 ? `<div class="no" style="margin-top:6px">✗ No usable rows.</div>` : "";
+  $("#ownrep").innerHTML = `<h3>Validation report</h3><ul>${rep.join("")}</ul>${fatal}`;
+  $("#ownout").innerHTML = "";
+  if (fatal) return;
+  const arms = ARMS.map(a => a.k), pred = {}, confv = {}; arms.forEach(a => { pred[a] = new Array(N); confv[a] = new Float64Array(N); });
+  OWN = {N, labels, rids, line: keep, pred, conf: confv, hasLabel: li >= 0, done: false, name};
+  $("#ownprog").hidden = false; let done = 0;
+  const upd = () => { $("#ownbar").style.width = (100 * done / N) + "%"; $("#owntxt").textContent = `${done.toLocaleString()} / ${N.toLocaleString()} flows × 4 models`; };
+  runJob(xs.subarray(0, N * F), codes.subarray(0, N), arms, (r, ps) => {
+    for (const a of arms) { const p = ps[a], k = argmax(p); pred[a][r] = A.models[a].classes[k]; confv[a][r] = p[k]; }
+    if (++done % 50 === 0) upd();
+  }, () => { done = N; upd(); OWN.done = true; ownResults(); });
+}
+function ownMetrics(a) {
+  const cls = A.models[a].classes, M = {}, rowsK = [...cls, "unknown class"];
+  rowsK.forEach(t => { M[t] = {}; cls.forEach(p => M[t][p] = 0); });
+  let n = 0, ok = 0; const unk = new Set();
+  for (let i = 0; i < OWN.N; i++) { const t = OWN.labels[i]; if (t == null || t === "") continue; n++;
+    const p = OWN.pred[a][i], tk = cls.includes(t) ? t : "unknown class"; if (tk === "unknown class") unk.add(t);
+    M[tk][p]++; if (p === t) ok++; }
+  const per = cls.map(c => { const tp = M[c][c], fp = rowsK.reduce((s, t) => s + (t !== c ? M[t][c] : 0), 0), fn = cls.reduce((s, p) => s + (p !== c ? M[c][p] : 0), 0);
+    const P = tp + fp ? tp / (tp + fp) : null, R = tp + fn ? tp / (tp + fn) : null, F1 = P != null && R != null && P + R > 0 ? 2 * P * R / (P + R) : null; return {c, P, R, F1, sup: tp + fn}; });
+  return {n, ok, acc: n ? ok / n : null, M, rowsK, cls, per, unk: [...unk]};
+}
+function ownResults() {
+  const arms = ARMS.map(a => a.k), N = OWN.N, allC = [...new Set([...CLASSES, ...arms.flatMap(a => A.models[a].classes)])];
+  let h = `<div class="card white" style="margin-top:14px"><h3>Predicted classes per model (${N.toLocaleString()} flows)</h3>`;
+  for (const a of ARMS) { const cn = {}; OWN.pred[a.k].forEach(p => cn[p] = (cn[p] || 0) + 1);
+    h += `<div class="srow"><span><span class="sw" style="background:${COL[a.k]};margin-right:6px"></span>${a.name}</span><div class="stack" role="img" aria-label="${a.name}: ${allC.filter(c => cn[c]).map(c => `${c} ${cn[c]}`).join(", ")}">${allC.filter(c => cn[c]).map(c => `<div style="width:${100 * cn[c] / N}%;background:${CLSCOL[c] || "#5f646b"}" title="${c}: ${cn[c]}">${cn[c] / N > 0.07 ? `${c} ${cn[c]}` : ""}</div>`).join("")}</div></div>`; }
+  h += `<div class="legend">${allC.map(c => `<span><i style="background:${CLSCOL[c] || "#5f646b"}"></i>${c}</span>`).join("")}</div></div>`;
+  if (OWN.hasLabel) {
+    const MS = Object.fromEntries(arms.map(a => [a, ownMetrics(a)]));
+    h += `<div class="card white" style="margin-top:14px"><h3>Against your labels (${MS.clean.n.toLocaleString()} labelled flows)</h3>
+      <div class="accs" id="ownacc">${ARMS.map(a => `<div class="acc tint-${a.k}"><div class="v num" style="color:${INK[a.k]}">${MS[a.k].acc == null ? "–" : pct(MS[a.k].acc)}</div><div class="l">${a.name} · accuracy</div></div>`).join("")}</div>
+      <div class="cmpbar"><span class="lab" id="labOA">Per-class metrics for</span><div class="seg" id="segOA" role="group" aria-labelledby="labOA"></div></div>
+      <div id="ownmet"></div>
+      <div class="note">“unknown class”: a label this model never learned (e.g. LDAP for gate only). It cannot be predicted right, so it counts as an error.</div></div>`;
+    OWN.metrics = MS;
+  }
+  const hasRid = OWN.rids.some(x => x);
+  h += `<div class="card white" style="margin-top:14px"><div class="cmpbar"><h3 style="margin:0">First ${Math.min(SHOW, N)} rows${N > SHOW ? ` of ${N.toLocaleString()}` : ""}</h3>
+     <div class="btnrow ownact"><button class="btn" id="copycsv">Copy results as CSV</button><a class="btn ghost" id="dlcsv" download="nids_predictions.csv">Download CSV</a></div></div>
+     <div class="owntab"><table><thead><tr><th>#</th>${hasRid ? "<th>row id</th>" : ""}${OWN.hasLabel ? "<th>label</th>" : ""}${ARMS.map(a => `<th>${a.name}</th>`).join("")}<th>models</th></tr></thead><tbody>`;
+  for (let i = 0; i < Math.min(SHOW, N); i++) { const ps = arms.map(a => OWN.pred[a][i]), dis = new Set(ps).size > 1, t = OWN.labels[i];
+    h += `<tr class="${dis ? "dis" : ""}"><td class="num">${OWN.line[i]}</td>${hasRid ? `<td class="num">${esc(OWN.rids[i] || "")}</td>` : ""}${OWN.hasLabel ? `<td>${esc(t || "")}</td>` : ""}${arms.map(a => { const p = OWN.pred[a][i], c = OWN.conf[a][i];
+      return `<td>${OWN.hasLabel && t ? (p === t ? '<span class="ok">✓</span> ' : '<span class="no">✗</span> ') : ""}${p} <span class="num" style="color:var(--ink3)">${pct(c)}</span></td>`; }).join("")}<td>${dis ? '<span class="flag">DISAGREE</span>' : "agree"}</td></tr>`; }
+  h += `</tbody></table></div><div class="note">Rows where the four models disagree are shaded and marked DISAGREE. # = line in your file.</div></div>`;
+  $("#ownout").innerHTML = h;
+  if (OWN.hasLabel) ownMetricsSeg();
+  const csv = ownCSV();
+  $("#dlcsv").href = URL.createObjectURL(new Blob([csv], {type: "text/csv"}));
+  $("#copycsv").onclick = () => copyText(csv, $("#copycsv"));
+}
+function ownMetricsSeg() {
+  segBtns($("#segOA"), ARMS.map(a => [a.k, a.name]), OWNARM, v => { OWNARM = v; ownMetricsSeg(); });
+  const m = OWN.metrics[OWNARM];
+  $("#ownmet").innerHTML = `<div class="ownrow"><div><table class="t"><tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th>Support</th></tr>${m.per.map(p => `<tr><td>${p.c}</td><td class="num">${f4(p.P)}</td><td class="num">${f4(p.R)}</td><td class="num">${f4(p.F1)}</td><td class="num">${p.sup}</td></tr>`).join("")}</table>
+    ${m.unk.length ? `<div class="note">unknown class for this model: ${esc(m.unk.join(", "))}</div>` : ""}</div>
+    <div><table class="cm"><caption>Confusion matrix · ${ARMS.find(a => a.k === OWNARM).name}</caption><tr><th>true ↓ / pred →</th>${m.cls.map(c => `<th>${c}</th>`).join("")}</tr>
+    ${m.rowsK.filter(t => t !== "unknown class" || m.unk.length).map(t => { const tot = m.cls.reduce((s, p) => s + m.M[t][p], 0);
+      return `<tr><th style="text-align:left">${t}</th>${m.cls.map(p => { const v = m.M[t][p], sh = tot ? v / tot : 0;
+        return `<td class="num ${p === t ? "d" : ""}" style="background:${p === t ? `rgba(42,122,76,${0.12 + 0.5 * sh})` : v ? `rgba(181,55,42,${0.08 + 0.55 * sh})` : "transparent"}">${v || ""}</td>`; }).join("")}</tr>`; }).join("")}</table></div></div>`;
+}
+function ownCSV() {
+  const arms = ARMS.map(a => a.k), q = s => /[",\n]/.test(s) ? `"${String(s).replace(/"/g, '""')}"` : s;
+  const lines = [["line", "row_id", "label", ...arms.flatMap(a => [a + "_pred", a + "_conf"])].join(",")];
+  for (let i = 0; i < OWN.N; i++) lines.push([OWN.line[i], q(OWN.rids[i] || ""), q(OWN.labels[i] || ""), ...arms.flatMap(a => [OWN.pred[a][i], OWN.conf[a][i].toFixed(6)])].join(","));
+  return lines.join("\n") + "\n";
+}
+function copyText(s, btn) {
+  const ok = () => { btn.textContent = "Copied ✓"; setTimeout(() => btn.textContent = "Copy results as CSV", 1600); };
+  const fallback = () => { const t = el("textarea"); t.value = s; t.style.position = "fixed"; t.style.opacity = "0"; document.body.appendChild(t); t.select();
+    try { document.execCommand("copy"); ok(); } catch (e) { btn.textContent = "Copy failed: use Download"; } t.remove(); };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(s).then(ok, fallback); else fallback();
+}
+
+/* =============================================================== 4 ATTACK LAB */
+const T2 = {f: 1.0, s: 42, a: "poisoned_relabel"};
+const DEF = [{k: "poisoned", n: "Gate only"}, {k: "poisoned_repair", n: "Soft repair"}, {k: "poisoned_relabel", n: "Relabel repair"}, {k: "clean", n: "No attack"}];
+function attempts(f, s, a) {
+  if (a === "poisoned_relabel") return RES.fu2_rounds.filter(r => r.seed === s).map(r => ({...r, repair_method: r.attempt === "R1" ? "relabel" : null}));
+  return RES.sweep_decisions.filter(r => r.poison_frac === f && r.seed === s && r.arm === a);
+}
 function renderT2() {
   if (T2.a === "poisoned_relabel" && T2.f !== 1.0) T2.a = "poisoned_repair";
-  seg("#segF", FRACS.map(v => ({v, label: (100 * v) + "%"})), () => T2.f, v => T2.f = v);
-  seg("#segS", SEEDS.map(v => ({v, label: String(v)})), () => T2.s, v => T2.s = v);
-  seg("#segA", DEF.map(d => ({v: d.k, label: d.n})), () => T2.a, v => T2.a = v, v => v === "poisoned_relabel" && T2.f !== 1.0);
+  const go = fn => v => { stopPlay(); fn(v); renderT2(); };
+  segBtns($("#segF"), FRACS.map(v => [v, (100 * v) + "%"]), T2.f, go(v => T2.f = v));
+  segBtns($("#segS"), SEEDS.map(v => [v, String(v)]), T2.s, go(v => T2.s = v));
+  segBtns($("#segA"), DEF.map(d => [d.k, d.n, d.k === "poisoned_relabel" && T2.f !== 1.0 ? "not run at this flip fraction" : null]), T2.a, go(v => T2.a = v));
   drawBuffer(); timeline(); heat();
 }
-/* Play: 75% -> 90% -> 95% -> 100%, 1.5 s each, with the chosen defence (relabel repair exists only at 100%,
-   so soft repair stands in before that and the note says so) */
 let playT = null;
-function stopPlay() {
-  if (!playT) return; clearTimeout(playT); playT = null;
-  const b = $("#play"); b.innerHTML = "&#9656; Play 75% &#8594; 100%"; b.setAttribute("aria-pressed", "false");
-}
+function stopPlay() { if (!playT) return; clearTimeout(playT); playT = null; const b = $("#play"); b.innerHTML = "&#9656; Play 75% &#8594; 100%"; b.setAttribute("aria-pressed", "false"); }
 function play() {
   if (playT) { stopPlay(); $("#playnote").textContent = "stopped"; return; }
-  const want = T2.a, name = k => DEF.find(d => d.k === k).n.toLowerCase();
-  let i = 0;
+  const want = T2.a, name = k => DEF.find(d => d.k === k).n.toLowerCase(); let i = 0;
   const b = $("#play"); b.innerHTML = "&#10074;&#10074; Stop"; b.setAttribute("aria-pressed", "true");
   const tick = () => {
     if (i >= FRACS.length) { stopPlay(); $("#playnote").textContent = `done: ${name(T2.a)} at 100%`; return; }
     T2.f = FRACS[i]; T2.a = want === "poisoned_relabel" && T2.f !== 1.0 ? "poisoned_repair" : want; renderT2();
-    $("#playnote").textContent = `${100 * T2.f}% flipped · ${name(T2.a)}` + (T2.a !== want ? " (relabel repair exists only at 100%)" : "");
-    i++; playT = setTimeout(tick, 1500);
-  };
+    $("#playnote").textContent = `${100 * T2.f}% · ${name(T2.a)}` + (T2.a !== want ? " (relabel exists only at 100%)" : "");
+    i++; playT = setTimeout(tick, 1500); };
   playT = -1; tick();
 }
-/* buffer picture: 2,000 cells, one per stored Syn row. Which rows flipped is drawn in a fixed random order (an
-   illustration); the counts are the experiment's. */
 const ORDER = (() => { const o = Array.from({length: 2000}, (_, i) => i); let s = 7; for (let i = o.length - 1; i > 0; i--) { s = (s * 16807) % 2147483647; const j = s % (i + 1); [o[i], o[j]] = [o[j], o[i]]; } return o; })();
 const RANK = new Int32Array(2000); ORDER.forEach((v, i) => RANK[v] = i);
 let bufAnim = null, bufState = new Float32Array(2000);
@@ -642,182 +865,233 @@ function drawBuffer() {
   for (let i = 0; i < nflip; i++) flipped[ORDER[i]] = 1;
   const rec = attempts(T2.f, T2.s, T2.a).find(r => r.attempt === "R1" && r.experience === 1);
   const relab = T2.a === "poisoned_relabel" && rec ? rec.n_relabelled : 0;
-  const target = new Float32Array(2000);
-  for (let i = 0; i < 2000; i++) target[i] = flipped[i] ? 1 : 0;
-  const cv = $("#buf"), ctx = cv.getContext("2d"), cols = 50, rows = 40, cw = cv.width / cols, ch = cv.height / rows;
+  const target = new Float32Array(2000); for (let i = 0; i < 2000; i++) target[i] = flipped[i] ? 1 : 0;
+  const cv = $("#buf"), ctx = cv.getContext("2d"), cols = 50, cw = cv.width / cols, ch = cv.height / 40;
   cancelAnimationFrame(bufAnim);
   const start = bufState.slice(), t0 = performance.now();
   const frame = now => {
-    const k = Math.min(1, (now - t0) / 600);
-    ctx.clearRect(0, 0, cv.width, cv.height);
+    const k = Math.min(1, (now - t0) / 600); ctx.clearRect(0, 0, cv.width, cv.height);
     for (let i = 0; i < 2000; i++) {
-      const rank = RANK[i], delay = Math.min(0.6, rank / 2000 * 0.6), kk = Math.min(1, Math.max(0, (k - delay) / 0.4));
+      const delay = Math.min(0.6, RANK[i] / 2000 * 0.6), kk = Math.min(1, Math.max(0, (k - delay) / 0.4));
       const v = start[i] + (target[i] - start[i]) * kk; bufState[i] = v;
       const x = (i % cols) * cw, y = Math.floor(i / cols) * ch;
-      let col;
-      if (v < 0.5) col = "#2b7488"; else col = "#b5372a";
-      ctx.globalAlpha = 1;
-      if (T2.a === "poisoned_repair" && target[i] === 1 && k === 1) ctx.globalAlpha = 0.18;
-      ctx.fillStyle = col; ctx.fillRect(x + 1, y + 1, cw - 2, ch - 2);
-      if (relab && target[i] === 1 && rank < relab && k === 1) { ctx.globalAlpha = 1; ctx.strokeStyle = "#2a7a4c"; ctx.lineWidth = 2.2; ctx.strokeRect(x + 2.2, y + 2.2, cw - 4.4, ch - 4.4); }
+      ctx.globalAlpha = T2.a === "poisoned_repair" && target[i] === 1 && k === 1 ? 0.18 : 1;
+      ctx.fillStyle = v < 0.5 ? COL.teal : COL.poisoned; ctx.fillRect(x + 1, y + 1, cw - 2, ch - 2);
+      if (relab && target[i] === 1 && RANK[i] < relab && k === 1) { ctx.globalAlpha = 1; ctx.strokeStyle = COL.poisoned_relabel; ctx.lineWidth = 2.2; ctx.strokeRect(x + 2.2, y + 2.2, cw - 4.4, ch - 4.4); }
     }
-    ctx.globalAlpha = 1;
-    if (k < 1) bufAnim = requestAnimationFrame(frame);
+    ctx.globalAlpha = 1; if (k < 1) bufAnim = requestAnimationFrame(frame);
   };
   bufAnim = requestAnimationFrame(frame);
-  $("#bufleg").innerHTML = `<span><i style="background:#2b7488"></i>stored label Syn (correct)</span><span><i style="background:#b5372a"></i>flipped to BENIGN</span>`
-    + (T2.a === "poisoned_repair" ? `<span><i style="background:#b5372a;opacity:.2"></i>soft repair: weight ≈ ${rec && rec.w_flipped != null ? rec.w_flipped.toFixed(3) : "0.003"}</span>` : "")
-    + (T2.a === "poisoned_relabel" ? `<span><i style="background:#fff;outline:2px solid #2a7a4c;outline-offset:-2px"></i>teacher restores Syn for this training run</span>` : "");
-  let note = T2.a === "clean" ? "No attack: all 2,000 stored Syn labels are correct." :
-    `<b class="num">${nflip.toLocaleString()}</b> of 2,000 stored Syn labels say BENIGN; <b class="num">${(2000 - nflip).toLocaleString()}</b> correct Syn labels survive.`;
-  if (T2.a === "poisoned_repair") note += nflip === 2000 ? " Soft repair can delete the wrong labels but has no correct one left to learn from." : " Soft repair mutes the flipped rows, so the surviving correct rows decide.";
-  if (T2.a === "poisoned_relabel" && rec) note += ` The frozen teacher relabelled <b class="num">${rec.n_relabelled.toLocaleString()}</b> rows, <b class="num">${rec.n_relabelled_to_true.toLocaleString()}</b> of them to their true class. The stored buffer itself is never rewritten.`;
-  $("#bufnote").innerHTML = note + `<br><span style="color:var(--ink3)">Which cells are drawn as flipped is illustrative; the counts are exact.</span>`;
+  $("#bufleg").innerHTML = `<span><i style="background:${COL.teal}"></i>stored Syn (correct)</span><span><i style="background:${COL.poisoned}"></i>flipped to BENIGN</span>`
+    + (T2.a === "poisoned_repair" ? `<span><i style="background:${COL.poisoned};opacity:.2"></i>soft repair weight ≈ ${rec && rec.w_flipped != null ? rec.w_flipped.toFixed(3) : "–"}</span>` : "")
+    + (T2.a === "poisoned_relabel" ? `<span><i style="background:#fff;outline:2px solid ${COL.poisoned_relabel};outline-offset:-2px"></i>teacher restores Syn</span>` : "");
+  let note = T2.a === "clean" ? "No attack: all 2,000 stored Syn labels are correct." : `<b class="num">${nflip.toLocaleString()}</b> of 2,000 stored Syn labels say BENIGN; <b class="num">${(2000 - nflip).toLocaleString()}</b> correct ones survive.`;
+  if (T2.a === "poisoned_repair") note += nflip === 2000 ? " Soft repair can mute the wrong labels but has no correct one left." : " Soft repair mutes the flipped rows, so the correct rows decide.";
+  if (T2.a === "poisoned_relabel" && rec) note += ` The frozen teacher relabelled <b class="num">${rec.n_relabelled.toLocaleString()}</b> rows, <b class="num">${rec.n_relabelled_to_true.toLocaleString()}</b> to their true class; the stored buffer is never rewritten.`;
+  $("#bufnote").innerHTML = note + " Which cells are drawn as flipped is illustrative; the counts are exact.";
 }
 function gaugeRow(label, val, thr, dir, max) {
-  const ok = dir === "ge" ? val >= thr : val <= thr;
-  const w = Math.min(100, 100 * val / max), tp = Math.min(100, 100 * thr / max);
-  return `<div class="chk"><span>${label} <span class="num">${dir === "ge" ? f4(val) + " ≥ " + f4(thr) : f4(val) + " ≤ " + thr}</span></span><div class="gauge" aria-hidden="true"><div class="f" style="width:${w}%;background:${ok ? "var(--green)" : "var(--red)"}"></div><div class="th" style="left:${tp}%"></div></div><span class="${ok ? "ok" : "no"}">${ok ? "✓ pass" : "✗ fail"}</span></div>`;
+  const ok = dir === "ge" ? val >= thr : val <= thr, w = Math.min(100, 100 * val / max), tp = Math.min(100, 100 * thr / max);
+  return `<div class="chk"><span>${label} <span class="num">${dir === "ge" ? f4(val) + " ≥ " + f4(thr) : f4(val) + " ≤ " + thr}</span></span><div class="gauge" aria-hidden="true"><div class="f" style="width:${w}%;background:${ok ? COL.poisoned_relabel : COL.poisoned}"></div><div class="th" style="left:${tp}%"></div></div><span class="${ok ? "ok" : "no"}">${ok ? "✓ pass" : "✗ fail"}</span></div>`;
 }
 function timeline() {
-  const box = $("#timeline"), at = attempts(T2.f, T2.s, T2.a);
-  const newOf = {1: "LDAP", 2: "UDP"};
-  let h = `<div class="step"><div class="hd"><b>E0 · learn BENIGN + Syn</b><span>the frozen teacher T is a copy of this model</span></div></div>`;
+  const box = $("#timeline"), at = attempts(T2.f, T2.s, T2.a), newOf = {1: "LDAP", 2: "UDP"};
+  let h = `<div class="step"><div class="hd2"><b>E0 · learn BENIGN + Syn</b><span>the frozen teacher is a copy of this model</span></div></div>`;
   const repairName = T2.a === "poisoned_repair" ? "soft repair" : "relabel repair";
   for (const e of [1, 2]) {
-    const rows = at.filter(r => r.experience === e);
-    const acc = rows.find(r => r.accepted);
-    h += `<div class="step"><div class="hd"><b>E${e} · new attack ${newOf[e]} arrives</b><span>${acc ? `<span class="pill acc">${acc.attempt} DEPLOYED</span>` : `<span class="pill kept">OLD MODEL KEPT</span>`}</span></div>`;
+    const rows = at.filter(r => r.experience === e), acc = rows.find(r => r.accepted);
+    h += `<div class="step"><div class="hd2"><b>E${e} · ${newOf[e]} arrives</b><span>${acc ? `<span class="pill acc">${acc.attempt} DEPLOYED</span>` : `<span class="pill kept">OLD MODEL KEPT</span>`}</span></div>`;
     for (const r of rows) {
-      const nm = r.attempt === "C1" ? "C1 · plain update" : `R1 · ${repairName}`;
-      h += `<div class="att"><div class="an"><span>${nm}</span><span class="pill ${r.accepted ? "acc" : "rej"}">${r.accepted ? "ACCEPT" : "REJECT"}</span></div>
-        ${gaugeRow("old Syn recall", r.Syn_val_recall, r.Syn_floor, "ge", 1)}
-        ${gaugeRow(`new ${newOf[e]} recall`, r.new_recall_min, 0.8, "ge", 1)}
-        ${gaugeRow("benign false alarms", r.benign_far, 0.05, "le", 0.1)}
-        ${r.new_class_far != null ? gaugeRow("new-class false alarms", r.new_class_far, 0.05, "le", 0.1) : ""}
-        ${r.Syn_val_mean_p != null ? `<div class="note" style="margin-top:4px">mean confidence on Syn: <span class="num">${f3(r.Syn_val_mean_p)}</span> (not checked by this gate)</div>` : ""}</div>`;
+      h += `<div class="att"><div class="an"><span>${r.attempt === "C1" ? "C1 · plain update" : `R1 · ${repairName}`}</span><span class="pill ${r.accepted ? "acc" : "rej"}">${r.accepted ? "ACCEPT" : "REJECT"}</span></div>
+        ${gaugeRow("old Syn recall", r.Syn_val_recall, r.Syn_floor, "ge", 1)}${gaugeRow(`new ${newOf[e]} recall`, r.new_recall_min, 0.8, "ge", 1)}
+        ${gaugeRow("benign false alarms", r.benign_far, 0.05, "le", 0.1)}${r.new_class_far != null ? gaugeRow("new-class false alarms", r.new_class_far, 0.05, "le", 0.1) : ""}</div>`;
     }
-    if (!acc) h += `<div class="note">No candidate passed, so the last accepted model keeps serving and the buffer does not grow. ${newOf[e]} is not learned.</div>`;
+    if (!acc) h += `<div class="note">No candidate passed: the last accepted model keeps serving. ${newOf[e]} is not learned.</div>`;
     h += `</div>`;
   }
   const d = deployed(T2.f, T2.s, T2.a);
-  if (d) {
-    const n = CLASSES.filter(c => d.recall[c] > 0).length;
-    h += `<div class="step" style="border-color:${n === 4 ? "#b9d8c5" : "#e8c2bc"};background:${n === 4 ? "#f6fbf8" : "#fdf6f5"}"><div class="hd"><b>Deployed model on held-out test <span class="ev test">test</span></b><span><b style="color:${n === 4 ? "var(--green)" : "var(--red)"}">${n} of 4 classes learned</b></span></div>
-      <div class="bars">${CLASSES.map(c => `<div class="bar"><span>${c}</span><div class="track"><div class="fill" style="width:${100 * d.recall[c]}%;background:${d.recall[c] > 0 ? "var(--teal)" : "var(--red)"}"></div></div><span class="v num">${f4(d.recall[c])}</span></div>`).join("")}</div>
-      <div class="note">benign false-alarm rate <span class="num">${f4(d.far)}</span> · macro recall <span class="num">${f4(d.macro)}</span>${n < 4 && d.far === 0 ? " · zero false alarms here only because LDAP/UDP traffic is called benign" : ""}</div></div>`;
-  }
+  if (d) { const n = CLASSES.filter(c => d.recall[c] > 0).length;
+    h += `<div class="step ${n === 4 ? "tint-poisoned_relabel" : "tint-poisoned"}"><div class="hd2"><b>Deployed model on held-out test ${tag("test", "test")}</b><span><b class="${n === 4 ? "ok" : "no"}">${n === 4 ? "✓" : "✗"} ${n} of 4 classes learned</b></span></div>
+      <div class="bars">${CLASSES.map(c => `<div class="bar"><span>${c}</span><div class="track"><div class="fill" style="width:${100 * d.recall[c]}%;background:${d.recall[c] > 0 ? COL.teal : COL.poisoned}"></div></div><span class="v num">${f4(d.recall[c])}</span></div>`).join("")}</div>
+      <div class="note">benign FAR <span class="num">${f4(d.far)}</span> · macro recall <span class="num">${f4(d.macro)}</span></div></div>`; }
   box.innerHTML = h; box.classList.remove("fade"); void box.offsetWidth; box.classList.add("fade");
 }
 function heat() {
   const t = $("#heat");
   let h = `<tr><th></th>${DEF.map(d => `<th>${d.n}</th>`).join("")}</tr>`;
-  for (const f of FRACS) {
-    h += `<tr><th>${100 * f}%</th>`;
+  for (const f of FRACS) { h += `<tr><th>${100 * f}%</th>`;
     for (const d of DEF) {
       if (d.k === "poisoned_relabel" && f !== 1.0) { h += `<td class="na" aria-label="${d.n} at ${100 * f}%: not run">n/a</td>`; continue; }
       const n = SEEDS.filter(s => learnedAll(f, s, d.k)).length, sel = T2.f === f && T2.a === d.k;
-      const bg = n === 3 ? "#d9eee1" : n === 0 ? "#f5dcd8" : "#f4e7cf";
-      h += `<td class="${sel ? "sel" : ""}" style="background:${bg}" data-f="${f}" data-a="${d.k}" tabindex="0" role="button" aria-pressed="${sel}" aria-label="${d.n} at ${100 * f}% flipped: ${n} of 3 seeds learned all 4 classes">${n}/3</td>`;
-    }
-    h += `</tr>`;
-  }
+      h += `<td class="${sel ? "sel" : ""}" style="background:${n === 3 ? "#d9eee1" : n === 0 ? "#f5dcd8" : "#f4e7cf"}" data-f="${f}" data-a="${d.k}" tabindex="0" role="button" aria-pressed="${sel}" aria-label="${d.n} at ${100 * f}% flipped: ${n} of 3 seeds learned all 4 classes">${n}/3</td>`; }
+    h += `</tr>`; }
   t.innerHTML = h;
-  t.querySelectorAll("td[data-f]").forEach(td => {
-    const go = () => { stopPlay(); T2.f = +td.dataset.f; T2.a = td.dataset.a; renderT2(); const n = $(`#heat td[data-f="${td.dataset.f}"][data-a="${td.dataset.a}"]`); if (n && document.activeElement === document.body) n.focus(); };
+  t.querySelectorAll("td[data-f]").forEach(td => { const go = () => { stopPlay(); T2.f = +td.dataset.f; T2.a = td.dataset.a; renderT2(); };
     td.onclick = go; td.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); $(`#heat td[data-f="${td.dataset.f}"][data-a="${td.dataset.a}"]`).focus(); } }; });
 }
 
-/* =============================================================== TAB 3 */
-function initT3() {
-  const L = [
-    ["var(--green)", "Pre-registered, supported", "The gate rejects more poisoned updates as f grows. Soft repair lets all four classes be learned for f ≤ 0.95: 9/9 runs vs 3/9 with the gate alone. Soft repair fails at f = 1.0 (0/6)."],
-    ["var(--amber)", "Post hoc, positive", "Relabel repair learns all four classes at f = 1.0 in 3/3 seeds, within about 0.01 of the clean model."],
-    ["var(--slate)", "Diagnostic / limitation", "A recall-based gate is blind to a large loss of confidence (runs main and RF)."],
-    ["var(--red)", "Negative / unsolved", "The 12-label continual protocol; repeated corruption while new classes arrive (untested)."],
-    ["#1c1d1f", "Not claimed", "Statistical significance, real-time deployment, time-ordered validity, other datasets, full-data training, novelty of gated acceptance."],
-  ];
-  $("#ladder").innerHTML = L.map((r, i) => `<div class="rung"><div class="n" style="background:${r[0]}">${i + 1}</div><div class="b"><b style="color:${r[0]}">${r[1]}</b>${r[2]}</div></div>`).join("");
-  const F = [[70427637, "70,427,637", "raw rows, read once (18 files, 14 labels)", "#6e2617"],
-             [10136295, "10,136,295", "distinct finite (features, label) pairs after global de-duplication", "#8b3c28"],
-             [618188, "618,188", "kept after dropping 235,261 label-conflict vectors and capping at 60,000 per attack", "#a8573f"],
-             [98833, "98,833", "four-class training rows", "#2b7488"], [46527, "46,527", "four-class test rows (19,028 BENIGN), scored once", "#24607a"]];
-  $("#funnel").innerHTML = F.map(r => `<div class="row"><div class="bx" style="width:${Math.max(18, 100 * (Math.log10(r[0]) - 3.9) / (Math.log10(F[0][0]) - 3.9))}%;background:${r[3]}">${r[1]}</div><div class="lb">${r[2]}</div></div>`).join("") + `<div class="note">Bar length on a log scale.</div>`;
-  rfChart();
-  const ig = [];
-  if (A) {
-    const ok = Object.values(A.meta.full_test_checks || {}).every(c => c.matches);
-    ig.push(`<div>Model weights: <b>${A.meta.dev ? "DEV stand-ins" : "deployed models of " + A.meta.source_run + " and " + A.meta.fu2_run}</b></div>`);
-    ig.push(`<div>Full-test recall equals the committed results: ${ok ? '<span class="ok">✓ all four models</span>' : '<span class="no">not verified</span>'}</div>`);
-    ig.push(`<div>FU2 model is byte-identical to the validated model (sha256): ${A.meta.fu2_model_is_validated_model ? '<span class="ok">✓</span>' : '<span class="no">no</span>'}</div>`);
-    ig.push(`<div style="margin-top:6px;color:var(--ink3)">sha256 · ${Object.entries(A.meta.model_sha256 || {}).map(([k, v]) => `${k} <span class="num">${String(v).slice(0, 12)}…</span>`).join(" · ")}</div>`);
-  } else ig.push(`<div>No model weights in this build (results tabs only).</div>`);
-  ig.push(`<div style="margin-top:6px">Tab 2 and this tab read the committed run records only (sweep decisions, FU2 rounds, test tables, RF trajectories).</div>`);
-  $("#integrity").innerHTML = ig.join("");
-  if (RES.followups && RES.followups.length) followups();
+/* =============================================================== 5 RESULTS: one SVG style for every chart */
+const AXIS = "#c9ccd1", GRID = "#eceef0", TXT = "#5f646b";
+function svgHead(W, H, aria) { return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${esc(aria)}">`; }
+function yAxis(l, r, W, Y, ticks, fmtT) { return ticks.map(v => `<line x1="${l}" x2="${W - r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${GRID}"/><text x="${l - 6}" y="${Y(v) + 3.5}" font-size="10.5" text-anchor="end" fill="${TXT}">${fmtT(v)}</text>`).join(""); }
+/* grouped vertical bars. groups: [{label, bars: [{v, color, label, title, na, op}]}] */
+function barChart(o) {
+  const W = o.W || 560, H = o.H || 250, l = 38, r = 8, t = 16, b = 32, ih = H - t - b, iw = W - l - r, max = o.max || 1;
+  const Y = v => t + ih * (1 - v / max), G = o.groups.length, gw = iw / G, nb = Math.max(...o.groups.map(g => g.bars.length));
+  const bw = Math.min(o.bw || 30, (gw - 16) / nb - 3);
+  let s = svgHead(W, H, o.aria) + yAxis(l, r, W, Y, o.ticks || [0, 0.5, 1], o.tickFmt || (v => v));
+  o.groups.forEach((g, gi) => {
+    const x0 = l + gi * gw + (gw - nb * (bw + 3) + 3) / 2;
+    g.bars.forEach((bar, bi) => { const x = x0 + bi * (bw + 3);
+      if (bar.na) { s += `<text x="${x + bw / 2}" y="${Y(0) - 4}" font-size="10" text-anchor="middle" fill="${TXT}">${bar.na}</text>`; return; }
+      const y = Y(Math.max(0, bar.v)), hh = Math.max(Y(0) - y, bar.v > 0 ? 1.5 : 0);
+      s += `<rect x="${x}" y="${Y(0) - hh}" width="${bw}" height="${hh}" rx="2" fill="${bar.color}" opacity="${bar.op || 1}"><title>${esc(bar.title || "")}</title></rect>`;
+      if (bar.label != null) s += `<text x="${x + bw / 2}" y="${Y(0) - hh - 4}" font-size="${o.lfs || 10.5}" text-anchor="middle" fill="#1c1d1f">${bar.label}</text>`; });
+    s += `<text x="${l + gi * gw + gw / 2}" y="${H - 11}" font-size="11.5" text-anchor="middle" fill="#1c1d1f">${g.label}</text>`;
+  });
+  return s + `<line x1="${l}" x2="${W - r}" y1="${Y(0)}" y2="${Y(0)}" stroke="${AXIS}"/></svg>`;
 }
-function rfChart() {
-  const tr = RES.rf_traj.filter(r => r.rho === 0.1);
+function shape(k, x, y, c, title) {
+  const t = title ? `<title>${esc(title)}</title>` : "";
+  if (k === "sq") return `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" fill="${c}">${t}</rect>`;
+  if (k === "dia") return `<path d="M${x} ${y - 6.5}L${x + 6.5} ${y}L${x} ${y + 6.5}L${x - 6.5} ${y}Z" fill="${c}">${t}</path>`;
+  if (k === "ring") return `<circle cx="${x}" cy="${y}" r="5.5" fill="#fff" stroke="${c}" stroke-width="2.2">${t}</circle>`;
+  return `<circle cx="${x}" cy="${y}" r="6" fill="${c}">${t}</circle>`;
+}
+/* horizontal dot plot on [lo, hi]: rows [{label, dots: [{v, color, shape, title}]}] */
+function dotPlot(o) {
+  const W = o.W || 560, l = 130, r = 14, t = 10, rowH = 34, H = t + rowH * o.rows.length + 28, X = v => l + (W - l - r) * (v - o.lo) / (o.hi - o.lo);
+  let s = svgHead(W, H, o.aria);
+  o.ticks.forEach(v => s += `<line x1="${X(v)}" x2="${X(v)}" y1="${t}" y2="${H - 24}" stroke="${GRID}"/><text x="${X(v)}" y="${H - 9}" font-size="10.5" text-anchor="middle" fill="${TXT}">${v.toFixed(2)}</text>`);
+  o.rows.forEach((row, i) => { const y = t + i * rowH + rowH / 2;
+    s += `<text x="${l - 10}" y="${y + 4}" font-size="11.5" text-anchor="end" fill="#1c1d1f">${row.label}</text><line x1="${l}" x2="${W - r}" y1="${y}" y2="${y}" stroke="${GRID}" stroke-dasharray="2 3"/>`;
+    row.dots.forEach(d => { if (d.v != null) s += shape(d.shape, X(Math.max(o.lo, d.v)), y, d.color, d.title); }); });
+  return s + "</svg>";
+}
+function legendHTML(items) { return `<div class="legend">${items.map(i => `<span>${i.shape ? `<svg width="14" height="14" aria-hidden="true" style="vertical-align:-2px;margin-right:4px">${shape(i.shape, 7, 7, i.color)}</svg>` : `<i style="background:${i.color};${i.op ? `opacity:${i.op}` : ""}"></i>`}${i.label}</span>`).join("")}</div>`; }
+function chartCard(id, title, take, svg, tags, more) {
+  return `<div class="chart" id="ch-${id}"><div class="ttl"><b>${title}</b><span>${tags.map(t => tag(t[0], t[1])).join(" ")}</span></div><p class="take">${take}</p>${svg}${more ? `<details class="more"><summary><span class="ib" aria-hidden="true">i</span> more</summary><div class="note">${more}</div></details>` : ""}</div>`;
+}
+const ARMLEG = [{color: COL.poisoned, label: "Gate only"}, {color: COL.poisoned_repair, label: "Soft repair"}, {color: COL.poisoned_relabel, label: "Relabel repair"}, {color: COL.clean, label: "Clean"}];
+function chartA() {
+  const groups = FRACS.map(f => ({label: (100 * f) + "% flipped", bars: ["poisoned", "poisoned_repair", "poisoned_relabel", "clean"].map(a => {
+    if (a === "poisoned_relabel" && f !== 1.0) return {na: "n/a"};
+    const n = SEEDS.filter(s => learnedAll(f, s, a)).length; return {v: n / SEEDS.length, color: COL[a], label: `${n}/${SEEDS.length}`, title: `${ARM_WORD[a]}, ${100 * f}%: ${n} of ${SEEDS.length} seeds`}; })}));
+  const b = base4();
+  return chartCard("a", "a · All four classes learned, per setting and defence", `Soft repair learns all four classes in ${b.soft}/${b.n} runs at 75–95% flipped (gate only ${b.gate}/${b.n}); at 100% only relabel repair does (${b.relabel}/${b.n1}).`,
+    barChart({groups, aria: "Seeds whose deployed model learned all four classes", ticks: [0, 1 / 3, 2 / 3, 1], tickFmt: v => `${Math.round(v * 3)}/3`, bw: 24}) + legendHTML(ARMLEG),
+    [["pre", "registered"], ["post", "relabel: post hoc"], ["test", "test"]], "Bar height = seeds (of 42, 43, 44) whose deployed model has held-out test recall above 0 on all four classes. Relabel repair was run only at f = 1.0 (FU2).");
+}
+function precisionOf(conf, c) { let col = 0; for (const t in conf) col += (conf[t][c] || 0); return col ? (conf[c] || {})[c] / col : null; }
+function chartB() {
+  if (!A) return chartCard("b", "b · Per-class recall and precision", "Needs the bundled model assets.", "", [["test", "test"]]);
+  const ft = A.full_test, arms = ARMS.map(a => a.k);
+  const mk = kind => barChart({W: 520, H: 200, aria: `Per-class ${kind} of the four deployed models`, bw: 15, groups: CLASSES.map(c => ({label: c, bars: arms.map(a => {
+    const f = ft[a]; if (!f.classes.includes(c)) return {na: "×"};
+    const v = kind === "recall" ? f.recall[c] : precisionOf(f.confusion, c); return {v, color: COL[a], title: `${ARM_WORD[a]} · ${c} ${kind} ${f4(v)}`}; })}))});
+  const dRel = Math.max(...CLASSES.map(c => Math.abs(ft.poisoned_relabel.recall[c] - ft.clean.recall[c])));
+  const never = arms.filter(a => !ft[a].classes.includes("LDAP")).map(a => ARM_WORD[a]);
+  return chartCard("b", "b · Per-class recall and precision (f = 1.0, seed 42)", `Relabel repair's recall is within ${f3(dRel)} of the clean model on every class; ${andList(never)} never predict LDAP or UDP.`,
+    `<div class="lab" style="margin-top:4px">Recall</div>${mk("recall")}<div class="lab">Precision</div>${mk("precision")}` + legendHTML([{color: COL.clean, label: "Clean"}, {color: COL.poisoned, label: "Gate only"}, {color: COL.poisoned_repair, label: "Soft repair"}, {color: COL.poisoned_relabel, label: "Relabel repair"}, {color: "transparent", label: "× = class not learned"}]),
+    [["test", `test, ${ft.clean.n_rows.toLocaleString()} rows`]], "Recall and precision of the four deployed models on the full held-out test set, from the PyTorch confusion matrices bundled with this page (precision = correct predictions of a class / all predictions of it).");
+}
+function chartC() {
+  if (!A) return chartCard("c", "c · Why accuracy misleads", "Needs the bundled model assets.", "", [["test", "test"]]);
+  const ft = A.full_test, g = ft.poisoned, r = ft.poisoned_relabel;
+  const groups = [["poisoned", "Gate only"], ["poisoned_relabel", "Relabel repair"]].map(([a, n]) => ({label: n, bars: [
+    {v: ft[a].accuracy, color: COL[a], label: "acc " + f3(ft[a].accuracy), title: `${n} accuracy ${f4(ft[a].accuracy)}`},
+    {v: ft[a].macro_recall, color: COL[a], op: .45, label: "macro " + f3(ft[a].macro_recall), title: `${n} macro recall ${f4(ft[a].macro_recall)}`}]}));
+  return chartCard("c", "c · Why accuracy misleads", `Gate only still scores ${f3(g.accuracy)} accuracy, but its macro recall is ${f3(g.macro_recall)}: two attack classes are never detected.`,
+    barChart({groups, aria: "Accuracy and macro recall of gate only and relabel repair", bw: 70, H: 230}) + legendHTML([{color: "#5f646b", label: "accuracy (solid)"}, {color: "#5f646b", op: .45, label: "macro recall (light)"}]),
+    [["test", "test"]], `Accuracy is dominated by the large BENIGN and Syn classes; macro recall weights every class equally. Relabel repair: accuracy ${f3(r.accuracy)}, macro recall ${f3(r.macro_recall)}.`);
+}
+function chartD() {
+  const tr = RES.rf_traj.filter(r => near(r.rho, 0.1));
   const series = arm => [0, 1, 2, 3, 4, 5, 6].map(t => { const r = tr.filter(x => x.arm === arm && x.t === t); return {t, rec: mean(r.map(x => x.Syn_recall)), p: mean(r.map(x => x.Syn_mean_p))}; });
   const C = series("clean"), P = series("poisoned");
-  const W = 560, H = 230, l = 44, r = 16, tp = 14, b = 30, X = t => l + t * (W - l - r) / 6, Y = v => tp + (1 - (v - 0.7) / 0.32) * (H - tp - b);
+  const W = 560, H = 230, l = 38, r = 12, tp = 12, b = 28, X = t => l + t * (W - l - r) / 6, Y = v => tp + (1 - (v - 0.7) / 0.32) * (H - tp - b);
   const path = (s, k) => s.map((d, i) => `${i ? "L" : "M"}${X(d.t).toFixed(1)},${Y(d[k]).toFixed(1)}`).join("");
-  let g = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="RF: Syn recall and confidence over six updates">`;
-  [0.7, 0.8, 0.9, 1.0].forEach(v => g += `<line x1="${l}" x2="${W - r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#eceef0"/><text x="${l - 6}" y="${Y(v) + 4}" font-size="11" text-anchor="end" fill="#7a7f86">${v.toFixed(1)}</text>`);
-  for (let t = 0; t <= 6; t++) g += `<text x="${X(t)}" y="${H - 10}" font-size="11" text-anchor="middle" fill="#7a7f86">${t === 0 ? "A0" : "U" + t}</text>`;
-  const lines = [[P, "rec", "#b5372a", "", "poisoned: Syn recall"], [P, "p", "#b5372a", "5 4", "poisoned: confidence"], [C, "p", "#4c5867", "5 4", "clean: confidence"]];
-  lines.forEach(([s, k, c, d]) => { g += `<path d="${path(s, k)}" fill="none" stroke="${c}" stroke-width="2.2" stroke-dasharray="${d}"/>`; });
-  $("#rfchart").innerHTML = g + `</svg><div class="legend">` + lines.map(([s, k, c, d, lab]) => `<span><svg width="22" height="8"><line x1="0" x2="22" y1="4" y2="4" stroke="${c}" stroke-width="2.2" stroke-dasharray="${d}"/></svg> ${lab} <span class="num">${s[6][k].toFixed(3)}</span> at U6</span>`).join("") + `</div>`;
-  const tt = RES.rf_test.filter(x => x.rho === 0.1);
-  $("#rfnote").innerHTML = `Validation, mean of 3 seeds; 10% more stored Syn labels flipped before each of six updates (60% at the end). Every update passed the recall gate, so repair never ran. Held-out test after U6: Syn recall <span class="num">${f4(mean(tt.filter(x => x.arm === "poisoned").map(x => x.Syn_recall)))}</span> vs clean <span class="num">${f4(mean(tt.filter(x => x.arm === "clean").map(x => x.Syn_recall)))}</span>; mean confidence <span class="num">${f4(mean(tt.filter(x => x.arm === "poisoned").map(x => x.Syn_mean_p)))}</span> vs <span class="num">${f4(mean(tt.filter(x => x.arm === "clean").map(x => x.Syn_mean_p)))}</span>.`;
+  let g = svgHead(W, H, "RF: Syn recall and confidence over six refresh updates") + yAxis(l, r, W, Y, [0.7, 0.8, 0.9, 1.0], v => v.toFixed(1));
+  for (let t = 0; t <= 6; t++) g += `<text x="${X(t)}" y="${H - 8}" font-size="10.5" text-anchor="middle" fill="${TXT}">${t ? "U" + t : "A0"}</text>`;
+  const lines = [[P, "rec", COL.poisoned, "", "poisoned: Syn recall"], [P, "p", COL.poisoned, "5 4", "poisoned: confidence"], [C, "p", COL.clean, "2 3", "clean: confidence"]];
+  lines.forEach(([s, k, c, d, lab]) => { g += `<path d="${path(s, k)}" fill="none" stroke="${c}" stroke-width="2.2" stroke-dasharray="${d}"/>` + s.map(q => `<circle cx="${X(q.t)}" cy="${Y(q[k])}" r="6" fill="transparent"><title>${lab}, ${q.t ? "U" + q.t : "A0"}: ${f3(q[k])}</title></circle>`).join(""); });
+  g += "</svg>";
+  const leg = `<div class="legend">${lines.map(([s, k, c, d, lab]) => `<span><svg width="22" height="8" aria-hidden="true"><line x1="0" x2="22" y1="4" y2="4" stroke="${c}" stroke-width="2.2" stroke-dasharray="${d}"/></svg> ${lab} <span class="num">${f3(s[6][k])}</span></span>`).join("")}</div>`;
+  const tt = RES.rf_test.filter(x => near(x.rho, 0.1));
+  return chartCard("d", "d · The blind spot: recall holds, confidence falls", `Syn recall stays ${f3(P[6].rec)} while confidence falls to ${f3(P[6].p)} (clean ${f3(C[6].p)}); the recall gate never fires.`, g + leg,
+    [["post", "post hoc (RF)"], ["val", "validation"]], `10% more stored Syn labels flipped before each of six updates (60% at the end); mean of 3 seeds. Held-out test after U6: confidence ${f4(mean(tt.filter(x => x.arm === "poisoned").map(x => x.Syn_mean_p)))} vs clean ${f4(mean(tt.filter(x => x.arm === "clean").map(x => x.Syn_mean_p)))}.`);
 }
-function followups() { /* filled from experiments/results/11_confgate and 12_five once committed */
-  $("#followups").innerHTML = `<div class="fucards">` + RES.followups.map(c => { const t = takeaway(c);
-    return `<div class="card white"><h3>${c.title} <span class="ev post">${c.tag}</span></h3>${t ? `<p class="takeaway">${t}</p>` : ""}<div style="font-size:13px;overflow-x:auto">${c.html}</div></div>`; }).join("") + `</div>`;
+function chartE() {
+  const cg = fu("confgate"); if (!cg || !(cg.stats || []).some(x => x.Syn_mean_conf != null)) return chartCard("e", "e · Confidence-aware gate", "Not committed yet.", `<div class="empty">No CG test results in this build.</div>`, [["post", "post hoc"]]);
+  const rows = [["CG-RF", 0.1, "Refresh, 10%/update"], ["CG-RF", 0.05, "Refresh, 5%/update"], ["CG-MAIN", 0.5, "4 classes, 50%"]].map(([st, f, lab]) => {
+    const g = a => (cg.stats.find(x => x.setting === st && near(x.frac, f) && x.arm === a) || {}).Syn_mean_conf;
+    const no = st === "CG-RF" ? mean(RES.rf_test.filter(x => near(x.rho, f) && x.arm === "poisoned_repair").map(x => x.Syn_mean_p)) : null;
+    return {label: lab, dots: [{v: no, color: COL.poisoned_repair, shape: "ring", title: `${lab}: repair without confidence gate ${f4(no)}`},
+      {v: g("poisoned"), color: COL.poisoned, shape: "dia", title: `${lab}: gate only ${f4(g("poisoned"))}`},
+      {v: g("clean"), color: COL.clean, shape: "sq", title: `${lab}: clean ${f4(g("clean"))}`},
+      {v: g("poisoned_repair"), color: COL.poisoned_repair, shape: "dot", title: `${lab}: repair with confidence gate ${f4(g("poisoned_repair"))}`}]}; });
+  const r = cgRepair(), cl = cg.stats.filter(x => x.arm === "clean");
+  return chartCard("e", "e · Confidence-aware gate: Syn confidence on test", r ? `Repair keeps Syn confidence at ${f3(r.with)} with the confidence gate (without: ${f3(r.without)}); ${cl.reduce((s, x) => s + x.updates_accepted, 0)}/${cl.reduce((s, x) => s + x.updates, 0)} clean updates still pass.` : "",
+    dotPlot({rows, lo: 0.7, hi: 1.0, ticks: [0.7, 0.8, 0.9, 1.0], aria: "Mean held-out Syn confidence per setting and arm"}) + legendHTML([{shape: "ring", color: COL.poisoned_repair, label: "repair, no confidence gate (RF)"}, {shape: "dot", color: COL.poisoned_repair, label: "repair + confidence gate"}, {shape: "dia", color: COL.poisoned, label: "gate only"}, {shape: "sq", color: COL.clean, label: "clean"}]),
+    [["post", "post hoc"], ["test", "test"]], "Mean of 3 seeds per setting. The no-confidence-gate reference exists only for the refresh (RF) settings. Full table under Evidence.");
 }
-const near = (a, b) => Math.abs(a - b) < 1e-9;
-function cgRepair() { /* test Syn confidence of repaired models at RF rho 0.10: without (RF) and with the confidence gate (CG) */
-  const cg = (RES.followups || []).find(c => c.id === "confgate");
-  const w = cg && (cg.stats || []).find(x => x.setting === "CG-RF" && near(x.frac, 0.1) && x.arm === "poisoned_repair");
-  const no = RES.rf_test.filter(x => near(x.rho, 0.1) && x.arm === "poisoned_repair").map(x => x.Syn_mean_p);
-  return w && w.Syn_mean_conf != null && no.length ? {with: w.Syn_mean_conf, without: mean(no)} : null;
+function chartF() {
+  const fv = fu("five"); if (!fv || !(fv.stats || []).length || fv.stats[0].all5 == null) return chartCard("f", "f · A fifth class (TFTP)", "Not committed yet.", `<div class="empty">No FIVE test results in this build.</div>`, [["post", "post hoc"]]);
+  const g = (f, a) => fv.stats.find(x => near(x.frac, f) && x.arm === a);
+  const groups = [[0.9, "90% flipped (soft repair)"], [1.0, "100% flipped (relabel repair)"]].map(([f, lab]) => ({label: lab, bars: [["poisoned", COL.poisoned], ["poisoned_repair", f === 1.0 ? COL.poisoned_relabel : COL.poisoned_repair], ["clean", COL.clean]].map(([a, c]) => {
+    const s = g(f, a); return {v: s.all5 / s.n_test, color: c, label: `${s.all5}/${s.n_test}`, title: `${lab}, ${a}: ${s.all5} of ${s.n_test} seeds learned all 5 classes`}; })}));
+  const rl = g(1.0, "poisoned_repair"), go = g(1.0, "poisoned"), sf = g(0.9, "poisoned_repair"), far = Math.max(...rl.benign_far, ...sf.benign_far);
+  return chartCard("f", "f · A fifth class (TFTP): all five learned", `Relabel repair still learns all 5 classes in ${rl.all5}/${rl.n_test} seeds at 100% (gate only ${go.all5}/${go.n_test}); soft repair ${sf.all5}/${sf.n_test} at 90%; repaired benign FAR ≤ ${f4(far)}.`,
+    barChart({groups, aria: "Seeds whose deployed model learned all five classes", ticks: [0, 1 / 3, 2 / 3, 1], tickFmt: v => `${Math.round(v * 3)}/3`, bw: 40}) + legendHTML([{color: COL.poisoned, label: "Gate only"}, {color: COL.poisoned_repair, label: "Soft repair (90%)"}, {color: COL.poisoned_relabel, label: "Relabel repair (100%)"}, {color: COL.clean, label: "Clean"}]),
+    [["post", "post hoc"], ["test", "test"]], "Schedule BENIGN + Syn, then + LDAP, + UDP, + TFTP; seeds 42-44. Full table under Evidence.");
 }
-/* one bold sentence per follow-up, computed from its numbers */
-function takeaway(c) {
-  const st = c.stats || [];
-  if (c.id === "confgate") {
-    const r = cgRepair(), cl = st.filter(x => x.arm === "clean");
-    if (!r) return "";
-    return `With the confidence gate, repair keeps held-out Syn confidence at ${f3(r.with)} (no confidence gate: ${f3(r.without)}), and ${cl.reduce((s, x) => s + x.updates_accepted, 0)}/${cl.reduce((s, x) => s + x.updates, 0)} clean updates are still accepted.`;
-  }
-  if (c.id === "five") {
-    if (!st.length) return "The registered clean pilot did not pass, so FIVE stopped before any poisoned run.";
-    const g = (f, a) => st.find(x => near(x.frac, f) && x.arm === a), rl = g(1.0, "poisoned_repair"), go = g(1.0, "poisoned"), sf = g(0.9, "poisoned_repair");
-    if (!rl || rl.all5 == null) return "";
-    const far = Math.max(...rl.benign_far, ...sf.benign_far);
-    return `With a fifth class, relabel repair still learns all 5 classes in ${rl.all5}/${rl.n_test} seeds at 100% flipped (gate only: ${go.all5}/${go.n_test}), soft repair in ${sf.all5}/${sf.n_test} at 90%, and no repaired model's benign false-alarm rate exceeds ${f4(far)}.`;
-  }
-  return "";
+function chartG() {
+  const sd = fu("seeds");
+  if (!sd || !sd.chart) return chartCard("g", "g · More seeds (45-49)", "Appears here once the SEEDS results are committed.", `<div class="empty">No SEEDS results in this build yet.</div>`, [["pre", "registered + post hoc"]]);
+  const groups = sd.chart.map(g => ({label: g.label, bars: g.bars.map(b => ({v: b.n ? b.k / b.n : 0, color: COL[b.arm], label: `${b.k}/${b.n}`, title: `${g.label}, ${ARM_WORD[b.arm]}: ${b.k} of ${b.n} runs (seeds ${sd.pooled.seeds})`}))}));
+  return chartCard("g", `g · Pooled seeds ${sd.pooled.seeds}: all classes learned`, sd.takeaway, barChart({groups, aria: "Runs whose deployed model learned all classes, pooled seeds", ticks: [0, 0.5, 1], tickFmt: v => `${Math.round(v * 100)}%`, bw: 22}) + legendHTML(ARMLEG),
+    [["pre", "4-class soft: registered"], ["post", "relabel, 5-class: post hoc"], ["test", "test"]], sd.more || "");
 }
-/* header: three headline numbers, all computed from DATA */
-function headline() {
-  const lo = FRACS.filter(f => f <= 0.95), tot = lo.length * SEEDS.length;
-  const cnt = a => lo.reduce((s, f) => s + SEEDS.filter(x => learnedAll(f, x, a)).length, 0);
-  const at1 = a => SEEDS.filter(x => learnedAll(1.0, x, a)).length;
-  const items = [[`${cnt("poisoned_repair")}/${tot} vs ${cnt("poisoned")}/${tot}`, `soft repair vs gate only, f ${lo[0]}–${lo[lo.length - 1]}`, "runs whose deployed model learned all 4 classes (held-out test)"],
-                 [`${at1("poisoned_relabel")}/${SEEDS.length} vs ${at1("poisoned")}/${SEEDS.length}`, "relabel vs gate only, 100% flipped", "seeds whose deployed model learned all 4 classes (held-out test)"]];
-  const r = cgRepair();
-  if (r) items.push([`${r.without.toFixed(2)} → ${r.with.toFixed(2)}`, "repaired Syn confidence, without → with confidence gate", "RF, 10% more flips per update, mean of 3 seeds (held-out test; post hoc)"]);
-  $("#stats").innerHTML = items.map(([v, lab, tip]) => `<div class="stat" role="listitem" title="${tip}"><b class="num">${v}</b><span>${lab}</span><span class="ev test">test</span></div>`).join("");
+function initResults() { $("#charts").innerHTML = [chartA(), chartB(), chartC(), chartD(), chartE(), chartF(), chartG()].join(""); }
+
+/* =============================================================== 6 EVIDENCE */
+function initEvidence() {
+  const b = base4(), fr = RES.fu2_test, rel = fr.filter(x => x.arm === "poisoned_relabel"), cln = fr.filter(x => x.arm === "clean");
+  const dRel = Math.max(...CLASSES.map(c => Math.abs(mean(rel.map(x => x[c])) - mean(cln.map(x => x[c])))));
+  const L = [
+    [COL.poisoned_relabel, "#246b43", "Pre-registered, supported", `The gate rejects more poisoned updates as f grows. Soft repair: all four classes in ${b.soft}/${b.n} runs at f 0.75–0.95 vs ${b.gate}/${b.n} with the gate alone; at f = 1.0 gate only and soft repair learn them in ${b.fail1}/${2 * b.n1}. Seeds 42-44.`],
+    [INK.poisoned_repair, "#8a5a0e", "Post hoc, positive", `Relabel repair learns all four classes at f = 1.0 in ${b.relabel}/${b.n1} seeds (42-44), within ${f3(dRel)} of the clean model's mean per-class recall.`],
+    [COL.clean, "#4c5867", "Diagnostic / limitation", "A recall-based gate is blind to a large loss of confidence (runs main and RF); the post-hoc confidence gate addresses it."],
+    [COL.poisoned, "#9c2f24", "Negative / unsolved", "The 12-label continual protocol; repeated corruption while new classes arrive (untested)."],
+    ["#1c1d1f", "#1c1d1f", "Not claimed", "Statistical significance, real-time deployment, time-ordered validity, other datasets, full-data training, novelty of gated acceptance."]];
+  $("#ladder").innerHTML = L.map((r, i) => `<div class="rung"><div class="n" style="background:${r[0]}">${i + 1}</div><div class="b" style="background:${r[0]}12"><b style="color:${r[1]}">${r[2]}</b>${r[3]}</div></div>`).join("");
+  const Fn = RES.funnel, ft = A && A.full_test.clean;
+  const F = [[Fn.raw_rows, `raw rows, read once (${Fn.raw_files ?? "–"} files, ${Fn.raw_labels} labels)`, COL.maroon],
+             [Fn.distinct, "distinct finite (features, label) pairs after global de-duplication", "#8b3c28"],
+             [Fn.kept, `kept after dropping ${Fn.conflicts.toLocaleString()} label-conflict vectors and capping at ${Fn.cap.toLocaleString()} per attack`, "#a8573f"],
+             [Fn.train_4class, "four-class training rows", COL.teal]];
+  if (ft) F.push([ft.n_rows, `four-class test rows (${ft.n_benign.toLocaleString()} BENIGN), scored once`, "#24607a"]);
+  $("#funnel").innerHTML = F.map(r => `<div class="row"><div class="bx" style="width:${Math.max(18, 100 * (Math.log10(r[0]) - 3.9) / (Math.log10(F[0][0]) - 3.9))}%;background:${r[2]}">${r[0].toLocaleString()}</div><div class="lb">${r[1]}</div></div>`).join("") + `<div class="note">Bar length on a log scale.</div>`;
+  const ig = [];
+  if (A) { const ok = Object.values(A.meta.full_test_checks || {}).every(c => c.matches);
+    ig.push(`<div>Model weights: <b>${A.meta.dev ? "DEV stand-ins" : "deployed models of " + A.meta.source_run + " and " + A.meta.fu2_run}</b></div>`,
+      `<div>Full-test recall equals the committed results: ${ok ? '<span class="ok">✓ all four models</span>' : '<span class="no">✗ not verified</span>'}</div>`,
+      `<div>FU2 model byte-identical to the validated model (sha256): ${A.meta.fu2_model_is_validated_model ? '<span class="ok">✓ yes</span>' : '<span class="no">✗ no</span>'}</div>`,
+      `<details class="more"><summary><span class="ib" aria-hidden="true">i</span> model hashes</summary><div class="note num">${Object.entries(A.meta.model_sha256 || {}).map(([k, v]) => `${k} ${String(v).slice(0, 16)}…`).join("<br>")}</div></details>`);
+  } else ig.push(`<div>No model weights in this build (results screens only).</div>`);
+  ig.push(`<div style="margin-top:6px;color:var(--ink3)">Screens 4-6 read the committed run records only.</div>`);
+  $("#integrity").innerHTML = ig.join("");
+  $("#followups").innerHTML = (RES.followups || []).map(c => `<details class="fold tl2"><summary>${c.title} ${tag("post", c.tag)}</summary><div style="font-size:13px;overflow-x:auto">${c.html}</div></details>`).join("");
 }
-const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
 
 /* boot */
 try { initLive(); } catch (e) { console.error(e); setStatus("bad", "live models failed to load"); }
-renderT2(); initT3(); headline();
+try { initOwn(); } catch (e) { console.error(e); }
+renderT2(); initOverview(); initResults(); initEvidence();
 $("#play").onclick = play;
 $("#presbtn").onclick = () => togglePresenter();
 $("#helpbtn").onclick = () => toggleHelp();
+window.NIDS_DASH = {batch: () => BATCH, own: () => OWN, rows: () => ROWS};  // read-only hooks for the automated page check
 </script>
 </body>
 </html>
