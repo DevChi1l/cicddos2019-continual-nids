@@ -6,10 +6,18 @@
 <title>Continual NIDS under replay poisoning: live dashboard</title>
 <style>
 :root{
-  --ink:#1c1d1f; --ink2:#4b4f55; --ink3:#5f646b; --line:#e3e5e8; --panel:#f5f6f7; --paper:#fff;
-  --maroon:#6e2617; --teal:#2b7488; --red:#b5372a; --amber:#a86d12; --amber-ink:#8a5a0e; --green:#2a7a4c; --slate:#4c5867;
-  --t-slate:rgba(76,88,103,.07); --t-red:rgba(181,55,42,.07); --t-amber:rgba(168,109,18,.08); --t-green:rgba(42,122,76,.07);
-  --t-teal:rgba(43,116,136,.07); --t-maroon:rgba(110,38,23,.06);
+  /* text: headings, secondary, tertiary (tertiary #80868b is 3.7:1 on white, so it is used for non-text marks only) */
+  --ink:#1c1d1f; --ink2:#5f6368; --ink3:#80868b; --line:#e6e8eb; --panel:#fff; --paper:#fff; --track:#eef0f2;
+  --shadow:0 1px 2px rgba(0,0,0,.04);
+  /* one palette: fills, marks and accents */
+  --c-clean:#5b6675; --c-gate:#c0392b; --c-soft:#d68910; --c-relabel:#1e8449; --c-info:#2471a3; --c-brand:#6e2617;
+  --c-buf-ok:#2471a3; --c-buf-flip:#e67e73; --c-buf-fix:#1e8449;
+  /* text inks: the palette colour itself where it reaches 4.5:1 on its 10% tint; soft repair and relabel get a darker
+     shade of the same hue (#d68910 is 2.8:1 on white, #1e8449 4.2:1 on its tint) */
+  --i-clean:#5b6675; --i-gate:#c0392b; --i-soft:#9b630c; --i-relabel:#1c7c44; --i-info:#2471a3; --i-brand:#6e2617;
+  /* pills: 10% tint of the colour */
+  --p-clean:#eff0f1; --p-gate:#f9ebea; --p-soft:#fbf3e7; --p-relabel:#e8f3ed; --p-info:#e9f1f6; --p-brand:#f0e9e8;
+  --maroon:var(--c-brand); --teal:var(--c-info); --red:var(--c-gate); --amber:var(--c-soft); --amber-ink:var(--i-soft); --green:var(--c-relabel); --slate:var(--c-clean);
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
   --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
@@ -27,11 +35,11 @@ header{padding:16px 36px 12px;border-bottom:1px solid var(--line)}
 .side{display:flex;align-items:center;gap:8px;position:relative;flex:none}
 .chip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;border:1px solid var(--line);border-radius:999px;padding:4px 11px;color:var(--ink2);background:var(--paper);white-space:nowrap}
 .chip .dot{width:8px;height:8px;border-radius:50%;background:var(--ink3)}
-.chip.ok{color:#246b43;border-color:#b9d8c5;background:var(--t-green)} .chip.ok .dot{background:var(--green)}
-.chip.warn .dot{background:var(--amber)} .chip.bad{color:#9c2f24} .chip.bad .dot{background:var(--red)}
+.chip.ok{color:var(--i-relabel);border-color:#cfe3d7;background:var(--p-relabel)} .chip.ok .dot{background:var(--green)}
+.chip.warn .dot{background:var(--amber)} .chip.bad{color:var(--i-gate)} .chip.bad .dot{background:var(--red)}
 nav{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
 nav button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--paper);padding:6px 14px;border-radius:999px;color:var(--ink2);cursor:pointer}
-nav button .k{font-family:var(--mono);font-size:11.5px;color:var(--ink3);margin-right:6px}
+nav button .k{font-family:var(--mono);font-size:11.5px;color:var(--ink2);margin-right:6px}
 nav button:hover{border-color:#c9ccd1;color:var(--ink)}
 nav button[aria-selected=true]{background:var(--maroon);border-color:var(--maroon);color:#fff;font-weight:600}
 nav button[aria-selected=true] .k{color:#f1ddd8}
@@ -49,25 +57,26 @@ nav button[aria-selected=true] .k{color:#f1ddd8}
 main{padding:22px 36px 56px;max-width:1400px}
 section.tab{display:none} section.tab.on{display:block}
 h2{font-family:var(--serif);font-weight:600;font-size:26px;line-height:1.2;margin:0 0 4px}
-h3{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px;font-weight:600}
+h3{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);margin:0 0 10px;font-weight:600}
 .lede{color:var(--ink2);margin:0 0 18px;max-width:820px}
 .hd{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .ev{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:4px;padding:2px 7px;vertical-align:2px;white-space:nowrap}
-.ev.test{background:#e4f0f3;color:#245f70} .ev.val{background:#e8edf4;color:#2f4f78}
-.ev.pre{background:#e3f1e8;color:#246b43} .ev.post{background:#f6ecd9;color:var(--amber-ink)}
-.ev.diag{background:#eceef0;color:var(--slate)} .ev.neg{background:#f7e3e0;color:#9c2f24}
-.card{background:var(--panel);border-radius:10px;padding:16px 18px}
-.card.white{background:var(--paper);border:1px solid var(--line)}
-.tint-clean{background:var(--t-slate)} .tint-poisoned{background:var(--t-red)} .tint-poisoned_repair{background:var(--t-amber)}
-.tint-poisoned_relabel{background:var(--t-green)} .tint-teal{background:var(--t-teal)} .tint-maroon{background:var(--t-maroon)}
-.note{font-size:12.5px;color:var(--ink3);margin-top:8px;max-width:820px}
+.ev.test{background:var(--p-info);color:var(--i-info)} .ev.val{background:var(--p-clean);color:var(--i-clean)}
+.ev.pre{background:var(--p-relabel);color:var(--i-relabel)} .ev.post{background:var(--p-soft);color:var(--i-soft)}
+.ev.diag{background:var(--p-clean);color:var(--i-clean)} .ev.neg{background:var(--p-gate);color:var(--i-gate)}
+/* every card: white, hairline border, soft shadow; colour only as an accent (dot/square, number, marks, pills) */
+.card,.card.white{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:10px;padding:16px 18px}
+.tint-clean{--acc:var(--c-clean)} .tint-poisoned{--acc:var(--c-gate)} .tint-poisoned_repair{--acc:var(--c-soft)}
+.tint-poisoned_relabel{--acc:var(--c-relabel)} .tint-teal{--acc:var(--c-info)} .tint-maroon{--acc:var(--c-brand)}
+.dotb::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--acc,var(--ink3));margin-right:7px;vertical-align:1px}
+.note{font-size:12.5px;color:var(--ink2);margin-top:8px;max-width:820px}
 details.more{margin-top:10px}
-details.more>summary,details.fold>summary{cursor:pointer;font-size:13px;color:#245f70;list-style:none;display:inline-flex;gap:6px;align-items:center}
+details.more>summary,details.fold>summary{cursor:pointer;font-size:13px;color:var(--i-info);list-style:none;display:inline-flex;gap:6px;align-items:center}
 details.more>summary::-webkit-details-marker,details.fold>summary::-webkit-details-marker{display:none}
 details.more[open]>summary{margin-bottom:6px}
-details.fold{margin-top:16px;border:1px solid var(--line);border-radius:10px;padding:12px 16px;background:var(--paper)}
+details.fold{margin-top:16px;border:1px solid var(--line);border-radius:10px;padding:12px 16px;background:#fff;box-shadow:var(--shadow)}
 details.fold>summary{font-size:14px;font-weight:600;color:var(--ink)}
-details.fold>summary::before{content:"\25B8";color:var(--ink3);transition:transform .15s}
+details.fold>summary::before{content:"\25B8";color:var(--ink2);transition:transform .15s}
 details.fold[open]>summary::before{transform:rotate(90deg)}
 details.fold[open]>summary{margin-bottom:12px}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
@@ -76,20 +85,20 @@ details.fold[open]>summary{margin-bottom:12px}
 .seg button.on{background:var(--ink);color:#fff}
 .seg button:disabled{color:#6f747b;background:#f3f4f5;cursor:not-allowed;text-decoration:line-through}
 .seg button:focus-visible{outline-offset:-3px}
-.lab{font-size:11.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:4px}
+.lab{font-size:11.5px;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:4px}
 .fade{animation:fade .15s ease-out} @keyframes fade{from{opacity:0}to{opacity:1}}
 /* overview */
 .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:6px 0 22px}
-.kpi{border-radius:12px;padding:18px 20px;border:1px solid var(--line)}
+.kpi{border-radius:12px;padding:18px 20px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow)}
 .kpi .v{font-family:var(--serif);font-size:42px;font-weight:600;line-height:1.05;letter-spacing:-.01em}
 .kpi .l{color:var(--ink2);margin:6px 0 8px;font-size:14px}
-.method{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:0 0 22px;border:1px solid var(--line);border-radius:12px}
+.method{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:0 0 22px;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:var(--shadow)}
 .mstep{padding:16px 18px;position:relative;border-right:1px solid var(--line)}
 .mstep:last-child{border-right:0}
 .mstep svg{display:block;margin-bottom:8px}
 .mstep b{display:block;font-size:14.5px;margin-bottom:2px}
 .mstep span{font-size:13px;color:var(--ink2)}
-.mstep .arr{position:absolute;right:-9px;top:28px;width:18px;height:18px;background:var(--paper);border:1px solid var(--line);border-radius:50%;z-index:1;font-size:12px;line-height:15px;text-align:center;color:var(--ink3)}
+.mstep .arr{position:absolute;right:-9px;top:28px;width:18px;height:18px;background:var(--paper);border:1px solid var(--line);border-radius:50%;z-index:1;font-size:12px;line-height:15px;text-align:center;color:var(--ink2)}
 /* live detector */
 .subnav{margin:0 0 16px}
 .grid1{display:grid;grid-template-columns:330px 1fr;gap:26px;align-items:start}
@@ -104,59 +113,59 @@ select{font:inherit;font-size:13.5px;padding:5px 8px;border:1px solid var(--line
 .cmpbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 10px;flex-wrap:wrap}
 .story{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:8px;padding:9px 14px;margin:0 0 12px;font-size:14.5px;background:var(--paper);min-height:44px}
 .models{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.mcard{border:1px solid var(--line);border-radius:10px;padding:13px 16px}
+.mcard{border:1px solid var(--line);border-radius:10px;padding:13px 16px;background:#fff;box-shadow:var(--shadow)}
 .mcard .who{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14.5px}
 .sw{width:10px;height:10px;border-radius:2px;display:inline-block;flex:none}
-.mcard .desc{font-size:12.5px;color:var(--ink3);margin:1px 0 8px}
+.mcard .desc{font-size:12.5px;color:var(--ink2);margin:1px 0 8px}
 .verdict{font-family:var(--serif);font-size:26px;font-weight:600;line-height:1.1;display:flex;align-items:baseline;gap:10px}
 .verdict small{font-family:var(--sans);font-size:12.5px;font-weight:600;padding:2px 8px;border-radius:999px}
-.verdict small.y{background:#e3f1e8;color:#246b43} .verdict small.n{background:#f7e3e0;color:#9c2f24}
+.verdict small.y{background:var(--p-relabel);color:var(--i-relabel)} .verdict small.n{background:var(--p-gate);color:var(--i-gate)}
 .bars{margin-top:8px}
 .bar{display:grid;grid-template-columns:58px 1fr 70px;align-items:center;gap:8px;font-size:12.5px;margin:3px 0}
-.bar .track{height:9px;background:#eceef0;border-radius:5px;overflow:hidden}
+.bar .track{height:9px;background:var(--track);border-radius:5px;overflow:hidden}
 .bar .fill{height:100%;border-radius:5px;transition:width .25s ease}
-.bar.na .track{background:repeating-linear-gradient(135deg,#eceef0 0 5px,#f7f8f9 5px 10px)}
-.bar.na .v{color:var(--ink3);font-style:italic;font-family:var(--sans)}
+.bar.na .track{background:repeating-linear-gradient(135deg,var(--track) 0 5px,#f8f9fa 5px 10px)}
+.bar.na .v{color:var(--ink2);font-style:italic;font-family:var(--sans)}
 .bar .v{text-align:right}
 .models.duo .mcard{padding:20px 22px} .models.duo .who{font-size:17px} .models.duo .verdict{font-size:40px}
 .models.duo .verdict small{font-size:14px} .models.duo .bar{grid-template-columns:66px 1fr 80px;font-size:14px;margin:6px 0}
 .models.duo .bar .track{height:13px;border-radius:7px}
 .inf{display:grid;grid-template-columns:200px 1fr 60px;gap:10px;align-items:center;font-size:12.5px;margin:5px 0}
-.inf .track{height:8px;background:#eceef0;border-radius:4px;position:relative}
+.inf .track{height:8px;background:var(--track);border-radius:4px;position:relative}
 .inf .fill{position:absolute;top:0;bottom:0;border-radius:4px;background:var(--maroon)}
 .all77{max-height:300px;overflow:auto;margin-top:8px;border:1px solid var(--line);border-radius:8px}
 .all77 table{border-collapse:collapse;width:100%;font-size:12px} .all77 td{padding:3px 8px;border-bottom:1px solid #f0f1f2}
 .all77 input{width:110px;font:12px var(--mono);border:1px solid var(--line);border-radius:4px;padding:2px 4px;text-align:right}
-.prog{height:6px;background:#eceef0;border-radius:3px;overflow:hidden;margin:8px 0 4px;max-width:560px}
+.prog{height:6px;background:var(--track);border-radius:3px;overflow:hidden;margin:8px 0 4px;max-width:560px}
 .prog div{height:100%;background:var(--teal);width:0;transition:width .2s}
 .cms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
 table.cm{border-collapse:collapse;font-size:12px;width:100%}
-table.cm th,table.cm td{padding:4px 5px;text-align:right} table.cm th{color:var(--ink3);font-weight:600}
+table.cm th,table.cm td{padding:4px 5px;text-align:right} table.cm th{color:var(--ink2);font-weight:600}
 table.cm td.d{font-weight:700} table.cm caption{text-align:left;font-weight:600;font-size:13.5px;padding-bottom:6px}
 table.t{border-collapse:collapse;font-size:13px;width:100%}
 table.t th,table.t td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right}
 table.t th:first-child,table.t td:first-child{text-align:left}
-table.t th{color:var(--ink3);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+table.t th{color:var(--ink2);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
 .tl2 table.t td:nth-child(2),.tl2 table.t th:nth-child(2){text-align:left}
-.nl{color:#9c2f24;font-family:var(--sans);font-size:11.5px;font-weight:600;margin-left:4px}
-.ok{color:#246b43;font-weight:700} .no{color:#9c2f24;font-weight:700}
+.nl{color:var(--i-gate);font-family:var(--sans);font-size:11.5px;font-weight:600;margin-left:4px}
+.ok{color:var(--i-relabel);font-weight:700} .no{color:var(--i-gate);font-weight:700}
 /* own data */
-.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed #b9bfc6;border-radius:12px;padding:26px;text-align:center;cursor:pointer;background:var(--t-teal);transition:border-color .15s,background .15s}
-.drop.over{border-color:var(--teal);background:rgba(43,116,136,.13)}
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed #b9bfc6;border-radius:12px;padding:26px;text-align:center;cursor:pointer;background:#fff;transition:border-color .15s}
+.drop.over{border-color:var(--c-info)}
 .drop b{font-size:16px}
 .ownrow{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;align-items:start}
 .rep{font-size:13.5px} .rep li{margin:3px 0} .rep ul{margin:6px 0 0;padding-left:18px}
-.stack{display:flex;height:22px;border-radius:5px;overflow:hidden;background:#eceef0}
+.stack{display:flex;height:22px;border-radius:5px;overflow:hidden;background:var(--track)}
 .stack div{height:100%;color:#fff;font-size:11.5px;font-family:var(--mono);display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap}
 .srow{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center;margin:6px 0;font-size:13px}
 .accs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:8px 0 12px}
-.acc{border-radius:10px;padding:10px 12px;border:1px solid var(--line)} .acc .v{font-family:var(--serif);font-size:26px;font-weight:600}
+.acc{border-radius:10px;padding:10px 12px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow)} .acc .v{font-family:var(--serif);font-size:26px;font-weight:600}
 .acc .l{font-size:12.5px;color:var(--ink2)}
 .owntab{max-height:460px;overflow:auto;border:1px solid var(--line);border-radius:8px}
 .owntab table{border-collapse:collapse;font-size:12.5px;width:100%}
-.owntab th{position:sticky;top:0;background:var(--paper);text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink3);padding:6px 8px;border-bottom:1px solid var(--line)}
+.owntab th{position:sticky;top:0;background:var(--paper);text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink2);padding:6px 8px;border-bottom:1px solid var(--line)}
 .owntab td{padding:4px 8px;border-bottom:1px solid #f0f1f2;white-space:nowrap}
-.owntab tr.dis td{background:#fbf3e4}
+.owntab tr.dis td{background:var(--p-soft)}
 .flag{font-size:11px;font-weight:700;color:var(--amber-ink);letter-spacing:.03em}
 /* attack lab */
 .ctlrow{display:flex;flex-wrap:wrap;gap:16px 22px;align-items:flex-end;margin:0 0 16px}
@@ -165,26 +174,26 @@ canvas#buf{width:100%;height:auto;display:block;border-radius:6px}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink2);margin-top:8px}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 .tl{display:flex;flex-direction:column;gap:10px}
-.step{border:1px solid var(--line);border-radius:10px;padding:11px 14px;background:var(--paper)}
+.step{border:1px solid var(--line);border-radius:10px;padding:11px 14px;background:#fff;box-shadow:var(--shadow)}
 .step .hd2{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.step .hd2 b{font-size:14.5px} .step .hd2>span{font-size:12.5px;color:var(--ink3)}
+.step .hd2 b{font-size:14.5px} .step .hd2>span{font-size:12.5px;color:var(--ink2)}
 .att{margin-top:8px;border-top:1px dashed var(--line);padding-top:7px}
 .att .an{display:flex;justify-content:space-between;font-size:13px;font-weight:600}
 .pill{font-size:11.5px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px}
-.pill.acc{background:#e3f1e8;color:#246b43} .pill.rej{background:#f7e3e0;color:#9c2f24} .pill.kept{background:#eceef0;color:var(--slate)}
+.pill.acc{background:var(--p-relabel);color:var(--i-relabel)} .pill.rej{background:var(--p-gate);color:var(--i-gate)} .pill.kept{background:var(--p-clean);color:var(--i-clean)}
 .chk{display:grid;grid-template-columns:1fr 140px 52px;gap:8px;font-size:12.5px;align-items:center;margin:3px 0}
-.chk .gauge{height:7px;background:#eceef0;border-radius:4px;position:relative}
+.chk .gauge{height:7px;background:var(--track);border-radius:4px;position:relative}
 .chk .gauge .f{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
 .chk .gauge .th{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
 .heat{border-collapse:separate;border-spacing:4px;font-size:13px}
 .heat td,.heat th{text-align:center;padding:7px 10px;border-radius:6px}
-.heat th{color:var(--ink3);font-weight:600;font-size:12px}
+.heat th{color:var(--ink2);font-weight:600;font-size:12px}
 .heat td{cursor:pointer;font-family:var(--mono)} .heat td.sel{outline:2px solid var(--ink)}
-.heat td.na{color:var(--ink3);cursor:default;font-family:var(--sans);font-size:12px}
+.heat td.na{color:var(--ink2);cursor:default;font-family:var(--sans);font-size:12px}
 /* results */
 .charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
 .ib{display:inline-flex;width:15px;height:15px;border:1.5px solid currentColor;border-radius:50%;font:700 10px/1 var(--serif);align-items:center;justify-content:center;font-style:italic}
-.chart{border:1px solid var(--line);border-radius:12px;padding:14px 16px 12px;background:var(--paper);min-width:0}
+.chart{border:1px solid var(--line);border-radius:12px;padding:14px 16px 12px;background:#fff;box-shadow:var(--shadow);min-width:0}
 .chart .ttl{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
 .chart .ttl b{font-size:14.5px}
 .chart .take{font-family:var(--serif);font-size:16.5px;font-weight:600;line-height:1.35;margin:4px 0 6px}
@@ -195,13 +204,13 @@ canvas#buf{width:100%;height:auto;display:block;border-radius:6px}
 .ladder{display:flex;flex-direction:column;gap:7px}
 .rung{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:stretch}
 .rung .n{border-radius:8px;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:16px}
-.rung .b{border-radius:8px;padding:8px 12px;font-size:13.5px}
+.rung .b{border-radius:8px;padding:8px 12px;font-size:13.5px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
 .rung .b b{display:block;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1px}
 .funnel .row{margin:6px 0}
 .funnel .bx{height:22px;border-radius:5px;display:flex;align-items:center;padding:0 9px;color:#fff;font-size:12.5px;font-family:var(--mono);white-space:nowrap}
 .funnel .lb{font-size:12.5px;color:var(--ink2);margin-top:2px}
 pre{font-family:var(--mono);font-size:12px;background:var(--paper);border-radius:8px;padding:10px 12px;margin:8px 0;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere}
-footer{padding:14px 36px 30px;color:var(--ink3);font-size:12.5px;border-top:1px solid var(--line)}
+footer{padding:14px 36px 30px;color:var(--ink2);font-size:12.5px;border-top:1px solid var(--line)}
 @media (max-width:1180px){.charts{grid-template-columns:1fr}}
 @media (max-width:1100px){.grid1,.grid2,.cols3,.ownrow{grid-template-columns:1fr}.cms,.accs{grid-template-columns:repeat(2,1fr)}.method{grid-template-columns:repeat(2,1fr)}}
 body.presenter header,body.presenter main{zoom:1.2}
@@ -346,9 +355,14 @@ const pct = v => (100 * v).toFixed(v > 0.999 || v < 0.001 ? 2 : 1) + "%";
 const mean = a => a.length ? a.reduce((s, v) => s + v, 0) / a.length : null;
 const near = (a, b) => Math.abs(a - b) < 1e-9;
 const CLASSES = ["BENIGN", "Syn", "LDAP", "UDP"];
-const COL = {clean: "#4c5867", poisoned: "#b5372a", poisoned_repair: "#a86d12", poisoned_relabel: "#2a7a4c", teal: "#2b7488", maroon: "#6e2617"};
-const INK = {clean: "#4c5867", poisoned: "#b5372a", poisoned_repair: "#8a5a0e", poisoned_relabel: "#2a7a4c", teal: "#245f70", maroon: "#6e2617"};
-const CLSCOL = {BENIGN: "#2b7488", Syn: "#6e2617", LDAP: "#8a5a0e", UDP: "#4c5867", TFTP: "#2a7a4c"};
+/* the one palette lives in the CSS variables (:root); JS reads it so canvas and SVG marks use the same colours */
+const CSSV = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const PAL = {clean: "clean", poisoned: "gate", poisoned_repair: "soft", poisoned_relabel: "relabel", teal: "info", maroon: "brand"};
+const COL = {}, INK = {}, PILL = {};
+for (const k in PAL) { COL[k] = CSSV("--c-" + PAL[k]); INK[k] = CSSV("--i-" + PAL[k]); PILL[k] = CSSV("--p-" + PAL[k]); }
+const BUF = {ok: CSSV("--c-buf-ok"), flip: CSSV("--c-buf-flip"), fix: CSSV("--c-buf-fix")};
+/* class colours (white text sits on them in the own-data stacks, so the darker inks are used) */
+const CLSCOL = {BENIGN: INK.teal, Syn: INK.maroon, LDAP: INK.poisoned_repair, UDP: INK.clean, TFTP: INK.poisoned_relabel};
 const ARMS = [
   {k: "clean", name: "Clean reference", desc: "No attack. What the stream should produce."},
   {k: "poisoned", name: "Gate only", desc: "Rejects poisoned updates; the E0 model keeps serving."},
@@ -431,7 +445,7 @@ function kpiData() {
   return out;
 }
 function initOverview() {
-  $("#kpis").innerHTML = kpiData().map(d => `<div class="kpi tint-${d.k}" role="listitem"><div class="v num" style="color:${INK[d.k]};font-family:var(--serif)">${d.v}</div><div class="l">${d.l}</div>${d.tags.map(t => tag(t[0], t[1])).join(" ")}</div>`).join("");
+  $("#kpis").innerHTML = kpiData().map(d => `<div class="kpi tint-${d.k}" role="listitem"><div class="v num" style="color:${INK[d.k]};font-family:var(--serif)">${d.v}</div><div class="l dotb">${d.l}</div>${d.tags.map(t => tag(t[0], t[1])).join(" ")}</div>`).join("");
   const ic = {
     learn: `<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect x="5" y="20" width="24" height="6" rx="2" fill="${COL.teal}"/><rect x="8" y="13" width="18" height="6" rx="2" fill="${COL.teal}" opacity=".7"/><rect x="11" y="6" width="12" height="6" rx="2" fill="${COL.teal}" opacity=".45"/></svg>`,
     poison: `<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">${[0, 1, 2, 3].map(r => [0, 1, 2, 3].map(c => `<rect x="${5 + c * 6.5}" y="${5 + r * 6.5}" width="5" height="5" rx="1" fill="${(r * 4 + c) % 3 === 1 ? COL.poisoned : COL.teal}"/>`).join("")).join("")}</svg>`,
@@ -571,7 +585,7 @@ function predictAll(newFlow) {
   const p0 = m.forward(x0, code), k0 = argmax(p0), names = A.scaler.features_numeric;
   const inf = names.map((n, j) => { const x = Float64Array.from(x0); x[j] = benignMed[j]; return {j, n, d: p0[k0] - m.forward(x, code)[k0]}; });
   inf.sort((a, b) => b.d - a.d);
-  $("#whyh").innerHTML = `Why relabel repair says <span style="color:var(--maroon)">${m.classes[k0]}</span> <span style="font-weight:400;color:var(--ink3)">(sensitivity)</span>`;
+  $("#whyh").innerHTML = `Why relabel repair says <span style="color:var(--maroon)">${m.classes[k0]}</span> <span style="font-weight:400;color:var(--ink2)">(sensitivity)</span>`;
   const top = inf.slice(0, 8), mx = Math.max(1e-6, top[0].d);
   $("#why").innerHTML = top.map(t => `<div class="inf"><span>${t.n}</span><div class="track"><div class="fill" style="width:${Math.max(0, 100 * t.d / mx)}%"></div></div><span class="num" style="text-align:right">${t.d >= 0 ? "−" : "+"}${Math.abs(100 * t.d).toFixed(1)} pt</span></div>`).join("")
     + (top[0].d < 0.01 ? `<div class="note">No single feature moves this verdict by more than 1 point.</div>` : "");
@@ -781,12 +795,12 @@ function ownResults() {
   const arms = ARMS.map(a => a.k), N = OWN.N, allC = [...new Set([...CLASSES, ...arms.flatMap(a => A.models[a].classes)])];
   let h = `<div class="card white" style="margin-top:14px"><h3>Predicted classes per model (${N.toLocaleString()} flows)</h3>`;
   for (const a of ARMS) { const cn = {}; OWN.pred[a.k].forEach(p => cn[p] = (cn[p] || 0) + 1);
-    h += `<div class="srow"><span><span class="sw" style="background:${COL[a.k]};margin-right:6px"></span>${a.name}</span><div class="stack" role="img" aria-label="${a.name}: ${allC.filter(c => cn[c]).map(c => `${c} ${cn[c]}`).join(", ")}">${allC.filter(c => cn[c]).map(c => `<div style="width:${100 * cn[c] / N}%;background:${CLSCOL[c] || "#5f646b"}" title="${c}: ${cn[c]}">${cn[c] / N > 0.07 ? `${c} ${cn[c]}` : ""}</div>`).join("")}</div></div>`; }
-  h += `<div class="legend">${allC.map(c => `<span><i style="background:${CLSCOL[c] || "#5f646b"}"></i>${c}</span>`).join("")}</div></div>`;
+    h += `<div class="srow"><span><span class="sw" style="background:${COL[a.k]};margin-right:6px"></span>${a.name}</span><div class="stack" role="img" aria-label="${a.name}: ${allC.filter(c => cn[c]).map(c => `${c} ${cn[c]}`).join(", ")}">${allC.filter(c => cn[c]).map(c => `<div style="width:${100 * cn[c] / N}%;background:${CLSCOL[c] || TXT}" title="${c}: ${cn[c]}">${cn[c] / N > 0.07 ? `${c} ${cn[c]}` : ""}</div>`).join("")}</div></div>`; }
+  h += `<div class="legend">${allC.map(c => `<span><i style="background:${CLSCOL[c] || TXT}"></i>${c}</span>`).join("")}</div></div>`;
   if (OWN.hasLabel) {
     const MS = Object.fromEntries(arms.map(a => [a, ownMetrics(a)]));
     h += `<div class="card white" style="margin-top:14px"><h3>Against your labels (${MS.clean.n.toLocaleString()} labelled flows)</h3>
-      <div class="accs" id="ownacc">${ARMS.map(a => `<div class="acc tint-${a.k}"><div class="v num" style="color:${INK[a.k]}">${MS[a.k].acc == null ? "–" : pct(MS[a.k].acc)}</div><div class="l">${a.name} · accuracy</div></div>`).join("")}</div>
+      <div class="accs" id="ownacc">${ARMS.map(a => `<div class="acc tint-${a.k}"><div class="v num" style="color:${INK[a.k]}">${MS[a.k].acc == null ? "–" : pct(MS[a.k].acc)}</div><div class="l dotb">${a.name} · accuracy</div></div>`).join("")}</div>
       <div class="cmpbar"><span class="lab" id="labOA">Per-class metrics for</span><div class="seg" id="segOA" role="group" aria-labelledby="labOA"></div></div>
       <div id="ownmet"></div>
       <div class="note">“unknown class”: a label this model never learned (e.g. LDAP for gate only). It cannot be predicted right, so it counts as an error.</div></div>`;
@@ -798,7 +812,7 @@ function ownResults() {
      <div class="owntab"><table><thead><tr><th>#</th>${hasRid ? "<th>row id</th>" : ""}${OWN.hasLabel ? "<th>label</th>" : ""}${ARMS.map(a => `<th>${a.name}</th>`).join("")}<th>models</th></tr></thead><tbody>`;
   for (let i = 0; i < Math.min(SHOW, N); i++) { const ps = arms.map(a => OWN.pred[a][i]), dis = new Set(ps).size > 1, t = OWN.labels[i];
     h += `<tr class="${dis ? "dis" : ""}"><td class="num">${OWN.line[i]}</td>${hasRid ? `<td class="num">${esc(OWN.rids[i] || "")}</td>` : ""}${OWN.hasLabel ? `<td>${esc(t || "")}</td>` : ""}${arms.map(a => { const p = OWN.pred[a][i], c = OWN.conf[a][i];
-      return `<td>${OWN.hasLabel && t ? (p === t ? '<span class="ok">✓</span> ' : '<span class="no">✗</span> ') : ""}${p} <span class="num" style="color:var(--ink3)">${pct(c)}</span></td>`; }).join("")}<td>${dis ? '<span class="flag">DISAGREE</span>' : "agree"}</td></tr>`; }
+      return `<td>${OWN.hasLabel && t ? (p === t ? '<span class="ok">✓</span> ' : '<span class="no">✗</span> ') : ""}${p} <span class="num" style="color:var(--ink2)">${pct(c)}</span></td>`; }).join("")}<td>${dis ? '<span class="flag">DISAGREE</span>' : "agree"}</td></tr>`; }
   h += `</tbody></table></div><div class="note">Rows where the four models disagree are shaded and marked DISAGREE. # = line in your file.</div></div>`;
   $("#ownout").innerHTML = h;
   if (OWN.hasLabel) ownMetricsSeg();
@@ -867,24 +881,25 @@ function drawBuffer() {
   const relab = T2.a === "poisoned_relabel" && rec ? rec.n_relabelled : 0;
   const target = new Float32Array(2000); for (let i = 0; i < 2000; i++) target[i] = flipped[i] ? 1 : 0;
   const cv = $("#buf"), ctx = cv.getContext("2d"), cols = 50, cw = cv.width / cols, ch = cv.height / 40;
+  const G = 2 * cv.width / Math.max(1, cv.getBoundingClientRect().width || cv.width); /* 2 CSS px of white between cells */
   cancelAnimationFrame(bufAnim);
   const start = bufState.slice(), t0 = performance.now();
   const frame = now => {
-    const k = Math.min(1, (now - t0) / 600); ctx.clearRect(0, 0, cv.width, cv.height);
+    const k = Math.min(1, (now - t0) / 600); ctx.globalAlpha = 1; ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, cv.width, cv.height);
     for (let i = 0; i < 2000; i++) {
       const delay = Math.min(0.6, RANK[i] / 2000 * 0.6), kk = Math.min(1, Math.max(0, (k - delay) / 0.4));
       const v = start[i] + (target[i] - start[i]) * kk; bufState[i] = v;
       const x = (i % cols) * cw, y = Math.floor(i / cols) * ch;
-      ctx.globalAlpha = T2.a === "poisoned_repair" && target[i] === 1 && k === 1 ? 0.18 : 1;
-      ctx.fillStyle = v < 0.5 ? COL.teal : COL.poisoned; ctx.fillRect(x + 1, y + 1, cw - 2, ch - 2);
-      if (relab && target[i] === 1 && RANK[i] < relab && k === 1) { ctx.globalAlpha = 1; ctx.strokeStyle = COL.poisoned_relabel; ctx.lineWidth = 2.2; ctx.strokeRect(x + 2.2, y + 2.2, cw - 4.4, ch - 4.4); }
+      ctx.globalAlpha = T2.a === "poisoned_repair" && target[i] === 1 && k === 1 ? 0.25 : 1;
+      ctx.fillStyle = v < 0.5 ? BUF.ok : BUF.flip; ctx.fillRect(x + G / 2, y + G / 2, cw - G, ch - G);
+      if (relab && target[i] === 1 && RANK[i] < relab && k === 1) { ctx.globalAlpha = 1; ctx.strokeStyle = BUF.fix; ctx.lineWidth = 2.4; ctx.strokeRect(x + G / 2 + 1.2, y + G / 2 + 1.2, cw - G - 2.4, ch - G - 2.4); }
     }
     ctx.globalAlpha = 1; if (k < 1) bufAnim = requestAnimationFrame(frame);
   };
   bufAnim = requestAnimationFrame(frame);
-  $("#bufleg").innerHTML = `<span><i style="background:${COL.teal}"></i>stored Syn (correct)</span><span><i style="background:${COL.poisoned}"></i>flipped to BENIGN</span>`
-    + (T2.a === "poisoned_repair" ? `<span><i style="background:${COL.poisoned};opacity:.2"></i>soft repair weight ≈ ${rec && rec.w_flipped != null ? rec.w_flipped.toFixed(3) : "–"}</span>` : "")
-    + (T2.a === "poisoned_relabel" ? `<span><i style="background:#fff;outline:2px solid ${COL.poisoned_relabel};outline-offset:-2px"></i>teacher restores Syn</span>` : "");
+  $("#bufleg").innerHTML = `<span><i style="background:${BUF.ok}"></i>stored Syn (correct)</span><span><i style="background:${BUF.flip}"></i>flipped to BENIGN</span>`
+    + (T2.a === "poisoned_repair" ? `<span><i style="background:${BUF.flip};opacity:.25"></i>soft repair weight ≈ ${rec && rec.w_flipped != null ? rec.w_flipped.toFixed(3) : "–"}</span>` : "")
+    + (T2.a === "poisoned_relabel" ? `<span><i style="background:${BUF.flip};outline:2px solid ${BUF.fix};outline-offset:-2px"></i>teacher restores Syn</span>` : "");
   let note = T2.a === "clean" ? "No attack: all 2,000 stored Syn labels are correct." : `<b class="num">${nflip.toLocaleString()}</b> of 2,000 stored Syn labels say BENIGN; <b class="num">${(2000 - nflip).toLocaleString()}</b> correct ones survive.`;
   if (T2.a === "poisoned_repair") note += nflip === 2000 ? " Soft repair can mute the wrong labels but has no correct one left." : " Soft repair mutes the flipped rows, so the correct rows decide.";
   if (T2.a === "poisoned_relabel" && rec) note += ` The frozen teacher relabelled <b class="num">${rec.n_relabelled.toLocaleString()}</b> rows, <b class="num">${rec.n_relabelled_to_true.toLocaleString()}</b> to their true class; the stored buffer is never rewritten.`;
@@ -911,7 +926,7 @@ function timeline() {
   }
   const d = deployed(T2.f, T2.s, T2.a);
   if (d) { const n = CLASSES.filter(c => d.recall[c] > 0).length;
-    h += `<div class="step ${n === 4 ? "tint-poisoned_relabel" : "tint-poisoned"}"><div class="hd2"><b>Deployed model on held-out test ${tag("test", "test")}</b><span><b class="${n === 4 ? "ok" : "no"}">${n === 4 ? "✓" : "✗"} ${n} of 4 classes learned</b></span></div>
+    h += `<div class="step ${n === 4 ? "tint-poisoned_relabel" : "tint-poisoned"}"><div class="hd2"><b class="dotb">Deployed model on held-out test ${tag("test", "test")}</b><span><b class="${n === 4 ? "ok" : "no"}">${n === 4 ? "✓" : "✗"} ${n} of 4 classes learned</b></span></div>
       <div class="bars">${CLASSES.map(c => `<div class="bar"><span>${c}</span><div class="track"><div class="fill" style="width:${100 * d.recall[c]}%;background:${d.recall[c] > 0 ? COL.teal : COL.poisoned}"></div></div><span class="v num">${f4(d.recall[c])}</span></div>`).join("")}</div>
       <div class="note">benign FAR <span class="num">${f4(d.far)}</span> · macro recall <span class="num">${f4(d.macro)}</span></div></div>`; }
   box.innerHTML = h; box.classList.remove("fade"); void box.offsetWidth; box.classList.add("fade");
@@ -923,7 +938,7 @@ function heat() {
     for (const d of DEF) {
       if (d.k === "poisoned_relabel" && f !== 1.0) { h += `<td class="na" aria-label="${d.n} at ${100 * f}%: not run">n/a</td>`; continue; }
       const n = SEEDS.filter(s => learnedAll(f, s, d.k)).length, sel = T2.f === f && T2.a === d.k;
-      h += `<td class="${sel ? "sel" : ""}" style="background:${n === 3 ? "#d9eee1" : n === 0 ? "#f5dcd8" : "#f4e7cf"}" data-f="${f}" data-a="${d.k}" tabindex="0" role="button" aria-pressed="${sel}" aria-label="${d.n} at ${100 * f}% flipped: ${n} of 3 seeds learned all 4 classes">${n}/3</td>`; }
+      h += `<td class="${sel ? "sel" : ""}" style="background:${n === 3 ? PILL.poisoned_relabel : n === 0 ? PILL.poisoned : PILL.poisoned_repair};color:${n === 3 ? INK.poisoned_relabel : n === 0 ? INK.poisoned : INK.poisoned_repair}" data-f="${f}" data-a="${d.k}" tabindex="0" role="button" aria-pressed="${sel}" aria-label="${d.n} at ${100 * f}% flipped: ${n} of 3 seeds learned all 4 classes">${n}/3</td>`; }
     h += `</tr>`; }
   t.innerHTML = h;
   t.querySelectorAll("td[data-f]").forEach(td => { const go = () => { stopPlay(); T2.f = +td.dataset.f; T2.a = td.dataset.a; renderT2(); };
@@ -931,7 +946,7 @@ function heat() {
 }
 
 /* =============================================================== 5 RESULTS: one SVG style for every chart */
-const AXIS = "#c9ccd1", GRID = "#eceef0", TXT = "#5f646b";
+const AXIS = "#c9ccd1", GRID = CSSV("--track"), TXT = CSSV("--ink2");
 function svgHead(W, H, aria) { return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${esc(aria)}">`; }
 function yAxis(l, r, W, Y, ticks, fmtT) { return ticks.map(v => `<line x1="${l}" x2="${W - r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${GRID}"/><text x="${l - 6}" y="${Y(v) + 3.5}" font-size="10.5" text-anchor="end" fill="${TXT}">${fmtT(v)}</text>`).join(""); }
 /* grouped vertical bars. groups: [{label, bars: [{v, color, label, title, na, op}]}] */
@@ -1002,7 +1017,7 @@ function chartC() {
     {v: ft[a].accuracy, color: COL[a], label: "acc " + f3(ft[a].accuracy), title: `${n} accuracy ${f4(ft[a].accuracy)}`},
     {v: ft[a].macro_recall, color: COL[a], op: .45, label: "macro " + f3(ft[a].macro_recall), title: `${n} macro recall ${f4(ft[a].macro_recall)}`}]}));
   return chartCard("c", "c · Why accuracy misleads", `Gate only still scores ${f3(g.accuracy)} accuracy, but its macro recall is ${f3(g.macro_recall)}: two attack classes are never detected.`,
-    barChart({groups, aria: "Accuracy and macro recall of gate only and relabel repair", bw: 70, H: 230}) + legendHTML([{color: "#5f646b", label: "accuracy (solid)"}, {color: "#5f646b", op: .45, label: "macro recall (light)"}]),
+    barChart({groups, aria: "Accuracy and macro recall of gate only and relabel repair", bw: 70, H: 230}) + legendHTML([{color: TXT, label: "accuracy (solid)"}, {color: TXT, op: .45, label: "macro recall (light)"}]),
     [["test", "test"]], `Accuracy is dominated by the large BENIGN and Syn classes; macro recall weights every class equally. Relabel repair: accuracy ${f3(r.accuracy)}, macro recall ${f3(r.macro_recall)}.`);
 }
 function chartD() {
@@ -1059,18 +1074,18 @@ function initEvidence() {
   const b = base4(), fr = RES.fu2_test, rel = fr.filter(x => x.arm === "poisoned_relabel"), cln = fr.filter(x => x.arm === "clean");
   const dRel = Math.max(...CLASSES.map(c => Math.abs(mean(rel.map(x => x[c])) - mean(cln.map(x => x[c])))));
   const L = [
-    [COL.poisoned_relabel, "#246b43", "Pre-registered, supported", `The gate rejects more poisoned updates as f grows. Soft repair: all four classes in ${b.soft}/${b.n} runs at f 0.75–0.95 vs ${b.gate}/${b.n} with the gate alone; at f = 1.0 gate only and soft repair learn them in ${b.fail1}/${2 * b.n1}. Seeds 42-44.`],
-    [INK.poisoned_repair, "#8a5a0e", "Post hoc, positive", `Relabel repair learns all four classes at f = 1.0 in ${b.relabel}/${b.n1} seeds (42-44), within ${f3(dRel)} of the clean model's mean per-class recall.`],
-    [COL.clean, "#4c5867", "Diagnostic / limitation", "A recall-based gate is blind to a large loss of confidence (runs main and RF); the post-hoc confidence gate addresses it."],
-    [COL.poisoned, "#9c2f24", "Negative / unsolved", "The 12-label continual protocol; repeated corruption while new classes arrive (untested)."],
+    [COL.poisoned_relabel, INK.poisoned_relabel, "Pre-registered, supported", `The gate rejects more poisoned updates as f grows. Soft repair: all four classes in ${b.soft}/${b.n} runs at f 0.75–0.95 vs ${b.gate}/${b.n} with the gate alone; at f = 1.0 gate only and soft repair learn them in ${b.fail1}/${2 * b.n1}. Seeds 42-44.`],
+    [INK.poisoned_repair, INK.poisoned_repair, "Post hoc, positive", `Relabel repair learns all four classes at f = 1.0 in ${b.relabel}/${b.n1} seeds (42-44), within ${f3(dRel)} of the clean model's mean per-class recall.`],
+    [COL.clean, INK.clean, "Diagnostic / limitation", "A recall-based gate is blind to a large loss of confidence (runs main and RF); the post-hoc confidence gate addresses it."],
+    [COL.poisoned, INK.poisoned, "Negative / unsolved", "The 12-label continual protocol; repeated corruption while new classes arrive (untested)."],
     ["#1c1d1f", "#1c1d1f", "Not claimed", "Statistical significance, real-time deployment, time-ordered validity, other datasets, full-data training, novelty of gated acceptance."]];
-  $("#ladder").innerHTML = L.map((r, i) => `<div class="rung"><div class="n" style="background:${r[0]}">${i + 1}</div><div class="b" style="background:${r[0]}12"><b style="color:${r[1]}">${r[2]}</b>${r[3]}</div></div>`).join("");
+  $("#ladder").innerHTML = L.map((r, i) => `<div class="rung"><div class="n" style="background:${r[0]}">${i + 1}</div><div class="b"><b style="color:${r[1]}">${r[2]}</b>${r[3]}</div></div>`).join("");
   const Fn = RES.funnel, ft = A && A.full_test.clean;
-  const F = [[Fn.raw_rows, `raw rows, read once (${Fn.raw_files ?? "–"} files, ${Fn.raw_labels} labels)`, COL.maroon],
-             [Fn.distinct, "distinct finite (features, label) pairs after global de-duplication", "#8b3c28"],
-             [Fn.kept, `kept after dropping ${Fn.conflicts.toLocaleString()} label-conflict vectors and capping at ${Fn.cap.toLocaleString()} per attack`, "#a8573f"],
+  const F = [[Fn.raw_rows, `raw rows, read once (${Fn.raw_files ?? "–"} files, ${Fn.raw_labels} labels)`, COL.teal],
+             [Fn.distinct, "distinct finite (features, label) pairs after global de-duplication", COL.teal],
+             [Fn.kept, `kept after dropping ${Fn.conflicts.toLocaleString()} label-conflict vectors and capping at ${Fn.cap.toLocaleString()} per attack`, COL.teal],
              [Fn.train_4class, "four-class training rows", COL.teal]];
-  if (ft) F.push([ft.n_rows, `four-class test rows (${ft.n_benign.toLocaleString()} BENIGN), scored once`, "#24607a"]);
+  if (ft) F.push([ft.n_rows, `four-class test rows (${ft.n_benign.toLocaleString()} BENIGN), scored once`, COL.teal]);
   $("#funnel").innerHTML = F.map(r => `<div class="row"><div class="bx" style="width:${Math.max(18, 100 * (Math.log10(r[0]) - 3.9) / (Math.log10(F[0][0]) - 3.9))}%;background:${r[2]}">${r[0].toLocaleString()}</div><div class="lb">${r[1]}</div></div>`).join("") + `<div class="note">Bar length on a log scale.</div>`;
   const ig = [];
   if (A) { const ok = Object.values(A.meta.full_test_checks || {}).every(c => c.matches);
@@ -1079,7 +1094,7 @@ function initEvidence() {
       `<div>FU2 model byte-identical to the validated model (sha256): ${A.meta.fu2_model_is_validated_model ? '<span class="ok">✓ yes</span>' : '<span class="no">✗ no</span>'}</div>`,
       `<details class="more"><summary><span class="ib" aria-hidden="true">i</span> model hashes</summary><div class="note num">${Object.entries(A.meta.model_sha256 || {}).map(([k, v]) => `${k} ${String(v).slice(0, 16)}…`).join("<br>")}</div></details>`);
   } else ig.push(`<div>No model weights in this build (results screens only).</div>`);
-  ig.push(`<div style="margin-top:6px;color:var(--ink3)">Screens 4-6 read the committed run records only.</div>`);
+  ig.push(`<div style="margin-top:6px;color:var(--ink2)">Screens 4-6 read the committed run records only.</div>`);
   $("#integrity").innerHTML = ig.join("");
   $("#followups").innerHTML = (RES.followups || []).map(c => `<details class="fold tl2"><summary>${c.title} ${tag("post", c.tag)}</summary><div style="font-size:13px;overflow-x:auto">${c.html}</div></details>`).join("");
 }
