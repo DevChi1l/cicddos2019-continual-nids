@@ -1,0 +1,13 @@
+setting,arm,learned_all,runs,share
+"4 cl., f 0.75-0.95",poisoned,8,24,0.3333333333333333
+"4 cl., f 0.75-0.95",poisoned_repair,24,24,1.0
+"4 cl., f 0.75-0.95",clean,24,24,1.0
+"4 cl., f 1.0",poisoned,0,8,0.0
+"4 cl., f 1.0",poisoned_relabel,8,8,1.0
+"4 cl., f 1.0",clean,8,8,1.0
+"5 cl., f 0.9",poisoned,0,8,0.0
+"5 cl., f 0.9",poisoned_repair,8,8,1.0
+"5 cl., f 0.9",clean,8,8,1.0
+"5 cl., f 1.0",poisoned,0,8,0.0
+"5 cl., f 1.0",poisoned_relabel,8,8,1.0
+"5 cl., f 1.0",clean,8,8,1.0

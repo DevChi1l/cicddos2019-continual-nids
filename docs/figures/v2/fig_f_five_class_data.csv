@@ -1,0 +1,7 @@
+frac,arm,defence,all5,n_test,share,max_benign_far
+0.9,clean,clean,3,3,1.0,0.0014189615303762876
+0.9,poisoned,poisoned,0,3,0.0,0.0009459743535841917
+0.9,poisoned_repair,poisoned_repair,3,3,1.0,0.0015240697918856422
+1.0,clean,clean,3,3,1.0,0.0014189615303762876
+1.0,poisoned,poisoned,0,3,0.0,0.0
+1.0,poisoned_repair,poisoned_relabel,3,3,1.0,0.001997056968677738

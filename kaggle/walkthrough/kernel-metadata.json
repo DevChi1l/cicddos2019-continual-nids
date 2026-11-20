@@ -1,0 +1,13 @@
+{
+  "id": "dvdhere/nids-walkthrough",
+  "title": "nids-walkthrough",
+  "code_file": "12_walkthrough_end_to_end.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": true,
+  "dataset_sources": ["dvdhere/results-train-04"],
+  "kernel_sources": ["dvdhere/training-06"],
+  "competition_sources": []
+}
